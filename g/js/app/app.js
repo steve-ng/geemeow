@@ -1,7 +1,9 @@
 var apikey = 'fxv643daihuuwhfr';
-var app = angular.module('LearningRoom', ['prettyDateFilter', 'truncateFilter']);
+var app = angular.module('Geemeow', ['prettyDateFilter', 'truncateFilter']);
+var rootScope;
 
 app.run(function($rootScope){
+	rootScope = $rootScope;
 	$rootScope.users = {};
 	$rootScope.client;
 	$rootScope.server;
@@ -14,7 +16,7 @@ app.run(function($rootScope){
 	$rootScope.userClient;
 	$rootScope.userServer;
 
-	$rootScope.debug = false;
+	$rootScope.debug = true;
 	$rootScope.serverPeerId = "";
 	$rootScope.setupTimer;
 

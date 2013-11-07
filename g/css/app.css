@@ -283,13 +283,16 @@ box-shadow: 0 0 0px #719ECE;
 
 .active-video{
 	background-color: rgba(0, 0, 0, 1);
+	height: 100%;
+	width: 100%;
+}
+
+.flip{
 	-moz-transform: scale(-1, 1);
 	-webkit-transform: scale(-1, 1);
 	-o-transform: scale(-1, 1);
 	transform: scale(-1, 1);
 	filter: FlipH;
-	height: 100%;
-	width: 100%;
 }
 
 .inactive-video-div{
@@ -317,11 +320,6 @@ box-shadow: 0 0 0px #719ECE;
 .inactive-video{
 	background-color: rgba(0, 0, 0, 1);
 	width:100%;
-	-moz-transform: scale(-1, 1);
-	-webkit-transform: scale(-1, 1);
-	-o-transform: scale(-1, 1);
-	transform: scale(-1, 1);
-	filter: FlipH;
 	margin:0;
 	padding:0;
 	border-width:0;
