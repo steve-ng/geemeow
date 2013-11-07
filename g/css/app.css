@@ -346,6 +346,10 @@ box-shadow: 0 0 0px #719ECE;
 	cursor: pointer;
 }
 
+.video-name{
+	padding-left:1.0em;
+}
+
 .video-icon-font{
 	font-size: 0.7em;
 }
@@ -372,6 +376,15 @@ box-shadow: 0 0 0px #719ECE;
 	-moz-transform: rotate(45deg);
 	-ms-transform: rotate(45deg);
 	-o-transform: rotate(45deg);
+}
+
+.video-selection-menu{
+	padding:0.5em;
+    text-shadow:none;
+}
+
+.block{
+	display:block;
 }
 
 .translucent{
