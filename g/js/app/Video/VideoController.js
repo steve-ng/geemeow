@@ -1,6 +1,9 @@
 
 app.controller('VideoController', function($scope, $rootScope){
-	$scope.preferredVideoConstraints = {mandatory: { maxWidth: 320, maxHeight: 240 }};
+	$scope.videoType = {'Camera': {mandatory: { maxWidth: 320, maxHeight: 240 }},
+						'Screen': {mandatory: {chromeMediaSource: 'screen'}},
+						'None': false};
+	$scope.currentVideoType = 'None';			
 	$scope.constraints = {
 		video: false,
 		audio: false,
@@ -94,24 +97,24 @@ app.controller('VideoController', function($scope, $rootScope){
 	}
 
 
-	$scope.toggleVideo = function(peerId){
-		if (peerId == $scope.$parent.clientId){
-			if ($scope.constraints.video == false)
-				$scope.constraints.video = $scope.preferredVideoConstraints;
-			else
-				$scope.constraints.video = false;
+	$scope.setVideo = function(type){
+		$scope.currentVideoType = type;
+		$scope.constraints.video = $scope.videoType[$scope.currentVideoType];
 
-			if ($scope.constraintsListener != undefined)
-				$scope.constraintsListener.constraintsChanged($scope.constraints);
-		} else {
-			var peer = $scope.peers[peerId];
-			if (peer.hasVideo){
-				peer.videoEnabled = !peer.videoEnabled;
-				var tracks = peer.stream.getVideoTracks();
-				for (var i in tracks)
-					tracks[i].enabled = peer.videoEnabled;
+		if ($scope.constraintsListener != undefined)
+			$scope.constraintsListener.constraintsChanged($scope.constraints);
+	}
+
+
+	$scope.toggleVideo = function(peerId){
+		var peer = $scope.peers[peerId];
+		if (peer.hasVideo){
+			peer.videoEnabled = !peer.videoEnabled;
+			var tracks = peer.stream.getVideoTracks();
+			for (var i in tracks)
+				tracks[i].enabled = peer.videoEnabled;
 			}
-		}
+
 		$scope.safeApply();
 	}
 
