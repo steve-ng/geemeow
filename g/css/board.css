@@ -1,0 +1,179 @@
+
+.board-wrapper {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    overflow-y: auto;
+}
+.board-wrapper:after {
+    padding-top: 56.25%; /*16:9 ratio*/
+    display: block;
+    content: '';
+}
+#board-content {
+    position: absolute;
+    top: 0; bottom: 0; right: 0; left: 0; /*fill parent*/
+    background-color: rgb(200, 200, 200); /*let's see it!*/
+    border: 0.1em solid rgba(220,220,220, 1);
+    overflow: hidden;
+}
+
+.room-board-tab-header-list{
+	height:100%;
+}
+.room-board-tab-header-list-name{
+    cursor:pointer;
+    padding-left:0.5em !important;
+    padding-right:0.5em !important;
+}
+.room-board-tab-header-close{
+	font-size: 1.5em;
+}
+.board-tab-wrapper{
+    position: absolute;
+    height:100%;
+    width:100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    background-color: white;
+}
+.board-tab-page{
+    margin: 0 auto;
+    margin-top:0.3em;
+    background-color: white
+}
+.board-tab-page:first-child{
+    margin-top:0em;
+}
+.tabfront{
+    z-index: 5;
+}
+.loading-screen{
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    z-index:1;
+    background: grey;
+    position:absolute;
+}
+
+
+.board-tab{
+    background-color: rgba(240,240,240,1);
+}
+.board-tab-page-drawing{
+    position: absolute;
+    cursor: pointer;
+}
+.board-tab-page-background{
+    background-color: white;
+}
+.drawingFront{
+    z-index: 10;
+}
+.disablePointerEvents{
+    pointer-events:none;
+}
+.board-tab-page-drawing:active {
+    cursor: pointer;
+}
+.board-cursor{
+    position: absolute;
+    min-height: 0.6em;
+    min-width: 0.6em;
+    -moz-border-radius: 0.6em;
+    border-radius: 0.6em;
+    z-index:9;
+    vertical-align:text-top;
+    pointer-events:none;
+}
+.board-cursor-text{
+    position: absolute;
+    top:-0.8em;
+    padding-left: 1.0em;
+    font-size: 0.7em;
+    white-space:nowrap;
+}
+.board-tab-page-text{
+    -webkit-touch-callout: text;
+    -webkit-user-select: text;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+.board-toolbar{
+    list-style-type: none;
+    padding:0;
+    margin:0;
+    position: absolute;
+    width:100%;
+}
+
+.toolbar-btn{
+    background-color: rgba(255,255,255,0.75);
+    border-radius: 0.25em;
+    height:2.5em;
+    width:2.5em;
+    padding:0;
+    margin: 0.5em;
+    text-align:center;
+    line-height: 2.5em;
+    color: rgba(0,0,0, 1);
+}
+
+.toolbar-btn:hover{
+    background-color: white;
+    cursor: pointer;
+    color: black;
+}
+
+.itemSelected{
+    background-color: rgba(156,156,156,1);
+}
+
+.itemSelected:hover{
+    background-color: rgba(156,156,156,1);
+}
+
+.toolbar-text{
+    vertical-align: middle;
+    display: inline-block;
+    font-size: 1.6em;
+}
+
+
+.separator{
+    height: 1px;
+    padding: 0px;
+    margin: 0.3em;
+    background-color: rgba(0,0,0,0.1);
+}
+
+.color-picker{
+    background-color: rgba(230,230,230,1);
+}
+
+
+.color-picker-item{
+    display:inline;
+    background-color: transparent;
+}
+
+.color-picker-item:hover{
+    background-color: transparent;
+    opacity: 0.6;
+}
+
+.picker-tick{
+    text-shadow:1px 1px 2px #000, -1px -1px 2px #000,-1px 1px 2px #000,1px -1px 2px #000;
+    color: rgba(255,255,255,1);
+}
+
+.canvasMenu {
+  position: absolute;
+  display:none;
+  z-index:100;
+}
