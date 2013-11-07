@@ -1,0 +1,413 @@
+app.controller('BoardTabController', function($scope,$rootScope) {
+  	$scope.tab;	//	from parent
+  	$scope.lastScrollTime = 0;
+  	$scope.boardClient = $scope.$parent.boardClient;
+  	$scope.pages = [];
+  	$scope.scale = 1.0;
+  	$scope.done = false;
+    $scope.cursorData;
+    $scope.sendCursorUpdate;
+
+  	//	Init page
+  	var initTab = function(){
+  		if ($scope.tab.metadata.sourceType == "PDFLink"){
+  			PDFJS.getDocument($scope.tab.metadata.pdfLink).then(function getPdf(loadedPdf) {
+			 	var pageNumber = 1;
+			 	$scope.pdf = loadedPdf;
+			 	preparePDF();
+			});
+  		} else if ($scope.tab.metadata.sourceType == "PDFFile"){
+  			var data = base64ToUint8Array($scope.tab.metadata.pdfFile.substring($scope.tab.metadata.pdfFile.indexOf(';base64,')+8));
+  			PDFJS.getDocument(data).then(function getPdf(loadedPdf) {
+			 	var pageNumber = 1;
+			 	$scope.pdf = loadedPdf;
+			 	preparePDF();
+			});
+  		} else if ($scope.tab.metadata.sourceType == "Plain"){
+			$scope.pages[0] = {};
+  		} else if ($scope.tab.metadata.sourceType == "ImageLink"){
+			var image = new Image();
+ 			image.onload = function(){
+ 				$scope.pages[0] = {image: image};
+ 				$scope.$apply();
+		    }
+		    image.src = $scope.tab.metadata.imageLink;
+		} else if ($scope.tab.metadata.sourceType == "ImageFile"){
+			var image = new Image();
+ 			image.onload = function(){
+ 				$scope.pages[0] = {image: image};
+ 				$scope.$apply();
+		    }
+		    image.src = $scope.tab.metadata.imageFile;
+		}
+  	};
+  	initTab();
+
+  	function preparePDF(){	
+  		function prepare(pageNumber){
+			if (pageNumber > $scope.pdf.numPages){
+				$scope.$apply();
+				return;
+			}
+
+			$scope.pdf.getPage(pageNumber).then(function(pdfpage) {
+				$scope.pages[pageNumber-1] = {pdfpage: pdfpage};
+				prepare(pageNumber+1);
+			});
+		}
+		prepare(1);
+	}
+
+
+	//	Scroll handler
+	$scope.$on('TabUpdateScroll'+$scope.tab.tabIndex, function(event, message){
+		if (message.scrollTime > $scope.lastScrollTime){
+			$scope.tab.coords = message.coords;
+			$scope.$digest();
+		}
+	});
+
+	$scope.$on('TabUpdateScrollPage'+$scope.tab.tabIndex, function(event, message){
+		$scope.tab.pageCoords = {coords: message.coords, pageIndex: message.pageIndex};
+		$scope.$digest();
+	});
+
+	//	Canvas Action handler
+	$scope.$on('TabCanvasAction'+$scope.tab.tabIndex, function(event, message){
+		$scope.pages[message.canvasAction.pageIndex].canvasController.onCanvasAction(message.canvasAction);
+	});
+
+	//	Canvas Undo handler
+	$scope.$on('TabCanvasUndo'+$scope.tab.tabIndex, function(event){
+		$scope.undoCanvas();
+	});
+
+	//	Canvas Redo handler
+	$scope.$on('TabCanvasRedo'+$scope.tab.tabIndex, function(event){
+		$scope.redoCanvas();
+	});
+
+	//	Drawing specs
+	$scope.getStrokeColor = function(){
+		return $scope.$parent.strokeColor;
+	}
+
+	$scope.getStrokeSize = function(){
+		return $scope.$parent.strokeSize;
+	}
+
+	$scope.getCanvasMode = function(){
+		return $scope.$parent.canvasMode;
+	}
+
+	$scope.clearCanvas = function(pageIndex){
+		$scope.pages[pageIndex].canvasController.requestClear();
+	}
+
+	$scope.undoCanvas = function(){
+		var canvasAction = new Object();
+		canvasAction.tabIndex = $scope.tab.tabIndex;
+		canvasAction.type = "Undo";
+		$scope.boardClient.canvasAction(canvasAction);
+	}
+
+	$scope.redoCanvas = function(){
+		var canvasAction = new Object();
+		canvasAction.tabIndex = $scope.tab.tabIndex;
+		canvasAction.type = "Redo";
+		$scope.boardClient.canvasAction(canvasAction);
+	}
+
+	$scope.screenshotPage = function(pageIndex){
+		setTimeout(function(){
+	        var canvas = $scope.pages[pageIndex].getScreenshot();
+	        var download = document.createElement('a');
+			download.href = canvas.toDataURL();
+			download.download = $scope.tab.metadata.name+ ' page'+ (pageIndex+1) +'.png';
+			download.click();
+		},0);
+	}
+ });
+
+
+
+
+
+
+app.directive('scrollPosition', function($window) {
+  return function(scope, element, attrs) {
+
+  	var scrollTimer;
+    element.on('scroll', function(e){
+		var time = new Date().getTime();
+		if (time > scope.lastScrollTime){
+			scope.lastScrollTime = time;
+			if (scrollTimer != undefined)
+				clearTimeout(scrollTimer);
+			scrollTimer = setTimeout(function(){
+				var coords = {'x': element.scrollLeft()/element[0].scrollWidth, 'y': element.scrollTop()/element[0].scrollHeight};
+				scope.boardClient.updateScroll(scope.tab.tabIndex, coords);
+			}, 200);
+		}
+	});
+
+    var counter = 0;
+    var updateTimer;
+	element.on('mousemove', function(e){
+		function update(){
+			scope.cursorData = {left: (e.pageX - element.offset().left -3)/element.width(), top: (e.pageY - element.offset().top-3)/element.height()};
+			if (!scope.sendCursorUpdate)
+				return;
+			scope.boardClient.updateCursor(scope.cursorData);
+		}
+
+		clearTimeout(updateTimer);
+		updateTimer = setTimeout(update, 200);
+		counter++;
+		if (counter % 2 != 0)
+			return;
+		else
+			update();
+	});
+
+
+	scope.$watch("tab.coords", function() {
+		if (scope.tab.coords != undefined && Math.abs(element.scrollLeft() - scope.tab.coords.x*element[0].scrollWidth) + Math.abs(element.scrollTop() - scope.tab.coords.y*element[0].scrollHeight)> 2){
+			element.scrollLeft(scope.tab.coords.x*element[0].scrollWidth);
+			element.scrollTop(scope.tab.coords.y*element[0].scrollHeight);
+		} 
+	});
+
+	scope.$watch("tab.pageCoords", function() {
+		if (scope.tab.pageCoords != undefined){
+			var coords = scope.tab.pageCoords.coords;
+			var pageElement = element.children().eq(1).children().eq(scope.tab.pageCoords.pageIndex)[0];
+
+			var currentTop = scope.tab.coords.y * element[0].scrollHeight;
+			var currentLeft = scope.tab.coords.x * element[0].scrollWidth;
+			var currentBottom = currentTop + element.height();
+			var currentRight = currentLeft + element.width();
+
+			var actionTop = pageElement.offsetTop + pageElement.scrollHeight * coords.y;
+			var actionLeft = pageElement.offsetLeft + pageElement.scrollWidth * coords.x;
+
+			if (actionTop < currentTop || actionTop > currentBottom)
+				element.scrollTop(actionTop);
+			if (actionLeft < currentLeft || actionLeft > currentRight)
+				element.scrollLeft(actionLeft);
+		} 
+	});
+  };
+});
+
+
+
+
+app.directive('boardPage', function($window) {
+  return function(scope, element, attrs) {
+  	
+  	element.on('resize',function(e){
+  		var tab = scope.$parent.tab;
+  		var parent = element.parent();
+		var drawingLayer = element.children().eq(0);
+		var textLayer = element.children().eq(1);
+		var backgroundLayer = element.children().eq(2);
+		var canvasMenu = element.children().eq(3);
+		var parentHeight = parent.parent().height()-1;
+
+	  	if (tab.metadata.sourceType == "PDFLink" || tab.metadata.sourceType == "PDFFile") {
+			var parentWidth = parent.parent().innerWidth()-1-getScrollBarWidth();
+		  	var page = scope.$parent.pages[scope.$index].pdfpage;
+		  	
+		  	var scale = 1.0;
+
+		  	//	Aspect fill
+		  	var viewport = page.getViewport(scale);
+			var ratioHeight = parentHeight/viewport.height;
+			var ratioWidth = parentWidth/viewport.width;
+			scale = Math.max(ratioWidth, ratioHeight);
+			//scale = ratioWidth;
+			viewport = page.getViewport(scale);
+
+			var pageDisplayWidth = viewport.width;
+			var pageDisplayHeight = viewport.height;
+
+		  	element.width(pageDisplayWidth);
+			element.height(pageDisplayHeight);
+		  	backgroundLayer[0].width = pageDisplayWidth;
+			backgroundLayer[0].height = pageDisplayHeight;
+		  	textLayer.width(pageDisplayWidth);
+			textLayer.height(pageDisplayHeight);
+		  	drawingLayer[0].width = pageDisplayWidth;
+			drawingLayer[0].height = pageDisplayHeight;
+
+			page.getTextContent().then(function (textContent) {
+	            var textLayerPDF = new TextLayerBuilder({
+	                textLayerDiv: textLayer.get(0),
+	                pageIndex: scope.$index
+	            }); 
+	            textLayerPDF.setTextContent(textContent);
+
+	            var renderContext = {
+	                canvasContext: backgroundLayer[0].getContext('2d'),
+	                viewport: viewport,
+	                textLayer: textLayerPDF  	
+	            };
+				page.render(renderContext);
+        	});
+	  	} else if (tab.metadata.sourceType == "Plain"){
+			var parentWidth = parent.parent().innerWidth()-1;
+		  	var scale = 1.0;
+
+			var pageDisplayWidth = parentWidth;
+			var pageDisplayHeight = parentHeight;
+
+		  	element.width(pageDisplayWidth);
+			element.height(pageDisplayHeight);
+		  	drawingLayer[0].width = pageDisplayWidth;
+			drawingLayer[0].height = pageDisplayHeight;
+	  	} else if (tab.metadata.sourceType == "ImageLink" || tab.metadata.sourceType == "ImageFile"){
+			var parentWidth = parent.parent().innerWidth()-1-getScrollBarWidth();
+			var image = scope.$parent.pages[scope.$index].image;
+		  	
+		  	var ratioHeight = parentHeight/image.height;
+			var ratioWidth = parentWidth/image.width;
+			scale = Math.max(ratioWidth, ratioHeight);
+			element.width(pageDisplayWidth);
+			element.height(pageDisplayHeight);
+
+			var pageDisplayWidth = image.width*scale;
+			var pageDisplayHeight = image.height*scale;
+
+		  	backgroundLayer[0].width = pageDisplayWidth;
+			backgroundLayer[0].height = pageDisplayHeight;
+		  	textLayer.width(pageDisplayWidth);
+			textLayer.height(pageDisplayHeight);
+		  	drawingLayer[0].width = pageDisplayWidth;
+			drawingLayer[0].height = pageDisplayHeight;
+			backgroundLayer[0].getContext('2d').drawImage(image, 0, 0, pageDisplayWidth, pageDisplayHeight);
+	  	}
+
+	  	//	Setup canvas init data
+  		if (tab.canvasData[scope.$index] != undefined){
+  			scope.page.canvasController.setCanvasData(tab.canvasData[scope.$index]);
+  			scope.page.canvasController.redraw();
+  		}
+
+  		//	Set scroll for parent
+  		setTimeout(function(){
+  			if (scope.$index == scope.$parent.pages.length-1){
+  				scope.$parent.done = true;
+	  			scope.tab.coords = {x:scope.tab.coords.x, y:scope.tab.coords.y};
+	  			scope.$parent.$digest();
+	  		}
+	  	},0);
+
+
+  		//	Context menu
+  		function hideHandler(e){
+  			if (canvasMenu.css('display') == 'none')
+  				return;
+			canvasMenu.hide();
+			$(document).unbind('click', this);
+			drawingLayer.focus();
+		}
+
+	  	function openContextMenu(e){
+			canvasMenu.css({display: 'block', left: element[0].offsetLeft + Math.min(e.offsetX, element.width()-canvasMenu.width()), 
+												top: element[0].offsetTop + Math.min(e.offsetY, element.height()-canvasMenu.height())});
+			$(document).click(hideHandler);
+			return false;
+		}
+
+		canvasMenu.on('click', 'a', function(e){
+			hideHandler(e);
+		});
+
+
+		drawingLayer.on('contextmenu', openContextMenu);
+		textLayer.on('contextmenu', openContextMenu);
+		backgroundLayer.on('contextmenu', openContextMenu);
+	});
+
+
+	scope.$parent.pages[scope.$index].getScreenshot = function(){
+		var canvas = document.createElement("canvas");
+		var canvasContext = canvas.getContext('2d');
+
+		var backgroundCanvas = element.children().eq(2)[0];
+		var drawingCanvas = element.children().eq(0)[0];
+
+		canvas.width = drawingCanvas.width;
+		canvas.height = drawingCanvas.height;
+		canvasContext.fillStyle="#FFFFFF";
+		canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+		canvasContext.drawImage(backgroundCanvas, 0, 0);
+		canvasContext.drawImage(drawingCanvas, 0, 0);
+		return canvas;
+	}
+
+
+	setTimeout(function(){element.resize()}, 500);
+}});
+
+
+app.directive('canvasDrawing', function($window) {
+  return function(scope, element, attrs) {
+  	var index = scope.$index;
+  	var tab = scope.$parent.$parent.tab;
+  	function requestCanvasAction(canvasAction){
+  		canvasAction.pageIndex = index;
+  		canvasAction.tabIndex = tab.tabIndex;
+  		scope.boardClient.canvasAction(canvasAction);
+  	}
+  	scope.page.canvasController = new CanvasController(element, requestCanvasAction, scope.$parent, scope.boardClient.peerId());
+
+  };
+});
+
+
+angular.module('truncateFilter', []).filter('truncate', function () {
+    return function (text, length, end) {
+        if (isNaN(length))
+            length = 10;
+
+        if (end === undefined)
+            end = "...";
+
+        if (text.length <= length || text.length - end.length <= length) {
+            return text;
+        }
+        else {
+            return String(text).substring(0, length-end.length) + end;
+        }
+
+    };
+});
+
+
+function getScrollBarWidth () {
+  var inner = document.createElement('p');
+  inner.style.width = "100%";
+  inner.style.height = "200px";
+
+  var outer = document.createElement('div');
+  outer.style.position = "absolute";
+  outer.style.top = "0px";
+  outer.style.left = "0px";
+  outer.style.visibility = "hidden";
+  outer.style.width = "200px";
+  outer.style.height = "150px";
+  outer.style.overflow = "hidden";
+  outer.appendChild (inner);
+
+  document.body.appendChild (outer);
+  var w1 = inner.offsetWidth;
+  outer.style.overflow = 'scroll';
+  var w2 = inner.offsetWidth;
+  if (w1 == w2) w2 = outer.clientWidth;
+
+  document.body.removeChild (outer);
+
+  return (w1 - w2);
+};

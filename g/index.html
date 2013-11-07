@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="LearningRoom">
+<head>
+	<meta charset="utf-8">
+	 <title>Geemeow</title>
+ 
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/app.css">
+	<link rel="stylesheet" href="css/board.css">
+	<link rel="stylesheet" href="css/tinyloader.css">
+	<link rel="stylesheet" href="css/textlayerbuilder.css">
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+
+	<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+</head>
+
+
+<body>
+
+	<!-- Loading screen -->
+	<div id="loading-screen">
+		<div class="center-screen">
+			<div class="loader">
+			  <div class="left stick"><span></span></div>
+			  <div class="right stick"><span></span></div>
+			</div>
+			<span>Loading ...</span>
+		</div>
+	</div>
+
+	<div id="app" style="display:none">
+
+	<!-- Top bar -->
+	<div class="topbar">
+		<ul class="nav nav-pills topbar-nav">
+		  	<li class="dropdown">
+			    <a class="dropdown-toggle topbar-nav-item" data-toggle="dropdown" href="#">
+			      Menu <span class="caret"></span>
+			    </a>
+		    	<ul class="dropdown-menu">
+ 					 <li role="presentation" class="dropdown-header">Board</li>
+    				<li role="presentation"><a role="menuitem" href="" ng-click="newPlainBoard()">New Plain Board</a></li>
+					<li class="separator"></li>
+					<input id="pdf_file" ng-show="false" type="file" name="pdf_file" accept="application/pdf" on-change-pdf-file></input>
+					<li role="presentation"><a role="menuitem" href=""><span onclick="$('#pdf_file').click();">Upload PDF</span></a></li>
+    				<li role="presentation"><a role="menuitem" href="" data-toggle="modal" data-target="#openPdfLinkModal">Open PDF Link</a></li>
+
+					<li class="separator"></li>
+					<input id="image_file" ng-show="false" type="file" name="image_file" accept="image/*" on-change-image-file></input>
+					<li role="presentation"><a role="menuitem" href=""><span onclick="$('#image_file').click();">Upload Image</span></a></li>
+    				<li role="presentation"><a role="menuitem" href="" data-toggle="modal" data-target="#openImageLinkModal">Open Image Link</a></li>
+		    	</ul>
+		  	</li>
+ 			<li><a href="">Help</a></li>
+ 			<li class="pull-right"><p class="navbar-text topbar-nav-text">{{username}}</p></li>
+ 			<li class="pull-right"><p class="navbar-text topbar-nav-text">/</p></li>
+ 			<li class="pull-right"><p class="navbar-text topbar-nav-text">{{title}}</p></li>
+		</ul>
+	</div>
+
+
+
+
+	<!-- Main -->
+	<div class="main">
+		<div class="main-body">
+
+
+			<!-- Board Body -->
+			<div class="board-body" ng-controller="BoardController">
+
+
+				<!-- Board Side Bar -->
+				<div class="board-sidebar">
+					<ul class="board-toolbar">
+						<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='select'}" ng-click="toggleCanvasMode('select')"><i class="fa fa-hand-o-up toolbar-text"></i></li>
+						<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='marker'}" ng-click="toggleCanvasMode('marker')"><i class="fa fa-pencil toolbar-text"></i></li>
+						<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='highlighter'}" ng-click="toggleCanvasMode('highlighter')"><i class="fa fa-magic toolbar-text"></i></li>
+						<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='eraser'}" ng-click="toggleCanvasMode('eraser')"><i class="fa fa-eraser toolbar-text"></i></li>
+						<li class="separator"></li>
+						
+						<div class="btn-group">
+						    <li type="button" class="toolbar-btn" data-toggle="dropdown"><i class="fa fa-square toolbar-text" ng-style="getStrokeColor(strokeColor)"></i></li>
+						    <ul class="dropdown-menu color-picker">
+						    	<li ng-repeat="color in strokeColors" type="button" class="toolbar-btn color-picker-item" data-toggle="dropdown">
+						    		
+						    		<span class="fa-stack fa-lg" ng-click="setStrokeColor(color)">
+									  <i class="fa fa-square toolbar-text fa-stack-2x" ng-style="getStrokeColor(color)"></i>
+									  <i class="fa fa-check toolbar-text fa-stack-1x picker-tick" ng-show="strokeColor == color"></i>
+									</span>
+
+						    		
+						    	</li>
+						    </ul>
+						</div>
+
+
+						<li class="separator"></li>
+
+						<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==2 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(2)">
+							<i class="fa fa-circle toolbar-text" style="font-size:0.3em" ng-style="getStrokeColor(strokeColor)" ng-show="canvasMode == 'marker' || canvasMode == 'select' || canvasMode == 'highlighter'">
+							</i>
+							<i class="fa fa-circle-o toolbar-text" style="font-size:0.3em" ng-show="canvasMode == 'eraser'">
+							</i>
+						</li>
+
+						<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==5 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(5)">
+							<i class="fa fa-circle toolbar-text" style="font-size:0.7em"  ng-style="getStrokeColor(strokeColor)" ng-show="canvasMode == 'marker' || canvasMode == 'select' || canvasMode == 'highlighter'"></i>
+							<i class="fa fa-circle-o toolbar-text" style="font-size:0.7em" ng-show="canvasMode == 'eraser'">
+							</i>
+						</li>
+
+						<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==20 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(20)">
+							<i class="fa fa-circle toolbar-text" ng-style="getStrokeColor(strokeColor)" ng-show="canvasMode == 'marker' || canvasMode == 'select' || canvasMode == 'highlighter'"></i>
+							<i class="fa fa-circle-o toolbar-text" ng-show="canvasMode == 'eraser'">
+							</i>
+						</li>
+					
+					</ul>
+				</div>
+
+				
+				<!-- Board Tab Bar -->
+				<div class="board-tabbar">
+					<ul class="nav nav-tabs room-board-tab-header-list">
+						<li ng-class="{active: currentTabIndex == tab.tabIndex}" ng-repeat="tab in tabsArray">
+							<a class="room-board-tab-header-list-name" ng-class="{highlight: currentTabIndex == tab.tabIndex}" ng-click="switchTab(tab.tabIndex)">{{tab.metadata.name | truncate:15}}&nbsp;
+								<span class="glyphicon glyphicon-remove-circle room-board-tab-header-close" ng-click="closeTab(tab.tabIndex); $event.stopPropagation();"></span>
+							</a>
+						</li>
+					</ul>
+				</div>
+
+				<!-- Board Main -->
+				<div class="board-main" board-main>
+					<div class = "board-wrapper">
+					    <div id = "board-content">
+					    	<div class="board-cursor" ng-style="{background: $root.users[peerId].color}" ng-repeat="(peerId, cursor) in cursors" cursor-position>
+					    		<span class="board-cursor-text" ng-style="{color: $root.users[peerId].color}">{{$root.users[peerId].name}}</span>
+					    	</div>
+			    			<div class="board-tab-wrapper" ng-repeat="tab in tabsArray" ng-class="{tabfront: currentTabIndex == tab.tabIndex}" ng-controller="BoardTabController" scroll-position>
+
+								<div class="loading-screen" ng-show="!done">
+		    						<div class="center-screen">
+			    						<div class="loader">
+										  <div class="left stick"><span></span></div>
+										  <div class="right stick"><span></span></div>
+										</div>
+										<span>Loading ...</span>
+									</div>
+								</div>
+
+			    				<div class="board-tab">
+			    					<div class="board-tab-page" ng-repeat="page in pages" board-page>
+
+			    						<canvas class="board-tab-page-drawing" canvas-drawing ng-class="{drawingFront: tab.tabIndex==currentTabIndex, disablePointerEvents: canvasMode=='select'}" tabindex="1"></canvas>
+			    						<div class="board-tab-page-text textLayer"></div>
+			    						<canvas class="board-tab-page-background"></canvas>
+
+
+
+										<div class="canvasMenu" class="dropdown clearfix">
+										    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+										    	<li><a href="" ng-click="undoCanvas($index)">Undo</a></li>
+										    	<li><a href="" ng-click="redoCanvas($index)">Redo</a></li>
+										    	<li class="divider"></li>
+										    	<li><a href="" ng-click="clearCanvas($index)">Clear Page</a></li>
+										    	<li><a href="" ng-click="screenshotPage($index)">Screenshot Page</a></li>
+										    </ul>
+										</div>
+
+			    					</div>
+				    			</div>
+					    	</div>
+					    </div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+
+
+
+
+	<!-- Sidebar -->
+	<div class="sidebar">
+		<div class="sidebar-body">
+
+			<!-- Video Widget -->
+			<div class="video-widget" ng-controller="VideoController">
+				<div class="active-video-div" ng-mouseenter="showActiveMenu = true" ng-mouseleave="showActiveMenu = false">
+					<div class="active-video-innerdiv">
+						<div class="absolute z1 translucent" ng-class="{opaque: showActiveMenu}">
+							<span class="fa-stack toolbar-text video-icon" ng-click="toggleVideo(focusPeerId)">
+								<i class="fa fa-video-camera fa-stack-1x video-icon-font" ></i>
+								<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peers[focusPeerId].videoEnabled || !peers[focusPeerId].hasVideo"></i>
+							</span>
+							<span class="fa-stack toolbar-text video-icon" ng-click="toggleAudio(focusPeerId)">
+								<i class="fa fa-microphone fa-stack-1x video-icon-font" ></i>
+								<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peers[focusPeerId].audioEnabled || !peers[focusPeerId].hasAudio"></i>
+							</span>
+							<p class="touchnone" style="padding-left:1.0em;" ng-style="{color: $root.users[focusPeerId].color}"><i class="fa fa-user" ng-show="focusPeerId == $parent.clientId"></i>
+								{{$root.users[focusPeerId].name}}
+							</p>
+						</div>
+					
+						<video class="active-video" autoplay ng-src="{{peers[focusPeerId].url}}" ng-show="peers[focusPeerId].videoEnabled && peers[focusPeerId].hasVideo" video-chat-active video-zoom-active>
+						</video>
+					</div>
+				</div>
+				<div class="inactive-video-div" >
+					<div class="inactive-video-item" ng-repeat="(peerId, peer) in peers" ng-hide="peerId == focusPeerId"
+					ng-mouseenter="showInactiveMenu = true" ng-mouseleave="showInactiveMenu = false">
+						<div>
+							<div class="absolute z1 translucent" ng-class="{opaque: showInactiveMenu}">
+								<span class="fa-stack toolbar-text video-icon" ng-click="$parent.toggleVideo(peerId)">
+									<i class="fa fa-video-camera fa-stack-1x video-icon-font"></i>
+									<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peer.videoEnabled || !peer.hasVideo" ></i>
+								</span>
+								<span class="fa-stack toolbar-text video-icon" ng-click="$parent.toggleAudio(peerId)">
+									<i class="fa fa-microphone fa-stack-1x video-icon-font"></i>
+									<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peer.audioEnabled || !peer.hasAudio"></i>
+								</span>
+								<p class="pointer" style="padding-left:1.0em;" ng-style="{color: $root.users[peerId].color}" ng-click="switchFocusPeer(peerId)">
+									<i class="fa fa-user" ng-show="peerId == $parent.clientId"></i>
+									{{$root.users[peerId].name}}
+								</p>
+							</div>
+						
+							<video class="inactive-video" autoplay ng-src="{{peer.url}}" ng-show="peer.videoEnabled && peer.hasVideo" ng-click="switchFocusPeer(peerId)" video-chat-inactive video-zoom-inactive>
+							</video>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Sidebar Tab -->
+			<div ng-controller="SideBarController">
+				<div class="sidebar-tab">
+					<ul class="nav nav-tabs">
+						<li ng-class="{active: widgetID=='chat-widget'}" ng-click="switchWidget('chat-widget');"><a href="">Chat</a></li>
+						<li ng-class="{active: widgetID=='folder-widget'}" ng-click="switchWidget('folder-widget');"><a href="">Folder</a></li>
+					</ul>
+				</div>
+
+				<!-- Sidebar Main -->
+				<div class="sidebar-main">
+
+					<!-- Chat Widget -->
+					<div id="chat-widget" class="sidebar-main-tab" ng-show="widgetID=='chat-widget'" ng-controller="ChatController">
+						<div class="chat-messages" chat-scroll>
+							<div class="chat-message" ng-repeat="chat in chatHistory">
+								<p ng-style="{color: $root.users[chat.peerId].color}" class="chat-message-name">{{$root.users[chat.peerId].name}}
+									<span class="chat-message-time">{{chat.timestamp | prettyDate}}</span>
+								</p>
+								<textarea readonly class="chat-message-text" chat-message-text>{{chat.text}}</textarea>
+							</div>
+						</div>
+  						<textarea rows="1" class="chat-message-input" type="text" ng-model="text" placeholder="Type a message.." chat-input></textarea>
+					</div>
+
+					<!-- Folder Widget -->
+					<div id="folder-widget" class="sidebar-main-tab" ng-show="widgetID=='folder-widget'">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+
+
+	<!-- Modal for pdf link -->
+	<div id="openPdfLinkModal" class="modal fade">
+	  <div class="modal-dialog modal-dialog-center">
+	    <div class="modal-content">
+			<div class="modal-header">
+			  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			  <h4 class="modal-title">Open PDF Link</h4>
+			</div>
+			<div class="modal-body">
+				<input ng-model="pdflink" class="form-control" type="text" placeholder="Enter link here.."></input>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="openPDFLink(pdflink)">Open</button>
+			</div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+	<!-- Modal for image link -->
+	<div id="openImageLinkModal" class="modal fade">
+	  <div class="modal-dialog modal-dialog-center">
+	    <div class="modal-content">
+			<div class="modal-header">
+			  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			  <h4 class="modal-title">Open Image Link</h4>
+			</div>
+			<div class="modal-body">
+				<input ng-model="imagelink" class="form-control" type="text" placeholder="Enter link here.."></input>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="openImageLink(imagelink)">Open</button>
+			</div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+
+
+
+
+	</div>
+
+
+
+
+
+	<!-- JS -->
+
+	<!-- Initialization -->
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery.mobile.custom.min.js"></script>
+	<script src="js/angular.min.js"></script>
+	<script src="js/pretty.js"></script>
+
+	<!-- RTCStarJS -->
+	<script src="js/RTCStarJS/adapter.js"></script>
+	<script src="js/RTCStarJS/peer.js"></script>
+	<script src="js/RTCStarJS/RTCStarClient.js"></script>
+	<script src="js/RTCStarJS/RTCStarServer.js"></script>
+
+	<!-- PDFJS -->
+	<script src="js/pdfjs/pdf.js"></script>
+	<script src="js/pdfjs/pdf.worker.js"></script>
+	<script src="js/pdfjs/text_layer_builder.js"></script>
+	<script src="js/pdfjs/ui_utils.js"></script>
+
+	<!-- App -->
+	<script src="js/app/roomsession.js"></script>
+	<script src="js/app/app.js"></script>
+	<script src="js/app/User/UserServer.js"></script>
+	<script src="js/app/User/UserClient.js"></script>
+
+	<!-- Chat Widget -->
+	<script src="js/app/Chat/ChatServer.js"></script>
+	<script src="js/app/Chat/ChatClient.js"></script>
+	<script src="js/app/Chat/ChatController.js"></script>
+
+	<!-- Board Widget -->
+	<script src="js/app/Board/BoardClient.js"></script>
+	<script src="js/app/Board/BoardServer.js"></script>
+	<script src="js/app/Board/BoardController.js"></script>
+	<script src="js/app/Board/BoardTabController.js"></script>
+	<script src="js/app/Board/CanvasController.js"></script>
+
+	<!-- Video Widget -->
+	<script src="js/app/Video/VideoClient.js"></script>
+	<script src="js/app/Video/VideoController.js"></script>
+
+	<!-- bootstrap -->
+	<script src="js/bootstrap.min.js"></script>
+	
+
+</body>
+</html>
