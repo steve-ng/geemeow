@@ -2,9 +2,7 @@ var apikey = 'fxv643daihuuwhfr';
 var app = angular.module('LearningRoom', ['prettyDateFilter', 'truncateFilter']);
 
 app.run(function($rootScope){
-	$rootScope.username = roomSession.username;
-	$rootScope.title = roomSession.title;
-	$rootScope.names = {};
+	$rootScope.users = {};
 	$rootScope.client;
 	$rootScope.server;
 	$rootScope.clientId;
@@ -98,11 +96,10 @@ app.run(function($rootScope){
 		$rootScope.$apply();
 	}
 
-
-	$rootScope.client.onClientEvent('Open', function(serverPeerId){
-		$rootScope.userClient.changeName($rootScope.username);
-	});
-
+	$rootScope.onUserUpdate = function(message){
+		$rootScope.users[message.user.peerId] = message.user;
+		$rootScope.$apply();
+	}
 
 	//	UI Methods
 

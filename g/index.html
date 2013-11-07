@@ -52,9 +52,7 @@
 		    	</ul>
 		  	</li>
  			<li><a href="">Help</a></li>
- 			<li class="pull-right"><p class="navbar-text topbar-nav-text">{{username}}</p></li>
- 			<li class="pull-right"><p class="navbar-text topbar-nav-text">/</p></li>
- 			<li class="pull-right"><p class="navbar-text topbar-nav-text">{{title}}</p></li>
+ 			<li class="pull-right"><p class="navbar-text topbar-nav-text">{{$root.users[$root.clientId].name}}</p></li>
 		</ul>
 	</div>
 
@@ -166,6 +164,10 @@
 										    	<li class="divider"></li>
 										    	<li><a href="" ng-click="clearCanvas($index)">Clear Page</a></li>
 										    	<li><a href="" ng-click="screenshotPage($index)">Screenshot Page</a></li>
+										    	<li ng-show="tab.metadata.sourceType == 'PDFFile'"><a href="" ng-click="downloadSource()">Download Background PDF</a></li>
+										    	<li ng-show="tab.metadata.sourceType == 'PDFLink'"><a href="" ng-click="downloadSource()">Download Background PDF</a></li>
+										    	<li ng-show="tab.metadata.sourceType == 'ImageFile'"><a href="" ng-click="downloadSource()">Download Background Image</a></li>
+										    	<li ng-show="tab.metadata.sourceType == 'ImageLink'"><a href="" ng-click="downloadSource()">Download Background Image</a></li>
 										    </ul>
 										</div>
 
@@ -347,7 +349,6 @@
 	<script src="js/pdfjs/ui_utils.js"></script>
 
 	<!-- App -->
-	<script src="js/app/roomsession.js"></script>
 	<script src="js/app/app.js"></script>
 	<script src="js/app/User/UserServer.js"></script>
 	<script src="js/app/User/UserClient.js"></script>

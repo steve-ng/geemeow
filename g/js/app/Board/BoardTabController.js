@@ -127,6 +127,41 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 			download.click();
 		},0);
 	}
+
+	$scope.downloadSource = function(){
+		if ($scope.tab.metadata.sourceType == "PDFFile")
+			$scope.downloadOriginalPDF();
+		else if ($scope.tab.metadata.sourceType == "PDFLink")
+			$scope.downloadPDFFromLink();
+		else if ($scope.tab.metadata.sourceType == "ImageFile")
+			$scope.downloadOriginalImage();
+		else if ($scope.tab.metadata.sourceType == "ImageLink")
+			$scope.downloadImageFromLink();
+	}
+
+	$scope.downloadOriginalPDF = function(){
+		var download = document.createElement('a');
+		download.href = $scope.tab.metadata.pdfFile;
+		download.download = $scope.tab.metadata.name;
+		download.click();
+	}
+
+	$scope.downloadPDFFromLink = function(){
+		var win = window.open($scope.tab.metadata.pdfLink, '_blank');
+  		win.focus();
+	}
+
+	$scope.downloadOriginalImage = function(){
+		var download = document.createElement('a');
+		download.href = $scope.tab.metadata.imageFile;
+		download.download = $scope.tab.metadata.name;
+		download.click();
+	}
+
+	$scope.downloadImageFromLink = function(){
+		var win = window.open($scope.tab.metadata.imageLink, '_blank');
+  		win.focus();
+	}
  });
 
 
