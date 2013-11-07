@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="LearningRoom">
+<html lang="en" ng-app="Geemeow">
 <head>
 	<meta charset="utf-8">
 	 <title>Geemeow</title>
@@ -202,15 +202,15 @@
 								</span>
 								<ul class="dropdown-menu video-selection-menu">
 				    				<label class="block">
-								    	<input type="radio" name="optionsRadios" value="Camera" ng-checked="currentVideoType == 'Camera'" ng-click="setVideo('Camera')">
+								    	<input type="radio" name="optionsRadios" value="Camera" ng-checked="currentVideoType == 'Camera'" ng-click="setVideo('Camera')" ngChecked>
 								    	Camera
 								  	</label>
 								  	<label class="block">
-								    	<input type="radio" name="optionsRadios" value="Screen" ng-checked="currentVideoType == 'Screen'" ng-click="setVideo('Screen')">
+								    	<input type="radio" name="optionsRadios" value="Screen" ng-checked="currentVideoType == 'Screen'" ng-click="setVideo('Screen')" ngChecked>
 								    	Screen
 								  	</label>
 								  	<label class="block">
-								    	<input type="radio" name="optionsRadios" value="None" ng-checked="currentVideoType == 'None'" ng-click="setVideo('None')">
+								    	<input type="radio" name="optionsRadios" value="None" ng-checked="currentVideoType == 'None'" ng-click="setVideo('None')" ngChecked>
 								    	None
 								  	</label>
 				    			</ul>
@@ -237,18 +237,38 @@
 					ng-mouseenter="showInactiveMenu = true" ng-mouseleave="showInactiveMenu = false">
 						<div>
 							<div class="absolute z1 translucent" ng-class="{opaque: showInactiveMenu}">
-								<span class="fa-stack toolbar-text video-icon" ng-click="$parent.toggleVideo(peerId)">
-									<i class="fa fa-video-camera fa-stack-1x video-icon-font"></i>
-									<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peer.videoEnabled || !peer.hasVideo" ></i>
-								</span>
-								<span class="fa-stack toolbar-text video-icon" ng-click="$parent.toggleAudio(peerId)">
-									<i class="fa fa-microphone fa-stack-1x video-icon-font"></i>
-									<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peer.audioEnabled || !peer.hasAudio"></i>
-								</span>
-								<p class="pointer" style="padding-left:1.0em;" ng-style="{color: $root.users[peerId].color}" ng-click="switchFocusPeer(peerId)">
+								<div>
+									<span class="fa-stack toolbar-text video-icon" data-toggle="dropdown" ng-show="peerId == $root.clientId">
+										<i class="fa fa-video-camera fa-stack-1x video-icon-font" ></i>
+										<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peers[peerId].videoEnabled || !peers[peerId].hasVideo"></i>
+									</span>
+									<ul class="dropdown-menu video-selection-menu">
+					    				<label class="block">
+									    	<input type="radio" name="optionsRadiosInactive" value="Camera" ng-checked="$parent.currentVideoType == 'Camera'" ng-click="setVideo('Camera')" ngChecked>
+									    	Camera
+									  	</label>
+									  	<label class="block">
+									    	<input type="radio" name="optionsRadiosInactive" value="Screen" ng-checked="$parent.currentVideoType == 'Screen'" ng-click="setVideo('Screen')" ngChecked>
+									    	Screen
+									  	</label>
+									  	<label class="block">
+									    	<input type="radio" name="optionsRadiosInactive" value="None" ng-checked="$parent.currentVideoType == 'None'" ng-click="setVideo('None')" ngChecked>
+									    	None
+									  	</label>
+					    			</ul>
+									<span class="fa-stack toolbar-text video-icon" ng-click="$parent.toggleVideo(peerId)" ng-show="peerId != $root.clientId">
+										<i class="fa fa-video-camera fa-stack-1x video-icon-font"></i>
+										<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peer.videoEnabled || !peer.hasVideo" ></i>
+									</span>
+									<span class="fa-stack toolbar-text video-icon" ng-click="$parent.toggleAudio(peerId)">
+										<i class="fa fa-microphone fa-stack-1x video-icon-font"></i>
+										<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peer.audioEnabled || !peer.hasAudio"></i>
+									</span>
+								</div>
+								<span class="pointer video-name" ng-style="{color: $root.users[peerId].color}" ng-click="switchFocusPeer(peerId)">
 									<i class="fa fa-user" ng-show="peerId == $parent.clientId"></i>
 									{{$root.users[peerId].name}}
-								</p>
+								</span>
 							</div>
 						
 							<video class="inactive-video" autoplay ng-src="{{peer.url}}" ng-show="peer.videoEnabled && peer.hasVideo" ng-click="switchFocusPeer(peerId)" video-chat-inactive video-zoom-inactive>

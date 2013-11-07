@@ -13,13 +13,6 @@ app.controller('VideoController', function($scope, $rootScope){
 	$scope.peers = {};
 	$scope.focusPeerId;
 	$rootScope.videoClient.setDelegate($scope);
-	$scope.names = {};
-
-	//  Names
-    $rootScope.$on('NamesChanged', function(event, names){
-    	$scope.names = names;
-    	$scope.safeApply();
-    });
 	
 	$scope.init = function(){
 		//	Restart localstream based on constraints
@@ -37,6 +30,8 @@ app.controller('VideoController', function($scope, $rootScope){
 		
 		if (Object.keys($scope.peers).length == 1)
 			$scope.focusPeerId = peerId;
+
+		$scope.safeApply();
 	}
 
 
@@ -103,6 +98,8 @@ app.controller('VideoController', function($scope, $rootScope){
 
 		if ($scope.constraintsListener != undefined)
 			$scope.constraintsListener.constraintsChanged($scope.constraints);
+
+		$scope.safeApply();
 	}
 
 
