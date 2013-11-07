@@ -14,7 +14,7 @@ app.run(function($rootScope){
 	$rootScope.userClient;
 	$rootScope.userServer;
 
-	$rootScope.debug = true;
+	$rootScope.debug = false;
 	$rootScope.serverPeerId = "";
 	$rootScope.setupTimer;
 
