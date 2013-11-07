@@ -20,5 +20,7 @@ var UserClient = function(client){
 			delegate.onUserInit(message);
 		else if (message.subType == 'ChangeName')
 			delegate.onUserChangeName(message);
+		else if (message.subType == 'Update')
+			delegate.onUserUpdate(message);
 	}
 }
