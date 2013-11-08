@@ -62,6 +62,10 @@ function RTCStarClient(){
     serverConnectionSend("broadcast:"+JSON.stringify(message));
   }
 
+
+
+  /***  PeerJS methods ***/
+
   //  Function to segment messages that are too long
   var serverConnectionSend = function(message){
       if (message.length < messageLimit){
@@ -151,7 +155,9 @@ function RTCStarClient(){
   }
 
 
-   /*** Client Event Handlers ***/
+
+
+  /*** Client Event Handlers ***/
 
   //  Client Open
   function openHandler(){

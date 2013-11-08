@@ -83,10 +83,6 @@ app.run(function($rootScope){
 
 
 	//	User data
-	$rootScope.updateName = function(name){
-		$rootScope.userClient.changeName(name);
-	}
-
 
 	$rootScope.onUserInit = function(message){
 		$rootScope.users = message.users;
@@ -104,6 +100,9 @@ app.run(function($rootScope){
 	}
 
 	//	UI Methods
+	$rootScope.changeName = function(name){
+		$rootScope.userClient.changeName(name);
+	}
 
 	$rootScope.openPDFLink = function(link){
     	$rootScope.$broadcast('OpenPDFLink',link);
