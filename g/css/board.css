@@ -177,3 +177,10 @@
   display:none;
   z-index:100;
 }
+
+
+.zoom-plus-minus {
+  font-size:0.6em !important;
+  top:-0.05em !important;
+  left:-0.15em !important;
+}

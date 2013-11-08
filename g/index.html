@@ -42,13 +42,11 @@
     				<li role="presentation"><a role="menuitem" href="" ng-click="newPlainBoard()">New Plain Board</a></li>
 					<li class="separator"></li>
 					<input id="pdf_file" ng-show="false" type="file" name="pdf_file" accept="application/pdf" on-change-pdf-file></input>
-					<li role="presentation"><a role="menuitem" href=""><span onclick="$('#pdf_file').click();">Upload PDF</span></a></li>
 					<li role="presentation"><a role="menuitem" href="" onclick="$('#pdf_file').click();">Upload PDF</a></li>
     				<li role="presentation"><a role="menuitem" href="" data-toggle="modal" data-target="#openPdfLinkModal">Open PDF Link</a></li>
 
 					<li class="separator"></li>
 					<input id="image_file" ng-show="false" type="file" name="image_file" accept="image/*" on-change-image-file></input>
-					<li role="presentation"><a role="menuitem" href=""><span onclick="$('#image_file').click();">Upload Image</span></a></li>
 					<li role="presentation"><a role="menuitem" href="" onclick="$('#image_file').click();">Upload Image</a></li>
     				<li role="presentation"><a role="menuitem" href="" data-toggle="modal" data-target="#openImageLinkModal">Open Image Link</a></li>
 		    	</ul>
@@ -116,6 +114,21 @@
 							<i class="fa fa-circle-o toolbar-text" ng-show="canvasMode == 'eraser'">
 							</i>
 						</li>
+
+						<li class="separator"></li>
+						<li type="button" class="toolbar-btn"  ng-click="zoomIn()">
+							<span class="fa-stack fa-lg">
+							  	<i class="fa fa-search toolbar-text fa-stack-1x" style="font-size:1.4em"></i>
+							  	<i class="fa fa-plus toolbar-text fa-stack-1x zoom-plus-minus"></i>
+							</span>
+						</li>
+						<li type="button" class="toolbar-btn"  ng-click="zoomOut()">
+							<span class="fa-stack fa-lg">
+							  	<i class="fa fa-search toolbar-text fa-stack-1x" style="font-size:1.4em"></i>
+							  	<i class="fa fa-minus toolbar-text fa-stack-1x zoom-plus-minus"></i>
+							</span>
+						</li>
+
 					
 					</ul>
 				</div>

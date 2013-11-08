@@ -120,6 +120,14 @@ app.controller('BoardController', function($scope, $rootScope){
         $scope.addPlainTab();
   	}
 
+    $scope.zoomIn = function(){
+      $scope.boardClient.updateScale($scope.currentTabIndex, Math.min($scope.tabs[$scope.currentTabIndex].scale + 0.25,4));
+    }
+
+    $scope.zoomOut = function(){
+      $scope.boardClient.updateScale($scope.currentTabIndex, Math.max($scope.tabs[$scope.currentTabIndex].scale - 0.25,0.5));
+    }
+
   	//	Events and Messages
   	$scope.onNewTab = function(message){
   		var tab = new Object();
@@ -127,6 +135,7 @@ app.controller('BoardController', function($scope, $rootScope){
   		tab.canvasData = new Object();
       tab.tabIndex = message.tabIndex;
       tab.coords = message.coords;
+      tab.scale = message.scale;
   		$scope.tabs[message.tabIndex] = tab;
   		$scope.tabsArray.push(tab);
       currentTabIndex = tab.tabIndex;
@@ -151,6 +160,10 @@ app.controller('BoardController', function($scope, $rootScope){
 
     $scope.onUpdateScrollPage = function(message){
       $scope.$broadcast('TabUpdateScrollPage'+message.tabIndex, message);
+    }
+
+    $scope.onUpdateScale = function(message){
+      $scope.$broadcast('TabUpdateScale'+message.tabIndex, message);
     }
 
     $scope.onUpdateCursor = function(message){
