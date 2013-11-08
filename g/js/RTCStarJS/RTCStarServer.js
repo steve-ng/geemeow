@@ -129,7 +129,7 @@ function RTCStarServer(){
 
     //  Reset peers
     peerConnections = {};
-    peerBuffer = {};
+    connBuffer = {};
     
     if (eventHandlers['Open'] != null)
       for (var i in eventHandlers['Open'])
