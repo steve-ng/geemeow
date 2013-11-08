@@ -33,6 +33,7 @@ var BoardServer = function(server){
 		tabs[index].metadata = {sourceType: "Plain", name: "Plain Board "+plainRollingIndex};
 		plainRollingIndex++;
 		tabs[index].coords = {x: 0, y: 0};
+		tabs[index].scale = 1.0;
 		tabs[index].canvasData = []
 		tabsPriv[index] = new Object();
 		tabsPriv[index].peerActions = {}
@@ -66,6 +67,13 @@ var BoardServer = function(server){
 
 				//	Update tab
 				tabs[request.tabIndex].coords = request.coords;
+			}
+
+
+			else if (request.tabSubType == "UpdateScale"){
+
+				//	Update tab
+				tabs[request.tabIndex].scale = request.scale;
 			}
 
 
@@ -159,6 +167,8 @@ var BoardServer = function(server){
 			}
 			tabs[message.tabIndex].coords = {x: 0, y: 0};
 			message.coords = tabs[message.tabIndex].coords;
+			tabs[message.tabIndex].scale = 1.0;
+			message.scale = tabs[message.tabIndex].scale;
 			tabs[message.tabIndex].canvasDataPage = [];
 			tabs[message.tabIndex].canvasData = [];
 			tabs[message.tabIndex].tabIndex = message.tabIndex;

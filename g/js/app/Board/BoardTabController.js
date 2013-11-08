@@ -3,7 +3,6 @@ app.controller('BoardTabController', function($scope,$rootScope) {
   	$scope.lastScrollTime = 0;
   	$scope.boardClient = $scope.$parent.boardClient;
   	$scope.pages = [];
-  	$scope.scale = 1.0;
   	$scope.done = false;
     $scope.cursorData;
     $scope.sendCursorUpdate;
@@ -69,6 +68,12 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 
 	$scope.$on('TabUpdateScrollPage'+$scope.tab.tabIndex, function(event, message){
 		$scope.tab.pageCoords = {coords: message.coords, pageIndex: message.pageIndex};
+		$scope.$digest();
+	});
+
+	//	Zoom handler
+	$scope.$on('TabUpdateScale'+$scope.tab.tabIndex, function(event, message){
+		$scope.tab.scale = message.scale;
 		$scope.$digest();
 	});
 
@@ -240,7 +245,10 @@ app.directive('scrollPosition', function($window) {
 
 app.directive('boardPage', function($window) {
   return function(scope, element, attrs) {
-  	
+  	scope.$watch("$parent.tab.scale", function() {
+      element.resize();
+    });
+
   	element.on('resize',function(e){
   		var tab = scope.$parent.tab;
   		var parent = element.parent();
@@ -249,18 +257,17 @@ app.directive('boardPage', function($window) {
 		var backgroundLayer = element.children().eq(2);
 		var canvasMenu = element.children().eq(3);
 		var parentHeight = parent.parent().height()-1;
+		var tabScale = tab.scale;
 
 	  	if (tab.metadata.sourceType == "PDFLink" || tab.metadata.sourceType == "PDFFile") {
 			var parentWidth = parent.parent().innerWidth()-1-getScrollBarWidth();
 		  	var page = scope.$parent.pages[scope.$index].pdfpage;
-		  	
-		  	var scale = 1.0;
-
+		  
 		  	//	Aspect fill
-		  	var viewport = page.getViewport(scale);
+		  	var viewport = page.getViewport(1.0);
 			var ratioHeight = parentHeight/viewport.height;
 			var ratioWidth = parentWidth/viewport.width;
-			scale = Math.max(ratioWidth, ratioHeight);
+			var scale = tabScale*Math.max(ratioWidth, ratioHeight);
 			//scale = ratioWidth;
 			viewport = page.getViewport(scale);
 
@@ -292,10 +299,9 @@ app.directive('boardPage', function($window) {
         	});
 	  	} else if (tab.metadata.sourceType == "Plain"){
 			var parentWidth = parent.parent().innerWidth()-1;
-		  	var scale = 1.0;
 
-			var pageDisplayWidth = parentWidth;
-			var pageDisplayHeight = parentHeight;
+			var pageDisplayWidth = parentWidth*tabScale;
+			var pageDisplayHeight = parentHeight*tabScale;
 
 		  	element.width(pageDisplayWidth);
 			element.height(pageDisplayHeight);
@@ -307,7 +313,7 @@ app.directive('boardPage', function($window) {
 		  	
 		  	var ratioHeight = parentHeight/image.height;
 			var ratioWidth = parentWidth/image.width;
-			scale = Math.max(ratioWidth, ratioHeight);
+			var scale = Math.max(ratioWidth, ratioHeight)*tabScale;
 			element.width(pageDisplayWidth);
 			element.height(pageDisplayHeight);
 
@@ -324,10 +330,11 @@ app.directive('boardPage', function($window) {
 	  	}
 
 	  	//	Setup canvas init data
-  		if (tab.canvasData[scope.$index] != undefined){
-  			scope.page.canvasController.setCanvasData(tab.canvasData[scope.$index]);
-  			scope.page.canvasController.redraw();
-  		}
+  		if (tab.canvasData[scope.$index] == undefined)
+  			tab.canvasData[scope.$index] = {actions: []};
+  		
+  		scope.page.canvasController.setCanvasData(tab.canvasData[scope.$index]);
+  		scope.page.canvasController.redraw();
 
   		//	Set scroll for parent
   		setTimeout(function(){

@@ -114,6 +114,21 @@
 							<i class="fa fa-circle-o toolbar-text" ng-show="canvasMode == 'eraser'">
 							</i>
 						</li>
+
+						<li class="separator"></li>
+						<li type="button" class="toolbar-btn"  ng-click="zoomIn()">
+							<span class="fa-stack fa-lg">
+							  	<i class="fa fa-search toolbar-text fa-stack-1x" style="font-size:1.4em"></i>
+							  	<i class="fa fa-plus toolbar-text fa-stack-1x zoom-plus-minus"></i>
+							</span>
+						</li>
+						<li type="button" class="toolbar-btn"  ng-click="zoomOut()">
+							<span class="fa-stack fa-lg">
+							  	<i class="fa fa-search toolbar-text fa-stack-1x" style="font-size:1.4em"></i>
+							  	<i class="fa fa-minus toolbar-text fa-stack-1x zoom-plus-minus"></i>
+							</span>
+						</li>
+
 					
 					</ul>
 				</div>

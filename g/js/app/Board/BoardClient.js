@@ -54,6 +54,16 @@ var BoardClient = function(client){
 		client.request(request);
 	}
 
+	this.updateScale = function(tabIndex, scale){
+		var request = new Object();
+		request.type = "Board";
+		request.subType = "Tab";
+		request.tabSubType = "UpdateScale";
+		request.tabIndex = tabIndex;
+		request.scale = scale;
+		client.request(request);
+	}
+
 	this.canvasAction = function(canvasAction){
 		var request = new Object();
 		request.type = "Board";
@@ -72,10 +82,12 @@ var BoardClient = function(client){
 		else if (message.subType == "Tab"){
 			if (message.tabSubType == "UpdateScroll")
 				delegate.onUpdateScroll(message);
-			else if (message.tabSubType == "UpdateScrollPage")
-				delegate.onUpdateScrollPage(message);
 			else if (message.tabSubType == "CanvasAction")
 				delegate.onCanvasAction(message);
+			else if (message.tabSubType == "UpdateScrollPage")
+				delegate.onUpdateScrollPage(message);
+			else if (message.tabSubType == "UpdateScale")
+				delegate.onUpdateScale(message);
 		} 
 		else if (message.subType == "Init")
 			delegate.onInit(message); 
