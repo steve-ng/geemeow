@@ -136,10 +136,10 @@
 				
 				<!-- Board Tab Bar -->
 				<div class="board-tabbar">
-					<ul class="nav nav-tabs room-board-tab-header-list">
+					<ul class="nav nav-tabs board-tab-header-list">
 						<li ng-class="{active: currentTabIndex == tab.tabIndex}" ng-repeat="tab in tabsArray">
-							<a class="room-board-tab-header-list-name" ng-class="{highlight: currentTabIndex == tab.tabIndex}" ng-click="switchTab(tab.tabIndex)">{{tab.metadata.name | truncate:15}}&nbsp;
-								<span class="glyphicon glyphicon-remove-circle room-board-tab-header-close" ng-click="closeTab(tab.tabIndex); $event.stopPropagation();"></span>
+							<a class="board-tab-header-list-name" ng-class="{highlight: currentTabIndex == tab.tabIndex}" ng-click="switchTab(tab.tabIndex)">{{tab.metadata.name | truncate:15}}&nbsp;
+								<span class="glyphicon glyphicon-remove-circle board-tab-header-close" ng-click="closeTab(tab.tabIndex); $event.stopPropagation();"></span>
 							</a>
 						</li>
 					</ul>
