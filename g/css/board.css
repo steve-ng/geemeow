@@ -12,21 +12,22 @@
 }
 #board-content {
     position: absolute;
-    top: 0; bottom: 0; right: 0; left: 0; /*fill parent*/
-    background-color: rgb(200, 200, 200); /*let's see it!*/
+    top: 0; bottom: 0; right: 0; left: 0;
+    background-color: rgb(200, 200, 200); 
     border: 0.1em solid rgba(220,220,220, 1);
     overflow: hidden;
 }
 
-.room-board-tab-header-list{
+.board-tab-header-list{
 	height:100%;
 }
-.room-board-tab-header-list-name{
+.board-tab-header-list-name{
     cursor:pointer;
+    background: white;
     padding-left:0.5em !important;
     padding-right:0.5em !important;
 }
-.room-board-tab-header-close{
+.board-tab-header-close{
 	font-size: 1.5em;
 }
 .board-tab-wrapper{
@@ -35,7 +36,7 @@
     width:100%;
     overflow-x: auto;
     overflow-y: auto;
-    background-color: white;
+    background-color: rgba(240,240,240,1);
 }
 .board-tab-page{
     margin: 0 auto;

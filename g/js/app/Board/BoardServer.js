@@ -37,7 +37,7 @@ var BoardServer = function(server){
 		tabs[index].canvasData = []
 		tabsPriv[index] = new Object();
 		tabsPriv[index].peerActions = {}
-		currentTabIndex = "0";
+		currentTabIndex = index;
 	}
 
 	function initClient(peerId){
