@@ -42,16 +42,16 @@
     				<li role="presentation"><a role="menuitem" href="" ng-click="newPlainBoard()">New Plain Board</a></li>
 					<li class="separator"></li>
 					<input id="pdf_file" ng-show="false" type="file" name="pdf_file" accept="application/pdf" on-change-pdf-file></input>
-					<li role="presentation"><a role="menuitem" href=""><span onclick="$('#pdf_file').click();">Upload PDF</span></a></li>
+					<li role="presentation"><a role="menuitem" href="#" onclick="$('#pdf_file').click();">Upload PDF</a></li>
     				<li role="presentation"><a role="menuitem" href="" data-toggle="modal" data-target="#openPdfLinkModal">Open PDF Link</a></li>
 
 					<li class="separator"></li>
 					<input id="image_file" ng-show="false" type="file" name="image_file" accept="image/*" on-change-image-file></input>
-					<li role="presentation"><a role="menuitem" href=""><span onclick="$('#image_file').click();">Upload Image</span></a></li>
+					<li role="presentation"><a role="menuitem" href="#" onclick="$('#image_file').click();">Upload Image</a></li>
     				<li role="presentation"><a role="menuitem" href="" data-toggle="modal" data-target="#openImageLinkModal">Open Image Link</a></li>
 		    	</ul>
 		  	</li>
- 			<li><a href="">Help</a></li>
+ 			<li><a href="" >Help</a></li>
  			<li class="pull-right"><p class="navbar-text topbar-nav-text">{{$root.users[$root.clientId].name}}</p></li>
 		</ul>
 	</div>
