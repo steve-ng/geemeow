@@ -1,13 +1,16 @@
 function RTCStarServer(){
 
-  /*** Data ***/
+  /*** PeerJS Data ***/
   var serverPeer;
-  var peerConnections, peerBuffer;
+  var peerConnections;
+  this.key = "";
+
+  /** Data **/
+  var connBuffer;
   var eventHandlers = {}; //  Open, Close, Error, ClientEnter, ClientLeave
   var requestHandlers = {};
   var debug = false;
   var messageLimit = 50000;
-  this.key = "";
 
   /*** Public methods ***/
   
@@ -86,21 +89,21 @@ function RTCStarServer(){
 
 
 
-  /*** Internal methods ***/
+  /*** PeerJS methods ***/
 
   //  Send a message to a peer
   function send(peerId, message){
-      peerConnectionSend(peerId, message);
+      clientConnectionSend(peerId, message);
   }
 
   //  Broadcast a message to all connected clients
   function broadcast(message){
       for (var peerId in peerConnections)
-        peerConnectionSend(peerId, message);
+        clientConnectionSend(peerId, message);
   }
 
   //  Function to segment messages that are too long
-  var peerConnectionSend = function(peerId, message){
+  var clientConnectionSend = function(peerId, message){
       if (message.length < messageLimit){
           peerConnections[peerId].send(message);
       } else {
@@ -118,10 +121,6 @@ function RTCStarServer(){
           peerConnections[peerId].send("segmentend:"+message);
       }
   }
-
-
-
-  /*** PeerJS Event Handlers ***/
 
   //  PeerJS Open
   function peerjsOpenHandler(){
@@ -163,102 +162,93 @@ function RTCStarServer(){
       //  Store connection
       peerConnections[id] = conn;
 
-      //  ClientEnter handler
-      if (eventHandlers['ClientEnter'] != null)
-          for (var i in eventHandlers['ClientEnter'])
-              eventHandlers['ClientEnter'][i](id);
-
-      //  Broadcast to all users new user has joined
-      var message = new RoomRTCMessage(id);
-      message.type = "ClientEnter";
-      broadcast("event:"+JSON.stringify(message));
-
-      //  Send user list with ids to new connection
-      var message = new RoomRTCMessage(Object.keys(peerConnections));
-      message.type = "ClientList";
-      conn.send("event:"+JSON.stringify(message));
+      //  Open Handler
+      connOpenHandler(id);
   
-
       /*** Connection Handlers ***/
-      
-      //  Connection Data
-      var connDataHandler = function(data){
-          if (debug)
-            console.log(data);
-
-          var datatype = data.substring(0,data.indexOf(":"));
-          var messageString = data.substring(data.indexOf(":")+1, data.length);
-
-          //  Segmented message
-          if (datatype == 'segment'){
-              peerBuffer[id] += messageString;
-              return;
-          } else if (datatype == 'segmentstart'){
-              peerBuffer[id] = messageString;
-              return;
-          } else if (datatype == 'segmentend'){
-              peerBuffer[id] += messageString;
-              connDataHandler(peerBuffer[id]);
-              delete peerBuffer[id];
-              return;
-          }
-
-          //  Normal message
-          var message = JSON.parse(messageString);
-          message.peerId = id;
-          message.timestamp = new Date().getTime();
-
-          if (datatype == 'broadcast'){
-            broadcast("message:"+messageString);
-          } else if (datatype == 'request'){
-            var type = message['type'];
-            if (requestHandlers[type] != null)
-              for (var i in requestHandlers[type])
-                requestHandlers[type][i](message);
-          } 
-      }
-      conn.on('data', function(data){
-          connDataHandler(data);
-      });
-
-      //  Connection Close
-      conn.on('close', function(){
-        if (peerConnections[id] == null)
-          return;
-
-        delete peerConnections[id];
-
-        if (eventHandlers['ClientLeave'] != null)
-          for (var i in eventHandlers['ClientLeave'])
-            eventHandlers['ClientLeave'][i](id);
-
-        var message = new RoomRTCMessage(id);
-        message.type = "ClientLeave";
-        broadcast("event:"+JSON.stringify(message));
-      });
-
-      //  Connection Error
+      conn.on('data', function(data){connDataHandler(id, data);});
+      conn.on('close', function(){connCloseHandler(id);});
       conn.on('error', function(err){
-        if (peerConnections[id] == null)
-          return;
-        
         delete peerConnections[id];
-
-        if (eventHandlers['ClientLeave'] != null)
-          for (var i in eventHandlers['ClientLeave'])
-            eventHandlers['ClientLeave'][i](err);
-
-        var message = new RoomRTCMessage(id);
-        message.type = "ClientLeave";
-        broadcast("event:"+JSON.stringify(message));
-
+        connCloseHandler(id);
       });
     });
   }
 
 
+  /** Generic Server Methods**/
+
+  //  Connection Open
+  var connOpenHandler = function(id){
+       //  Broadcast to all users new user has joined
+      var message = new Message(id);
+      message.type = "ClientEnter";
+      broadcast("event:"+JSON.stringify(message));
+
+      //  Send user list with ids to new connection
+      var message = new Message(Object.keys(peerConnections));
+      message.type = "ClientList";
+      send(id, "event:"+JSON.stringify(message));
+
+      //  ClientEnter handler
+      if (eventHandlers['ClientEnter'] != null)
+          for (var i in eventHandlers['ClientEnter'])
+              eventHandlers['ClientEnter'][i](id);
+  }
+
+  //  Connection Data
+  var connDataHandler = function(id, data){
+      if (debug)
+        console.log(data);
+
+      var datatype = data.substring(0,data.indexOf(":"));
+      var messageString = data.substring(data.indexOf(":")+1, data.length);
+
+      //  Segmented message
+      if (datatype == 'segment'){
+          connBuffer[id] += messageString;
+          return;
+      } else if (datatype == 'segmentstart'){
+          connBuffer[id] = messageString;
+          return;
+      } else if (datatype == 'segmentend'){
+          connBuffer[id] += messageString;
+          connDataHandler(connBuffer[id]);
+          delete connBuffer[id];
+          return;
+      }
+
+      //  Normal message
+      var message = JSON.parse(messageString);
+      message.peerId = id;
+      message.timestamp = new Date().getTime();
+
+      if (datatype == 'broadcast'){
+        broadcast("message:"+messageString);
+      } else if (datatype == 'request'){
+        var type = message['type'];
+        if (requestHandlers[type] != null)
+          for (var i in requestHandlers[type])
+            requestHandlers[type][i](message);
+      } 
+  }
+
+  //  Connection Close
+  var connCloseHandler = function(id){
+    if (peerConnections[id] == null)
+        return;
+
+      if (eventHandlers['ClientLeave'] != null)
+        for (var i in eventHandlers['ClientLeave'])
+          eventHandlers['ClientLeave'][i](id);
+
+      var message = new Message(id);
+      message.type = "ClientLeave";
+      broadcast("event:"+JSON.stringify(message));
+  }
+
   /*** Messages structure ***/
-  function RoomRTCMessage(data){
+  function Message(data){
     this.type = "";
     this.data = data;
     this.timestamp = new Date().getTime();

@@ -52,7 +52,8 @@
 		    	</ul>
 		  	</li>
  			<li><a href="">Help</a></li>
- 			<li class="pull-right"><p class="navbar-text topbar-nav-text">{{$root.users[$root.clientId].name}}</p></li>
+ 			<li class="pull-right" data-toggle="modal" data-target="#changeNameModal"><a href="">{{$root.users[$root.clientId].name}}</a></li>
+
 		</ul>
 	</div>
 
@@ -358,7 +359,24 @@
 	  </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 
-
+	<!-- Modal for change name -->
+	<div id="changeNameModal" class="modal fade">
+	  <div class="modal-dialog modal-dialog-center">
+	    <div class="modal-content">
+			<div class="modal-header">
+			  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			  <h4 class="modal-title">Set Display Name</h4>
+			</div>
+			<div class="modal-body">
+				<input ng-model="changename" class="form-control" type="text" placeholder="Enter display name here.." ng-value="$root.users[$root.clientId].name"></input>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="changeName(changename)">Save</button>
+			</div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 
 
 
@@ -414,4 +432,8 @@
 	
 
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> 4986c30... refactor RTCstar, updated username ui, changed canvas stroke to bezier

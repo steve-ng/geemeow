@@ -42,7 +42,8 @@ var CanvasController = function(canvasJquery, requestCanvasAction, toolDataSourc
 		canvasAction.type = "AddStroke";
 		canvasAction.points = [{x: (mouseX-1)/canvasWidth, y: (mouseY-1)/canvasHeight},
 								{x: mouseX/canvasWidth, y: mouseY/canvasHeight},
-								{x: (mouseX+1)/canvasWidth, y: (mouseY+1)/canvasHeight}];
+								{x: mouseX/canvasWidth, y: mouseY/canvasHeight},
+								{x: (mouseX+1)/canvasWidth, y: (mouseY+1)/canvasHeight},];
 		canvasAction.size = toolDataSource.getStrokeSize();
 		canvasAction.color = toolDataSource.getStrokeColor();
 		canvasAction.peakCoord = {x: (mouseX-1)/canvasWidth, y: (mouseY-1)/canvasHeight};
@@ -151,7 +152,7 @@ var CanvasController = function(canvasJquery, requestCanvasAction, toolDataSourc
 
 	//	Internal methods
 	var drawSection = function(canvasData, i){
-		if (i % 2 == 1)
+		if (i % 3 != 0)
 			return;
 
 		var canvasWidth = canvasJquery.width();
@@ -175,8 +176,12 @@ var CanvasController = function(canvasJquery, requestCanvasAction, toolDataSourc
 		}
 
 		var points = canvasData.points;
-		context.moveTo(points[i-2].x*canvasWidth, points[i-2].y*canvasHeight);
-		context.quadraticCurveTo(points[i-1].x*canvasWidth, points[i-1].y*canvasHeight, points[i].x*canvasWidth, points[i].y*canvasHeight);
+		//context.moveTo(points[i-2].x*canvasWidth, points[i-2].y*canvasHeight);
+		//context.quadraticCurveTo(points[i-1].x*canvasWidth, points[i-1].y*canvasHeight, points[i].x*canvasWidth, points[i].y*canvasHeight);
+		context.moveTo(points[i-3].x*canvasWidth, points[i-3].y*canvasHeight);
+		context.bezierCurveTo(points[i-2].x*canvasWidth, points[i-2].y*canvasHeight, 
+									points[i-1].x*canvasWidth, points[i-1].y*canvasHeight, 
+									points[i].x*canvasWidth, points[i].y*canvasHeight);
 		//context.moveTo(points[i-1].x*canvasWidth, points[i-1].y*canvasHeight);
 		//context.lineTo(points[i].x*canvasWidth, points[i].y*canvasHeight);
 
@@ -204,16 +209,20 @@ var CanvasController = function(canvasJquery, requestCanvasAction, toolDataSourc
 		}
 
 		var points = canvasData.points;
-		for (var i = 2; i < points.length; i++){
-			if (i % 2 == 1)
+		for (var i = 3; i < points.length; i++){
+			if (i % 3 != 0)
 				continue;
 		
 
 			context.beginPath();
 			
 
-			context.moveTo(points[i-2].x*canvasWidth, points[i-2].y*canvasHeight);
-			context.quadraticCurveTo(points[i-1].x*canvasWidth, points[i-1].y*canvasHeight, points[i].x*canvasWidth, points[i].y*canvasHeight);
+			//context.moveTo(points[i-2].x*canvasWidth, points[i-2].y*canvasHeight);
+			//context.quadraticCurveTo(points[i-1].x*canvasWidth, points[i-1].y*canvasHeight, points[i].x*canvasWidth, points[i].y*canvasHeight);
+			context.moveTo(points[i-3].x*canvasWidth, points[i-3].y*canvasHeight);
+			context.bezierCurveTo(points[i-2].x*canvasWidth, points[i-2].y*canvasHeight, 
+									points[i-1].x*canvasWidth, points[i-1].y*canvasHeight, 
+									points[i].x*canvasWidth, points[i].y*canvasHeight);
 			//context.moveTo(points[i-1].x*canvasWidth, points[i-1].y*canvasHeight);
 			//context.lineTo(points[i].x*canvasWidth, points[i].y*canvasHeight);
 			context.stroke();
