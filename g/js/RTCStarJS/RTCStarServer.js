@@ -213,7 +213,7 @@ function RTCStarServer(){
           return;
       } else if (datatype == 'segmentend'){
           connBuffer[id] += messageString;
-          connDataHandler(connBuffer[id]);
+          connDataHandler(id, connBuffer[id]);
           delete connBuffer[id];
           return;
       }
