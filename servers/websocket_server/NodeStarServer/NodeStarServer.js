@@ -1,19 +1,23 @@
-function RTCStarServer(){
+
+var BoardServer = require('./BoardServer');
+var ChatServer = require('./ChatServer');
+var UserServer = require('./UserServer');
+
+module.exports = NodeStarServer;
+
+
+function NodeStarServer(serverPeerId){
 
   /*** PeerJS Data ***/
-  var serverPeer;
-  var peerConnections;
-  this.key = "";
-  this.host = "0.peerjs.com";
-  this.port = 9000;
-  this.secure = false;
+  var peerSockets = {};
 
   /** Data **/
-  var connBuffer;
+  var connBuffer = {};
   var eventHandlers = {}; //  Open, Close, Error, ClientEnter, ClientLeave
   var requestHandlers = {};
   var debug = false;
   var messageLimit = 50000;
+
 
   /*** Public methods ***/
   
@@ -53,26 +57,6 @@ function RTCStarServer(){
     }
   } 
 
-  //  Starts the server
-  this.start = function(){
-    //  Create peer
-    var options = {key: this.key, host: this.host, port: this.port, secure: this.secure};
-    if (this.key.length == 0)
-      delete options.key;
-    serverPeer = new Peer(options);
-
-    //  Event handlers
-    serverPeer.on('open', peerjsOpenHandler);
-    serverPeer.on('close', peerjsCloseHandler);
-    serverPeer.on('error', peerjsErrorHandler);
-    serverPeer.on('connection', peerjsConnectionHandler);
-  }
-
-  //  Stops the server
-  this.stop = function(){
-    serverPeer.destroy();
-  }
-
   //  Sends a message to a particular client
   this.send = function(peerId, message){
     send(peerId, "message:"+JSON.stringify(message));
@@ -84,8 +68,8 @@ function RTCStarServer(){
   }
  
   //  Returns the PeerJS ID of server
-  this.getServerPeerId = function(){
-    return serverPeer.id;
+  this.getServerNodeId = function(){
+    return serverPeerId;
   }
 
 
@@ -99,81 +83,47 @@ function RTCStarServer(){
 
   //  Broadcast a message to all connected clients
   function broadcast(message){
-      for (var peerId in peerConnections)
+      for (var peerId in peerSockets)
         clientConnectionSend(peerId, message);
   }
 
   //  Function to segment messages that are too long
   var clientConnectionSend = function(peerId, message){
       if (message.length < messageLimit){
-          peerConnections[peerId].send(message);
+          peerSockets[peerId].emit('data', message);
       } else {
           //  First segment
-          peerConnections[peerId].send("segmentstart:"+message.substring(0, messageLimit));
+          peerSockets[peerId].emit('data', "segmentstart:"+message.substring(0, messageLimit));
           message = message.substring(messageLimit);
 
           while (message.length > messageLimit){
-             console.log(message.substring(0, messageLimit).length);
-              peerConnections[peerId].send("segment:"+message.substring(0, messageLimit));
+              peerSockets[peerId].emit('data', "segment:"+message.substring(0, messageLimit));
               message = message.substring(messageLimit); 
           }
 
           //  Last segment
-          peerConnections[peerId].send("segmentend:"+message);
+          peerSockets[peerId].emit('data', "segmentend:"+message);
       }
   }
 
-  //  PeerJS Open
-  function peerjsOpenHandler(){
-    if (debug)
-      console.log("Server started, id: "+serverPeer.id);
-
-    //  Reset peers
-    peerConnections = {};
-    connBuffer = {};
-    
-    if (eventHandlers['Open'] != null)
-      for (var i in eventHandlers['Open'])
-        eventHandlers['Open'][i](serverPeer.id);
-  }
 
 
-  //  PeerJS Close
-  function peerjsCloseHandler(){
-    if (eventHandlers['Close'] != null)
-      for (var i in eventHandlers['Close'])
-        eventHandlers['Close'][i]();
-  }
-
-  //  PeerJS Error
-  function peerjsErrorHandler(err){
-    if (eventHandlers['Error'] != null)
-      for (var i in eventHandlers['Error'])
-        eventHandlers['Error'][i](err);
-  }
-
-  //  PeerJS Connection
-  function peerjsConnectionHandler(conn){
-    conn.on('open', function(){
+  //  Socket Connection
+  this.socketOpenHandler = function(socket){
       if (debug)
-        console.log("New peer: "+conn.peer);
+        console.log("New peer: "+socket.peerId);
 
-      var id = conn.peer;
+      //  Store connection      
+      var id = socket.peerId;
 
-      //  Store connection
-      peerConnections[id] = conn;
+      peerSockets[id] = socket;
 
       //  Open Handler
       connOpenHandler(id);
   
       /*** Connection Handlers ***/
-      conn.on('data', function(data){connDataHandler(id, data);});
-      conn.on('close', function(){connCloseHandler(id);});
-      conn.on('error', function(err){
-        delete peerConnections[id];
-        connCloseHandler(id);
-      });
-    });
+      socket.on('data', function(data){connDataHandler(id, data);});
+      socket.on('disconnect', function(){connCloseHandler(id);});
   }
 
 
@@ -187,7 +137,7 @@ function RTCStarServer(){
       broadcast("event:"+JSON.stringify(message));
 
       //  Send user list with ids to new connection
-      var message = new Message(Object.keys(peerConnections));
+      var message = new Message(Object.keys(peerSockets));
       message.type = "ClientList";
       send(id, "event:"+JSON.stringify(message));
 
@@ -236,7 +186,7 @@ function RTCStarServer(){
 
   //  Connection Close
   var connCloseHandler = function(id){
-    if (peerConnections[id] == null)
+    if (peerSockets[id] == null)
         return;
 
       if (eventHandlers['ClientLeave'] != null)
@@ -254,4 +204,27 @@ function RTCStarServer(){
     this.data = data;
     this.timestamp = new Date().getTime();
   }
+
+
+
+  //  Setup
+  var chatServer = new ChatServer(this);
+  var boardServer = new BoardServer(this);
+  var userServer = new UserServer(this);
+
+  //  PeerJS Open
+  function peerjsOpenHandler(){
+    if (debug)
+      console.log("Server started, id: "+serverPeerId);
+
+    //  Reset peers
+    peerConnections = {};
+    connBuffer = {};
+    
+    if (eventHandlers['Open'] != null)
+      for (var i in eventHandlers['Open'])
+        eventHandlers['Open'][i](serverPeerId);
+  }
+  peerjsOpenHandler();
+
 }

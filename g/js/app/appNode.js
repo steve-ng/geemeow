@@ -1,12 +1,8 @@
-<<<<<<< HEAD
-var apikey = 'fxv643daihuuwhfr';
-=======
 //var apikey = 'fxv643daihuuwhfr';
 var apikey = '';
 var apihost = "ec2-54-254-128-239.ap-southeast-1.compute.amazonaws.com";
 var apiport = 3216;
 
->>>>>>> 2bc7a500f051ce6eab4346fda07201be8b23af94
 var app = angular.module('Geemeow', ['prettyDateFilter', 'truncateFilter']);
 var rootScope;
 
@@ -30,36 +26,26 @@ app.run(function($rootScope){
 
 	//	Setup
 	function setup(){
-		if (window.location.hash == ""){
-			setupServer();
-			setupClient();
-		} else {
-			setupClient();
-			$rootScope.serverPeerId = window.location.hash.substring(1);
-		    $rootScope.client.start($rootScope.serverPeerId);
-		}
+		setupClient();
+		$rootScope.serverPeerId = window.location.hash.substring(1);
+		console.log("Connecting to : "+$rootScope.serverPeerId);
+		$rootScope.client.start($rootScope.serverPeerId);
 	}
 	setup();
 
 
 	function setupClient(){
-		$rootScope.setupTimer = setTimeout(
-			function(){
-				window.location.href = "";
-			}
-		, 10000);
-		$rootScope.client = new RTCStarClient();
+		$rootScope.client = new NodeStarClient();
 		$rootScope.client.key = apikey;
-<<<<<<< HEAD
-=======
 		$rootScope.client.host = apihost;
 		$rootScope.client.port = apiport;
->>>>>>> 2bc7a500f051ce6eab4346fda07201be8b23af94
 	    $rootScope.client.debug($rootScope.debug);
-	    $rootScope.client.onClientEvent('Open',function(clientPeerId){
+	    $rootScope.client.onClientEvent('Open',function(clientPeerId, serverPeerId){
 			$("#loading-screen").hide();
 			$("#app").show();
 			$rootScope.clientId = clientPeerId;
+			$rootScope.serverPeerId = serverPeerId;
+			window.location.hash = $rootScope.serverPeerId;
 
 			clearTimeout($rootScope.setupTimer);
 	    });
@@ -71,34 +57,6 @@ app.run(function($rootScope){
 	    $rootScope.userClient = new UserClient($rootScope.client);
 	    $rootScope.userClient.setDelegate($rootScope);
 	}
-
-
-	function setupServer(){
-		$rootScope.server = new RTCStarServer();
-		$rootScope.server.key = apikey;
-<<<<<<< HEAD
-=======
-		$rootScope.server.host = apihost;
-		$rootScope.server.port = apiport;
->>>>>>> 2bc7a500f051ce6eab4346fda07201be8b23af94
-		$rootScope.server.debug($rootScope.debug);
-		$rootScope.server.onServerEvent('Open', function(serverPeerId){
-			$rootScope.serverPeerId = serverPeerId;
-			window.location.hash = $rootScope.serverPeerId;
-			
-			//	Also start client
-	    	$rootScope.client.start($rootScope.serverPeerId);
-		});
-
-	    //	Plugins
-	    $rootScope.chatServer = new ChatServer($rootScope.server);
-	    $rootScope.boardServer = new BoardServer($rootScope.server);
-	    $rootScope.userServer = new UserServer($rootScope.server);
-
-	    //	Start
-		$rootScope.server.start();
-	}
-
 
 	//	User data
 

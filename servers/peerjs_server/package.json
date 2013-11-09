@@ -1,0 +1,9 @@
+{
+    "name": "peerjs-server",
+    "version": "0.0.0",
+    "description": "peerjs-server",
+    "dependencies": {
+        "peer": "latest"
+    },
+    "author": "hendy"
+}

@@ -1,7 +1,8 @@
 
-function RTCStarClient(){
+function NodeStarClient(){
 
   /*** Data ***/
+  var self = this;
   var clientPeer;
   var serverPeerId;
   var serverConnection, serverBuffer;
@@ -9,10 +10,14 @@ function RTCStarClient(){
   var messageHandlers = {};
   var debug = false;
   var messageLimit = 50000;
+  var socket;
   this.key = "";
   this.host = "0.peerjs.com";
   this.port = 9000;
   this.secure = false;
+  this.socketHost = "http://ec2-54-254-128-239.ap-southeast-1.compute.amazonaws.com";
+  //this.socketHost = "http://localhost";
+  this.socketPort = 3217;
 
   /*** Public methods ***/
   this.debug = function(d){
@@ -68,22 +73,19 @@ function RTCStarClient(){
   //  Function to segment messages that are too long
   var serverConnectionSend = function(message){
       if (message.length < messageLimit){
-          serverConnection.send(message);
+          serverConnection.emit('data', message);
       } else {
           //  First segment
-          console.log(message.substring(0, messageLimit));
-          serverConnection.send("segmentstart:"+message.substring(0, messageLimit));
+          serverConnection.emit('data', "segmentstart:"+message.substring(0, messageLimit));
           message = message.substring(messageLimit);
 
           while (message.length > messageLimit){
-          console.log(message.substring(0, messageLimit));
-            serverConnection.send("segment:"+message.substring(0, messageLimit));
+            serverConnection.emit('data', "segment:"+message.substring(0, messageLimit));
             message = message.substring(messageLimit); 
           }
 
           //  Last segment
-          console.log(message);
-          serverConnection.send("segmentend:"+message);
+          serverConnection.emit('data', "segmentend:"+message);
       }
   }
 
@@ -93,14 +95,10 @@ function RTCStarClient(){
     var options = {key: this.key, host: this.host, port: this.port, secure: this.secure};
     if (this.key.length == 0)
       delete options.key;
-    
     clientPeer = new Peer(options);
     serverPeerId = serverId;
 
-    //  Event handlers
     clientPeer.on('open', peerjsOpenHandler);
-    clientPeer.on('close', peerjsCloseHandler);
-    clientPeer.on('error', peerjsErrorHandler);
     clientPeer.on('call', peerjsCallHandler);
   }
 
@@ -128,26 +126,12 @@ function RTCStarClient(){
     if (debug)
       console.log("Client started, id: "+clientPeer.id);
 
-    //  Connect to server
-    serverConnection = clientPeer.connect(serverPeerId);
+    //  Connect to 
+    serverConnection = io.connect(self.socketHost+":"+self.socketPort);
+    serverConnection.on('ready', readyHandler);
     serverConnection.on('open', openHandler);
     serverConnection.on('data', dataHandler);
-    serverConnection.on('close', closeHandler);
-    serverConnection.on('error', errorHandler);
-  }
-
-  //  PeerJS Close
-  function peerjsCloseHandler(){
-    if (eventHandlers['Close'] != null)
-      for (var i in eventHandlers['Close'])
-        eventHandlers['Close'][i]();
-  }
-
-  //  PeerJS Error
-  function peerjsErrorHandler(err){
-    if (eventHandlers['Error'] != null)
-      for (var i in eventHandlers['Error'])
-        eventHandlers['Error'][i](err);
+    serverConnection.on('disconnect', closeHandler);
   }
 
   //  Client Call
@@ -162,8 +146,13 @@ function RTCStarClient(){
 
   /*** Client Event Handlers ***/
 
+  //  Client Ready
+  function readyHandler(){
+    serverConnection.emit('connect', {serverId: serverPeerId, peerId: clientPeer.id});
+  }
+
   //  Client Open
-  function openHandler(){
+  function openHandler(serverPeerId){
     if (debug)
       console.log("Client connected, id: "+clientPeer.id);
     
@@ -172,18 +161,12 @@ function RTCStarClient(){
         eventHandlers['Open'][i](clientPeer.id, serverPeerId);
   }
 
+
     //  Client Close
   function closeHandler(){
     if (eventHandlers['Close'] != null)
       for (var i in eventHandlers['Close'])
         eventHandlers['Close'][i](serverPeerId);
-  }
-
-    //  Client Error
-  function errorHandler(){
-    if (eventHandlers['Error'] != null)
-      for (var i in eventHandlers['Error'])
-        eventHandlers['Error'][i](serverPeerId);
   }
 
   //  Client Data
