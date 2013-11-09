@@ -4,7 +4,8 @@
     "description": "geemeow-server",
     "dependencies": {
         "socket.io": "latest",
-        "express": "latest"
+        "express": "latest",
+        "crypto": "latest"
     },
     "author": "hendy"
 }

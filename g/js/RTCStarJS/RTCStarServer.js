@@ -4,6 +4,9 @@ function RTCStarServer(){
   var serverPeer;
   var peerConnections;
   this.key = "";
+  this.host = "0.peerjs.com";
+  this.port = 9000;
+  this.secure = false;
 
   /** Data **/
   var connBuffer;
@@ -16,11 +19,6 @@ function RTCStarServer(){
   
   this.debug = function(d){
     debug = d;
-  }
-
-  
-  this.setHost = function(host){
-    serverPeer.host = host;
   }
 
   // Adds a handler to a particular server event
@@ -58,7 +56,10 @@ function RTCStarServer(){
   //  Starts the server
   this.start = function(){
     //  Create peer
-    serverPeer = new Peer({key: this.key});
+    var options = {key: this.key, host: this.host, port: this.port, secure: this.secure};
+    if (this.key.length == 0)
+      delete options.key;
+    serverPeer = new Peer(options);
 
     //  Event handlers
     serverPeer.on('open', peerjsOpenHandler);

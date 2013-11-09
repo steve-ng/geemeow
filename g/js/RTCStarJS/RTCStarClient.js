@@ -10,14 +10,13 @@ function RTCStarClient(){
   var debug = false;
   var messageLimit = 50000;
   this.key = "";
+  this.host = "0.peerjs.com";
+  this.port = 9000;
+  this.secure = false;
 
   /*** Public methods ***/
   this.debug = function(d){
     debug = d;
-  }
-
-  this.setHost = function(host){
-    clientPeer.host = host;
   }
 
   //  Adds a handler to a particular client event
@@ -91,7 +90,10 @@ function RTCStarClient(){
   //  To start the client
   this.start = function(serverId){
     //  Create peer
-    clientPeer = new Peer({key: this.key}, {secure: true});
+    var options = {key: this.key, host: this.host, port: this.port, secure: this.secure};
+    if (this.key.length == 0)
+      delete options.key;
+    clientPeer = new Peer(options);
     serverPeerId = serverId;
 
     //  Event handlers
@@ -166,7 +168,7 @@ function RTCStarClient(){
     
     if (eventHandlers['Open'] != null)
       for (var i in eventHandlers['Open'])
-        eventHandlers['Open'][i](clientPeer.id);
+        eventHandlers['Open'][i](clientPeer.id, serverPeerId);
   }
 
     //  Client Close
