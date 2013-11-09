@@ -1,12 +1,8 @@
-<<<<<<< HEAD
+
 var apikey = 'fxv643daihuuwhfr';
-=======
-//var apikey = 'fxv643daihuuwhfr';
-var apikey = '';
 var apihost = "ec2-54-254-128-239.ap-southeast-1.compute.amazonaws.com";
 var apiport = 3216;
 
->>>>>>> 2bc7a500f051ce6eab4346fda07201be8b23af94
 var app = angular.module('Geemeow', ['prettyDateFilter', 'truncateFilter']);
 var rootScope;
 
@@ -50,11 +46,8 @@ app.run(function($rootScope){
 		, 10000);
 		$rootScope.client = new RTCStarClient();
 		$rootScope.client.key = apikey;
-<<<<<<< HEAD
-=======
 		$rootScope.client.host = apihost;
 		$rootScope.client.port = apiport;
->>>>>>> 2bc7a500f051ce6eab4346fda07201be8b23af94
 	    $rootScope.client.debug($rootScope.debug);
 	    $rootScope.client.onClientEvent('Open',function(clientPeerId){
 			$("#loading-screen").hide();
@@ -76,11 +69,8 @@ app.run(function($rootScope){
 	function setupServer(){
 		$rootScope.server = new RTCStarServer();
 		$rootScope.server.key = apikey;
-<<<<<<< HEAD
-=======
 		$rootScope.server.host = apihost;
 		$rootScope.server.port = apiport;
->>>>>>> 2bc7a500f051ce6eab4346fda07201be8b23af94
 		$rootScope.server.debug($rootScope.debug);
 		$rootScope.server.onServerEvent('Open', function(serverPeerId){
 			$rootScope.serverPeerId = serverPeerId;
