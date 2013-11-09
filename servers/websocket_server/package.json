@@ -1,0 +1,10 @@
+{
+    "name": "node-geemeow-server",
+    "version": "0.0.0",
+    "description": "geemeow-server",
+    "dependencies": {
+        "socket.io": "latest",
+        "express": "latest"
+    },
+    "author": "hendy"
+}
