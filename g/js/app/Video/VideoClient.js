@@ -102,7 +102,7 @@ var VideoClient = function(client){
 			navigator.getMedia (constraints, gotStream,
 		        // errorCallback
 		        function(err) {
-		         	console.log("The following error occured: " + err);
+		         	console.log(err);
 		        }
 		    );
 		}
