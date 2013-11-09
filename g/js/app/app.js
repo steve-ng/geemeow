@@ -1,4 +1,8 @@
-var apikey = 'fxv643daihuuwhfr';
+//var apikey = 'fxv643daihuuwhfr';
+var apikey = '';
+var apihost = "ec2-54-254-128-239.ap-southeast-1.compute.amazonaws.com";
+var apiport = 3216;
+
 var app = angular.module('Geemeow', ['prettyDateFilter', 'truncateFilter']);
 var rootScope;
 
@@ -42,6 +46,8 @@ app.run(function($rootScope){
 		, 10000);
 		$rootScope.client = new RTCStarClient();
 		$rootScope.client.key = apikey;
+		$rootScope.client.host = apihost;
+		$rootScope.client.port = apiport;
 	    $rootScope.client.debug($rootScope.debug);
 	    $rootScope.client.onClientEvent('Open',function(clientPeerId){
 			$("#loading-screen").hide();
@@ -63,6 +69,8 @@ app.run(function($rootScope){
 	function setupServer(){
 		$rootScope.server = new RTCStarServer();
 		$rootScope.server.key = apikey;
+		$rootScope.server.host = apihost;
+		$rootScope.server.port = apiport;
 		$rootScope.server.debug($rootScope.debug);
 		$rootScope.server.onServerEvent('Open', function(serverPeerId){
 			$rootScope.serverPeerId = serverPeerId;
@@ -124,28 +132,5 @@ app.run(function($rootScope){
     	$rootScope.$broadcast('UploadImage', file);
 	}
 
+
 });
-
-
-//	Controller for Side Bar
-app.controller('SideBarController', ['$scope', function($scope){
-  	$scope.widgetID = "chat-widget";
-
-	$scope.switchWidget = function(widgetID){
-		$scope.widgetID = widgetID;
-		$scope.safeApply();
-	}
-
-	//	Safe Apply
-  	$scope.safeApply = function(fn) {
-	  var phase = this.$root.$$phase;
-	  if(phase == '$apply' || phase == '$digest') {
-	    if(fn && (typeof(fn) === 'function')) {
-	      fn();
-	    }
-	  } else {
-	    this.$apply(fn);
-	  }
-	};
-}]);
-

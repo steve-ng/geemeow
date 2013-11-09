@@ -294,42 +294,33 @@
 				</div>
 			</div>
 
-			<!-- Sidebar Tab -->
-			<div ng-controller="SideBarController">
-				<div class="sidebar-tab">
-					<ul class="nav nav-tabs">
-						<li ng-class="{active: widgetID=='chat-widget'}" ng-click="switchWidget('chat-widget');"><a href="">Chat</a></li>
-						<li ng-class="{active: widgetID=='folder-widget'}" ng-click="switchWidget('folder-widget');"><a href="">Folder</a></li>
-					</ul>
-				</div>
-
-				<!-- Sidebar Main -->
-				<div class="sidebar-main">
-
-					<!-- Chat Widget -->
-					<div id="chat-widget" class="sidebar-main-tab" ng-show="widgetID=='chat-widget'" ng-controller="ChatController">
-						<div class="chat-messages" chat-scroll>
-							<div class="chat-message" ng-repeat="chat in chatHistory">
-								<p ng-style="{color: $root.users[chat.peerId].color}" class="chat-message-name">{{$root.users[chat.peerId].name}}
-									<span class="chat-message-time">{{chat.timestamp | prettyDate}}</span>
-								</p>
-								<textarea readonly class="chat-message-text" chat-message-text>{{chat.text}}</textarea>
-							</div>
-						</div>
-  						<textarea rows="1" class="chat-message-input" type="text" ng-model="text" placeholder="Type a message.." chat-input></textarea>
-					</div>
-
-					<!-- Folder Widget -->
-					<div id="folder-widget" class="sidebar-main-tab" ng-show="widgetID=='folder-widget'">
-					</div>
-				</div>
-			</div>
+			
 		</div>
 	</div>
 
 
+	<!-- ChatWidget -->
+	<div ng-controller="ChatController">
+		<div class="chat-widget" ng-class="{chatWidgetHide: !showChatWidget}">
+			<div class="chat-widget-title" ng-class="{smallChatTitle: !showChatWidget}" ng-click="toggleShowChatWidget()">
+				<span class="touchnone">Chat</span>
+				<span class="touchnone chat-widget-title-right"><i class="fa fa-minus"></i></span>
+			</div>
 
-
+			<!-- Chat Widget -->
+			<div id="chat-widget" class="chat-widget-content" ng-show="showChatWidget">
+				<div class="chat-messages" chat-scroll>
+					<div class="chat-message" ng-repeat="chat in chatHistory">
+						<p ng-style="{color: $root.users[chat.peerId].color}" class="chat-message-name">{{$root.users[chat.peerId].name}}
+							<span class="chat-message-time">{{chat.timestamp | prettyDate}}</span>
+						</p>
+						<textarea readonly class="chat-message-text" chat-message-text>{{chat.text}}</textarea>
+					</div>
+				</div>
+				<textarea rows="1" class="chat-message-input" type="text" ng-model="text" placeholder="Type a message.." chat-input></textarea>
+			</div>
+		</div>
+	</div>
 
 
 
@@ -408,12 +399,14 @@
 	<script src="js/jquery.mobile.custom.min.js"></script>
 	<script src="js/angular.min.js"></script>
 	<script src="js/pretty.js"></script>
+	<script src="js/socket.io.min.js"></script>
 
 	<!-- RTCStarJS -->
 	<script src="js/RTCStarJS/adapter.js"></script>
 	<script src="js/RTCStarJS/peer.js"></script>
 	<script src="js/RTCStarJS/RTCStarClient.js"></script>
 	<script src="js/RTCStarJS/RTCStarServer.js"></script>
+	<script src="js/NodeStarJS/NodeStarClient.js"></script>
 
 	<!-- PDFJS -->
 	<script src="js/pdfjs/pdf.js"></script>
@@ -422,7 +415,7 @@
 	<script src="js/pdfjs/ui_utils.js"></script>
 
 	<!-- App -->
-	<script src="js/app/app.js"></script>
+	<script src="js/app/appNode.js"></script>
 	<script src="js/app/User/UserServer.js"></script>
 	<script src="js/app/User/UserClient.js"></script>
 
