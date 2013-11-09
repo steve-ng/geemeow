@@ -14,6 +14,7 @@ io.sockets.on('connection', socketConnectionInstance);
 
 
 var nodeStarServers = {};
+var randstr = "";	//	To edit
 
 function socketConnectionInstance(socket) {
     socket.on('connect', function(message) {
@@ -23,7 +24,7 @@ function socketConnectionInstance(socket) {
         var serverId = message.serverId;
         var nodeStarServer;
 		if (serverId == undefined || serverId.length == 0){
-			serverId = crypto.createHash('md5').update(new Date().getTime()).digest("hex");
+			serverId = crypto.createHash('md5').update(new Date().getTime()+randstr).digest("hex");
 			nodeStarServer = new NodeStarServer(serverId);
 			nodeStarServers[serverId] = nodeStarServer;
 		} 
