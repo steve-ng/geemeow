@@ -1,3 +1,3 @@
 .DS_Store
 servers/websocket_server/node_modules
-servers/peerjs_server/nodes_modules
+servers/peerjs_server/node_modules
