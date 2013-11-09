@@ -124,28 +124,5 @@ app.run(function($rootScope){
     	$rootScope.$broadcast('UploadImage', file);
 	}
 
+
 });
-
-
-//	Controller for Side Bar
-app.controller('SideBarController', ['$scope', function($scope){
-  	$scope.widgetID = "chat-widget";
-
-	$scope.switchWidget = function(widgetID){
-		$scope.widgetID = widgetID;
-		$scope.safeApply();
-	}
-
-	//	Safe Apply
-  	$scope.safeApply = function(fn) {
-	  var phase = this.$root.$$phase;
-	  if(phase == '$apply' || phase == '$digest') {
-	    if(fn && (typeof(fn) === 'function')) {
-	      fn();
-	    }
-	  } else {
-	    this.$apply(fn);
-	  }
-	};
-}]);
-
