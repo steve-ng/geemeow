@@ -1,10 +1,16 @@
 //	Controller for Chat
 app.controller('ChatController', function($scope, $rootScope){
+	$scope.showChatWidget = true;
 	$scope.chatHistory = [];
 	$scope.scrollDiv;
 	$rootScope.chatClient.setDelegate($scope);
 
 	$scope.text;
+
+
+	$scope.toggleShowChatWidget = function(){
+		$scope.showChatWidget = !$scope.showChatWidget;
+	}
 
 	$scope.sendChat = function(){
 		$scope.chatClient.sendChat($scope.text);
