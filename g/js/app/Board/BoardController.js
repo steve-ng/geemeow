@@ -8,6 +8,7 @@ app.controller('BoardController', function($scope, $rootScope){
     $scope.colors = ['#1abc9c', '#3498db', '#9b59b6', '#c0392b', '#d35400', '#34495e'];
     $scope.colorIndex = 0;
     $scope.sendCursorUpdate = true;
+    $scope.showToolbar = true;
 
     //  Board state
     $scope.strokeSize = 2;
@@ -36,6 +37,10 @@ app.controller('BoardController', function($scope, $rootScope){
     $scope.$on('NewPlainBoard', function(event, message){
       $scope.addPlainTab();
     });
+
+    $scope.toggleToolbar = function(){
+        $scope.showToolbar = !$scope.showToolbar;  
+    }
 
     $scope.toggleCanvasMode = function(mode){
         $scope.canvasMode = mode;
@@ -126,6 +131,14 @@ app.controller('BoardController', function($scope, $rootScope){
 
     $scope.zoomOut = function(){
       $scope.boardClient.updateScale($scope.currentTabIndex, Math.max($scope.tabs[$scope.currentTabIndex].scale - 0.25,0.5));
+    }
+
+    $scope.undoCanvas = function(){
+      $scope.$broadcast('TabCanvasUndo'+$scope.currentTabIndex);
+    }
+
+    $scope.redoCanvas = function(){
+      $scope.$broadcast('TabCanvasRedo'+$scope.currentTabIndex);
     }
 
   	//	Events and Messages
