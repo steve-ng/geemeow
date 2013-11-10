@@ -53,7 +53,6 @@ text-align: center;
 	color: #fff;
 	text-transform: uppercase;
 	font-family: Raleway,sans-serif;
-	font-weight: 900!important;
 	letter-spacing: .1em;
 	-webkit-transition: all,400ms;
 	-moz-transition: all,400ms;
@@ -104,7 +103,6 @@ font-weight:700;
 .tagwords{
 	font-size:1.6rem;
 	font-family:Raleway,sans-serif;
-	font-weight:700;
 	text-align:center;
 }
 
@@ -159,7 +157,7 @@ font-weight:700;
 }
 
 .feature_title {
-	font-family: 'Open Sans',sans-serif;
+	font-family: 'Raleway',sans-serif;
 	font-weight: 300;
 	font-size: 24.5px;
 	line-height: 40px;
@@ -169,6 +167,10 @@ font-weight:700;
 	-webkit-margin-end: 0px;
 	text-align: center;
 	margin-top:-5%;
+}
+
+.bigger{
+	font-size: 35px;
 }
 
 .thumbnailx {
@@ -205,7 +207,7 @@ font-weight:700;
 }
 
 .feature_description{
-	font-family: 'Open Sans',sans-serif;
+	font-family: 'Raleway',sans-serif;
 }
 
 .page {
