@@ -2,7 +2,7 @@ var UserServer = function(server){
 
 	//	Variables
 	var users;
-	var colors = ['red', 'green', 'blue', 'yellow', 'pink', 'purple', 'orange', 'brown', 'lime', 'tam'];
+	var colors = ['red', 'green', 'blue', 'yellow', 'pink', 'purple', 'orange', 'brown', 'lime', 'tan'];
 	var userRollingIndex = 0;
 	server.onServerEvent('Open', init);
 	server.onServerEvent('ClientEnter', initUserClient);

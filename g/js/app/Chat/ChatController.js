@@ -1,6 +1,6 @@
 //	Controller for Chat
 app.controller('ChatController', function($scope, $rootScope){
-	$scope.showChatWidget = true;
+	$scope.showChatWidget = false;
 	$scope.chatHistory = [];
 	$scope.scrollDiv;
 	$rootScope.chatClient.setDelegate($scope);
