@@ -1,9 +1,9 @@
 
 app.controller('VideoController', function($scope, $rootScope){
-	$scope.videoType = {'Camera': {mandatory: { maxWidth: 320, maxHeight: 240 }},
-						'Screen': {mandatory: {chromeMediaSource: 'screen'}},
-						'None': false};
-	$scope.currentVideoType = 'None';			
+	$scope.videoType = {'CameraLow': {mandatory: { maxWidth: 320, maxHeight: 180 }},
+						'CameraHigh': {mandatory: { maxWidth: 640, maxHeight: 360 }}};
+	$scope.currentVideoType = 'CameraLow';
+	$scope.videoEnabled = false;			
 	$scope.constraints = {
 		video: false,
 		audio: false,
@@ -92,14 +92,23 @@ app.controller('VideoController', function($scope, $rootScope){
 	}
 
 
-	$scope.setVideo = function(type){
-		$scope.currentVideoType = type;
-		$scope.constraints.video = $scope.videoType[$scope.currentVideoType];
+	$scope.toggleOwnVideo = function(type){
+		$scope.videoEnabled = !$scope.videoEnabled;
+
+		if ($scope.videoEnabled)
+			$scope.constraints.video = $scope.videoType[$scope.currentVideoType];
+		else
+			$scope.constraints.video = false;
 
 		if ($scope.constraintsListener != undefined)
 			$scope.constraintsListener.constraintsChanged($scope.constraints);
+	}
 
-		$scope.safeApply();
+	$scope.toggleOwnAudio = function(){
+		$scope.constraints.audio = !$scope.constraints.audio;
+
+		if ($scope.constraintsListener != undefined)
+			$scope.constraintsListener.constraintsChanged($scope.constraints);
 	}
 
 
@@ -110,27 +119,17 @@ app.controller('VideoController', function($scope, $rootScope){
 			var tracks = peer.stream.getVideoTracks();
 			for (var i in tracks)
 				tracks[i].enabled = peer.videoEnabled;
-			}
-
-		$scope.safeApply();
+		}
 	}
 
 
 	$scope.toggleAudio = function(peerId){
-		if (peerId == $scope.$parent.clientId){
-			$scope.constraints.audio = !$scope.constraints.audio;
-
-			if ($scope.constraintsListener != undefined)
-				$scope.constraintsListener.constraintsChanged($scope.constraints);
-			
-		} else {
-			var peer = $scope.peers[peerId];
-			if (peer.hasAudio){
-				peer.audioEnabled = !peer.audioEnabled;
-				var tracks = peer.stream.getAudioTracks();
-				for (var i in tracks)
-					tracks[i].enabled = peer.audioEnabled;
-			}
+		var peer = $scope.peers[peerId];
+		if (peer.hasAudio){
+			peer.audioEnabled = !peer.audioEnabled;
+			var tracks = peer.stream.getAudioTracks();
+			for (var i in tracks)
+				tracks[i].enabled = peer.audioEnabled;
 		}
 	}
 
@@ -152,16 +151,6 @@ app.controller('VideoController', function($scope, $rootScope){
 
 app.directive('videoChatActive', function($window) {
 	return function(scope, element, attrs) {
-		scope.$watch("focusPeerId", function(){
-		    checkMute(scope.focusPeerId, scope.$parent.clientId);
-	    });
-		
-		function checkMute(peerId, selfPeerId){
-			if (peerId == selfPeerId)
-				element.prop('muted', true);
-			else
-				element.prop('muted', false);
-		}
 		element[0].removeAttribute("controls");
 		
 		function alive(){

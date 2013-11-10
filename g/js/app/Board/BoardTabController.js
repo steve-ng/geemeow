@@ -6,6 +6,7 @@ app.controller('BoardTabController', function($scope,$rootScope) {
   	$scope.done = false;
     $scope.cursorData;
     $scope.sendCursorUpdate;
+    $scope.currentPage = 0;
 
   	//	Init page
   	var initTab = function(){
@@ -167,6 +168,15 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 		var win = window.open($scope.tab.metadata.imageLink, '_blank');
   		win.focus();
 	}
+
+	//	Canvas Context Menu handler
+	$scope.openContextMenu = function(e){
+		e.stopPropagation();
+		var element = e.srcElement;
+      	$scope.$broadcast('OpenContextMenu'+$scope.currentPage, 
+      		{offsetX: element.offsetLeft - element.scrollWidth, offsetY: element.offsetTop});
+	}
+
  });
 
 
@@ -179,6 +189,20 @@ app.directive('scrollPosition', function($window) {
 
   	var scrollTimer;
     element.on('scroll', function(e){
+
+    	//	Page
+    	var y = element.scrollTop();
+  		var pageNumber = 0;
+  		var pageElements = element.find('.board-tab').find('.board-tab-page');
+
+  		for (var i = 0; i < pageElements.length; i++){
+  			if (pageElements[i].offsetTop <= y)
+  				pageNumber = i;
+  		}
+
+  		scope.currentPage = pageNumber;
+
+  		//	Scroll
 		var time = new Date().getTime();
 		if (time > scope.lastScrollTime){
 			scope.lastScrollTime = time;
@@ -256,7 +280,7 @@ app.directive('boardPage', function($window) {
 		var textLayer = element.children().eq(1);
 		var backgroundLayer = element.children().eq(2);
 		var canvasMenu = element.children().eq(3);
-		var parentHeight = parent.parent().height()-1;
+		var parentHeight = parent.parent().innerHeight()-1;
 		var tabScale = tab.scale;
 
 	  	if (tab.metadata.sourceType == "PDFLink" || tab.metadata.sourceType == "PDFFile") {
@@ -314,12 +338,12 @@ app.directive('boardPage', function($window) {
 		  	var ratioHeight = parentHeight/image.height;
 			var ratioWidth = parentWidth/image.width;
 			var scale = Math.max(ratioWidth, ratioHeight)*tabScale;
-			element.width(pageDisplayWidth);
-			element.height(pageDisplayHeight);
 
 			var pageDisplayWidth = image.width*scale;
 			var pageDisplayHeight = image.height*scale;
 
+			element.width(pageDisplayWidth);
+			element.height(pageDisplayHeight);
 		  	backgroundLayer[0].width = pageDisplayWidth;
 			backgroundLayer[0].height = pageDisplayHeight;
 		  	textLayer.width(pageDisplayWidth);
@@ -356,8 +380,20 @@ app.directive('boardPage', function($window) {
 		}
 
 	  	function openContextMenu(e){
-			canvasMenu.css({display: 'block', left: element[0].offsetLeft + Math.min(e.offsetX, element.width()-canvasMenu.width()), 
-												top: element[0].offsetTop + Math.min(e.offsetY, element.height()-canvasMenu.height())});
+	  		if (!canvasMenu.is(':hidden')){
+	  			canvasMenu.hide();
+	  			return;
+	  		}
+
+	  		if (e.stopPropagation != undefined){
+	  			e.stopPropagation();
+				canvasMenu.css({display: 'block', left: element[0].offsetLeft + e.offsetX, 
+												top: element[0].offsetTop +e.offsetY});
+			} else {
+				canvasMenu.css({display: 'block', left: element.parent().parent().scrollLeft() + e.offsetX, 
+												top: element.parent().parent().scrollTop() +e.offsetY});
+			}
+
 			$(document).click(hideHandler);
 			return false;
 		}
@@ -370,6 +406,11 @@ app.directive('boardPage', function($window) {
 		drawingLayer.on('contextmenu', openContextMenu);
 		textLayer.on('contextmenu', openContextMenu);
 		backgroundLayer.on('contextmenu', openContextMenu);
+
+
+	    scope.$parent.$on('OpenContextMenu'+scope.$index, function(event, e){
+	      	openContextMenu(e);
+	    });
 	});
 
 
@@ -388,9 +429,6 @@ app.directive('boardPage', function($window) {
 		canvasContext.drawImage(drawingCanvas, 0, 0);
 		return canvas;
 	}
-
-
-	setTimeout(function(){element.resize()}, 500);
 }});
 
 

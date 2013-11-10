@@ -30,364 +30,400 @@
 
 	<div id="app" style="display:none">
 
-	<!-- Top bar -->
-	<div class="topbar">
-		<ul class="nav nav-pills topbar-nav">
-		  	<li class="dropdown">
-			    <a class="dropdown-toggle topbar-nav-item" data-toggle="dropdown" href="">
-			      Menu <span class="caret"></span>
-			    </a>
-		    	<ul class="dropdown-menu">
- 					 <li role="presentation" class="dropdown-header">Board</li>
-    				<li role="presentation"><a role="menuitem" href="" ng-click="newPlainBoard()">New Plain Board</a></li>
-					<li class="separator"></li>
-					<input id="pdf_file" ng-show="false" type="file" name="pdf_file" accept="application/pdf" on-change-pdf-file></input>
-					<li role="presentation"><a role="menuitem" href="" onclick="$('#pdf_file').click();">Upload PDF</a></li>
-    				<li role="presentation"><a role="menuitem" href="" data-toggle="modal" data-target="#openPdfLinkModal">Open PDF Link</a></li>
-
-					<li class="separator"></li>
-					<input id="image_file" ng-show="false" type="file" name="image_file" accept="image/*" on-change-image-file></input>
-					<li role="presentation"><a role="menuitem" href="" onclick="$('#image_file').click();">Upload Image</a></li>
-    				<li role="presentation"><a role="menuitem" href="" data-toggle="modal" data-target="#openImageLinkModal">Open Image Link</a></li>
-		    	</ul>
-		  	</li>
- 			<li><a href="">Help</a></li>
- 			<li class="pull-right" data-toggle="modal" data-target="#changeNameModal"><a href="">{{$root.users[$root.clientId].name}}</a></li>
-
-		</ul>
-	</div>
+		<!-- Main -->
+		<div class="main">
+			<div class="main-body">
 
 
+				<!-- Board Body -->
+				<div class="board-body" ng-controller="BoardController">
 
 
-	<!-- Main -->
-	<div class="main">
-		<div class="main-body">
+					<!-- Board Side Bar -->
+					<div class="toolbar-toggle" ng-click="toggleToolbar()">
+						<i class="fa fa-chevron-circle-down toolbar-toggle-text" ng-show="!showToolbar"></i>
+						<i class="fa fa-chevron-circle-up toolbar-toggle-text" ng-show="showToolbar"></i>
+					</div>
+
+					<div id="board-sidebar" class="board-sidebar" ng-show="showToolbar">
+						<ul class="board-toolbar">
+							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='select'}" ng-click="toggleCanvasMode('select')"><i class="fa fa-hand-o-up toolbar-text"></i></li>
+							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='marker'}" ng-click="toggleCanvasMode('marker')"><i class="fa fa-pencil toolbar-text"></i></li>
+							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='highlighter'}" ng-click="toggleCanvasMode('highlighter')"><i class="fa fa-magic toolbar-text"></i></li>
+							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='eraser'}" ng-click="toggleCanvasMode('eraser')"><i class="fa fa-eraser toolbar-text"></i></li>
+							<li class="toolbar-separator"></li>
+							
+							<div class="btn-group">
+							    <li type="button" class="toolbar-btn" data-toggle="dropdown"><i class="fa fa-square toolbar-text" ng-style="getStrokeColor(strokeColor)"></i></li>
+							    <ul class="dropdown-menu color-picker">
+							    	<li ng-repeat="color in strokeColors" type="button" class="toolbar-btn color-picker-item" data-toggle="dropdown">
+							    		
+							    		<span class="fa-stack fa-lg" ng-click="setStrokeColor(color)">
+										  <i class="fa fa-square toolbar-text fa-stack-2x" ng-style="getStrokeColor(color)"></i>
+										  <i class="fa fa-check toolbar-text fa-stack-1x picker-tick" ng-show="strokeColor == color"></i>
+										</span>
+
+							    		
+							    	</li>
+							    </ul>
+							</div>
 
 
-			<!-- Board Body -->
-			<div class="board-body" ng-controller="BoardController">
+							<li class="toolbar-separator"></li>
+
+							<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==2 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(2)">
+								<i class="fa fa-circle toolbar-text" style="font-size:0.3em" ng-style="getStrokeColor(strokeColor)" ng-show="canvasMode == 'marker' || canvasMode == 'select' || canvasMode == 'highlighter'">
+								</i>
+								<i class="fa fa-circle-o toolbar-text" style="font-size:0.3em" ng-show="canvasMode == 'eraser'">
+								</i>
+							</li>
+
+							<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==5 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(5)">
+								<i class="fa fa-circle toolbar-text" style="font-size:0.7em"  ng-style="getStrokeColor(strokeColor)" ng-show="canvasMode == 'marker' || canvasMode == 'select' || canvasMode == 'highlighter'"></i>
+								<i class="fa fa-circle-o toolbar-text" style="font-size:0.7em" ng-show="canvasMode == 'eraser'">
+								</i>
+							</li>
+
+							<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==20 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(20)">
+								<i class="fa fa-circle toolbar-text" ng-style="getStrokeColor(strokeColor)" ng-show="canvasMode == 'marker' || canvasMode == 'select' || canvasMode == 'highlighter'"></i>
+								<i class="fa fa-circle-o toolbar-text" ng-show="canvasMode == 'eraser'">
+								</i>
+							</li>
 
 
-				<!-- Board Side Bar -->
-				<div class="board-sidebar">
-					<ul class="board-toolbar">
-						<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='select'}" ng-click="toggleCanvasMode('select')"><i class="fa fa-hand-o-up toolbar-text"></i></li>
-						<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='marker'}" ng-click="toggleCanvasMode('marker')"><i class="fa fa-pencil toolbar-text"></i></li>
-						<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='highlighter'}" ng-click="toggleCanvasMode('highlighter')"><i class="fa fa-magic toolbar-text"></i></li>
-						<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='eraser'}" ng-click="toggleCanvasMode('eraser')"><i class="fa fa-eraser toolbar-text"></i></li>
-						<li class="separator"></li>
-						
-						<div class="btn-group">
-						    <li type="button" class="toolbar-btn" data-toggle="dropdown"><i class="fa fa-square toolbar-text" ng-style="getStrokeColor(strokeColor)"></i></li>
-						    <ul class="dropdown-menu color-picker">
-						    	<li ng-repeat="color in strokeColors" type="button" class="toolbar-btn color-picker-item" data-toggle="dropdown">
-						    		
-						    		<span class="fa-stack fa-lg" ng-click="setStrokeColor(color)">
-									  <i class="fa fa-square toolbar-text fa-stack-2x" ng-style="getStrokeColor(color)"></i>
-									  <i class="fa fa-check toolbar-text fa-stack-1x picker-tick" ng-show="strokeColor == color"></i>
-									</span>
+							<li class="toolbar-separator"></li>
 
-						    		
-						    	</li>
-						    </ul>
-						</div>
+							<li type="button" class="toolbar-btn" ng-click="undoCanvas()">
+								<i class="fa fa-undo toolbar-text">
+								</i>
+							</li>
+
+							<li type="button" class="toolbar-btn" ng-click="redoCanvas()">
+								<i class="fa fa-repeat toolbar-text">
+								</i>
+							</li>
 
 
-						<li class="separator"></li>
+							<li class="toolbar-separator"></li>
+							<li type="button" class="toolbar-btn"  ng-click="zoomIn()">
+								<span class="fa-stack fa-lg">
+								  	<i class="fa fa-search toolbar-text fa-stack-1x zoom-button"></i>
+								  	<i class="fa fa-plus toolbar-text fa-stack-1x zoom-plus-minus"></i>
+								</span>
+							</li>
+							<li type="button" class="toolbar-btn"  ng-click="zoomOut()">
+								<span class="fa-stack fa-lg">
+								  	<i class="fa fa-search toolbar-text fa-stack-1x zoom-button"></i>
+								  	<i class="fa fa-minus toolbar-text fa-stack-1x zoom-plus-minus"></i>
+								</span>
+							</li>
 
-						<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==2 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(2)">
-							<i class="fa fa-circle toolbar-text" style="font-size:0.3em" ng-style="getStrokeColor(strokeColor)" ng-show="canvasMode == 'marker' || canvasMode == 'select' || canvasMode == 'highlighter'">
-							</i>
-							<i class="fa fa-circle-o toolbar-text" style="font-size:0.3em" ng-show="canvasMode == 'eraser'">
-							</i>
-						</li>
-
-						<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==5 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(5)">
-							<i class="fa fa-circle toolbar-text" style="font-size:0.7em"  ng-style="getStrokeColor(strokeColor)" ng-show="canvasMode == 'marker' || canvasMode == 'select' || canvasMode == 'highlighter'"></i>
-							<i class="fa fa-circle-o toolbar-text" style="font-size:0.7em" ng-show="canvasMode == 'eraser'">
-							</i>
-						</li>
-
-						<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==20 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(20)">
-							<i class="fa fa-circle toolbar-text" ng-style="getStrokeColor(strokeColor)" ng-show="canvasMode == 'marker' || canvasMode == 'select' || canvasMode == 'highlighter'"></i>
-							<i class="fa fa-circle-o toolbar-text" ng-show="canvasMode == 'eraser'">
-							</i>
-						</li>
-
-						<li class="separator"></li>
-						<li type="button" class="toolbar-btn"  ng-click="zoomIn()">
-							<span class="fa-stack fa-lg">
-							  	<i class="fa fa-search toolbar-text fa-stack-1x" style="font-size:1.4em"></i>
-							  	<i class="fa fa-plus toolbar-text fa-stack-1x zoom-plus-minus"></i>
-							</span>
-						</li>
-						<li type="button" class="toolbar-btn"  ng-click="zoomOut()">
-							<span class="fa-stack fa-lg">
-							  	<i class="fa fa-search toolbar-text fa-stack-1x" style="font-size:1.4em"></i>
-							  	<i class="fa fa-minus toolbar-text fa-stack-1x zoom-plus-minus"></i>
-							</span>
-						</li>
+						</ul>
+					</div>
 
 					
-					</ul>
-				</div>
+					<!-- Board Tab Bar -->
+					<div class="board-tabbar">
 
-				
-				<!-- Board Tab Bar -->
-				<div class="board-tabbar">
-					<ul class="nav nav-tabs board-tab-header-list">
-						<li ng-class="{active: currentTabIndex == tab.tabIndex}" ng-repeat="tab in tabsArray">
-							<a class="board-tab-header-list-name" ng-class="{highlight: currentTabIndex == tab.tabIndex}" ng-click="switchTab(tab.tabIndex)">{{tab.metadata.name | truncate:15}}&nbsp;
-								<span class="glyphicon glyphicon-remove-circle board-tab-header-close" ng-click="closeTab(tab.tabIndex); $event.stopPropagation();"></span>
-							</a>
-						</li>
-					</ul>
-				</div>
+						<ul class="nav nav-tabs board-tab-header-list">
+							<li ng-repeat="tab in tabsArray">
+								<a class="board-tab-header-list-name" ng-class="{highlight: currentTabIndex == tab.tabIndex}"  ng-click="switchTab(tab.tabIndex)">{{tab.metadata.name | truncate:15}}&nbsp;
+									<span class="glyphicon glyphicon-remove-circle board-tab-header-close" ng-click="closeTab(tab.tabIndex); $event.stopPropagation();"></span>
+								</a>
+							</li>
 
-				<!-- Board Main -->
-				<div class="board-main" board-main>
-					<div class = "board-wrapper">
-					    <div id = "board-content">
-					    	<div class="board-cursor" ng-style="{background: $root.users[peerId].color}" ng-repeat="(peerId, cursor) in cursors" cursor-position>
-					    		<span class="board-cursor-text" ng-style="{color: $root.users[peerId].color}">{{$root.users[peerId].name}}</span>
-					    	</div>
-			    			<div class="board-tab-wrapper" ng-repeat="tab in tabsArray" ng-class="{tabfront: currentTabIndex == tab.tabIndex}" ng-controller="BoardTabController" scroll-position>
+							<li data-toggle="modal" data-target="#newBoardTabModel">
+								<a class="board-tab-header-list-name board-new-tab-button">
+									<i class="fa fa-plus board-new-tab-text"></i>
+								</a>
+							</li>
+						</ul>
 
-								<div class="loading-screen" ng-show="!done">
-		    						<div class="center-screen">
-			    						<div class="loader">
-										  <div class="left stick"><span></span></div>
-										  <div class="right stick"><span></span></div>
+					</div>
+
+					<!-- Board Main -->
+					<div class="board-main" board-main>
+						<div class = "board-wrapper">
+						    <div id = "board-content">
+						    	<div class="board-cursor" ng-style="{background: $root.users[peerId].color}" ng-repeat="(peerId, cursor) in cursors" cursor-position>
+						    		<span class="board-cursor-text" ng-style="{color: $root.users[peerId].color}">{{$root.users[peerId].name}}</span>
+						    	</div>
+				    			<div class="board-tab-wrapper" ng-repeat="tab in tabsArray" ng-class="{tabfront: currentTabIndex == tab.tabIndex}" ng-controller="BoardTabController" scroll-position>
+
+									<div class="loading-screen" ng-show="!done">
+			    						<div class="center-screen">
+				    						<div class="loader">
+											  <div class="left stick"><span></span></div>
+											  <div class="right stick"><span></span></div>
+											</div>
+											<span>Loading ...</span>
 										</div>
-										<span>Loading ...</span>
 									</div>
-								</div>
 
-			    				<div class="board-tab">
-			    					<div class="board-tab-page" ng-repeat="page in pages" board-page>
+				    				<div class="board-tab">
 
-			    						<canvas class="board-tab-page-drawing" canvas-drawing ng-class="{drawingFront: tab.tabIndex==currentTabIndex, disablePointerEvents: canvasMode=='select'}" tabindex="1"></canvas>
-			    						<div class="board-tab-page-text textLayer"></div>
-			    						<canvas class="board-tab-page-background"></canvas>
+				    					<div class="board-tab-page" ng-repeat="page in pages" board-page>
+
+				    						<canvas class="board-tab-page-drawing" canvas-drawing ng-class="{drawingFront: tab.tabIndex==currentTabIndex, disablePointerEvents: canvasMode=='select'}" tabindex="1"></canvas>
+				    						<div class="board-tab-page-text textLayer"></div>
+				    						<canvas class="board-tab-page-background"></canvas>
 
 
 
-										<div class="canvasMenu" class="dropdown clearfix">
-										    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
-										    	<li><a href="" ng-click="undoCanvas($index)">Undo</a></li>
-										    	<li><a href="" ng-click="redoCanvas($index)">Redo</a></li>
-										    	<li class="divider"></li>
-										    	<li><a href="" ng-click="clearCanvas($index)">Clear Page</a></li>
-										    	<li><a href="" ng-click="screenshotPage($index)">Screenshot Page</a></li>
-										    	<li ng-show="tab.metadata.sourceType == 'PDFFile'"><a href="" ng-click="downloadSource()">Download Attached PDF</a></li>
-										    	<li ng-show="tab.metadata.sourceType == 'PDFLink'"><a href="" ng-click="downloadSource()">Download Attached PDF</a></li>
-										    	<li ng-show="tab.metadata.sourceType == 'ImageFile'"><a href="" ng-click="downloadSource()">Download Attached Image</a></li>
-										    	<li ng-show="tab.metadata.sourceType == 'ImageLink'"><a href="" ng-click="downloadSource()">Download Attached Image</a></li>
-										    </ul>
-										</div>
+											<div class="canvasMenu" class="dropdown clearfix">
+											    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+											    	<li><a href="" ng-click="undoCanvas($index)">Undo</a></li>
+											    	<li><a href="" ng-click="redoCanvas($index)">Redo</a></li>
+											    	<li class="divider"></li>
+											    	<li><a href="" ng-click="clearCanvas($index)">Clear Page</a></li>
+											    	<li><a href="" ng-click="screenshotPage($index)">Screenshot Page</a></li>
+											    	<li ng-show="tab.metadata.sourceType == 'PDFFile'"><a href="" ng-click="downloadSource()">Download Attached PDF</a></li>
+											    	<li ng-show="tab.metadata.sourceType == 'PDFLink'"><a href="" ng-click="downloadSource()">Download Attached PDF</a></li>
+											    	<li ng-show="tab.metadata.sourceType == 'ImageFile'"><a href="" ng-click="downloadSource()">Download Attached Image</a></li>
+											    	<li ng-show="tab.metadata.sourceType == 'ImageLink'"><a href="" ng-click="downloadSource()">Download Attached Image</a></li>
+											    </ul>
+											</div>
 
-			    					</div>
-				    			</div>
-					    	</div>
-					    </div>
+				    					</div>
+
+					    					<!-- Page index -->
+			    						<div class="fixed board-tab-page-index" ng-show="tab.tabIndex==currentTabIndex" ng-click="openContextMenu($event)">
+			    							<span class="touchnone">Page {{currentPage+1}}</span>
+											<i class="fa fa-chevron-down pull-right touchnone" style="padding-top:0.1em;"></i>
+			    						</div>
+
+					    			</div>
+					    		
+						    	</div>
+						    </div>
+						</div>
 					</div>
+
 				</div>
 
 			</div>
-
 		</div>
-	</div>
+
+		<!-- Sidebar -->
+		<div class="sidebar" ng-controller="VideoController">
+			<div class="sidebar-top">
+				<div class="sidebar-items">
+					<span class="fa-stack sidebar-item" ng-click="toggleOwnVideo()">
+						<i class="fa fa-video-camera fa-stack-1x"></i>
+						<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peers[$root.clientId].videoEnabled || !peers[$root.clientId].hasVideo"></i>
+					</span>
+					<span class="fa-stack sidebar-item" ng-click="toggleOwnAudio()">
+						<i class="fa fa-microphone fa-stack-1x"></i>
+						<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peers[$root.clientId].audioEnabled || !peers[$root.clientId].hasAudio"></i>
+					</span>
+					
+
+					<div class="pull-right" style="margin-right: 0.3em">
+						<span class="fa-stack sidebar-item" data-toggle="dropdown">
+							<i class="fa fa-bars fa-stack-1x"></i>
+
+						</span>
+
+						<ul class="dropdown-menu" style="top:3em; right:0.5em">
+		    				<li role="presentation" class="dropdown-header">Menu</li>
+		    				<li role="presentation" data-toggle="modal" data-target="#changeNameModal"><a role="menuitem" href="">Set Name</a></li>
+		    				<li role="presentation" data-toggle="modal" data-target="#quitModal"><a role="menuitem" href="">Quit</a></li>
+							<li class="divider"></li>
+		    				<li role="presentation" data-toggle="modal" data-target="#inviteModal"><a role="menuitem" href="">Invite</a></li>
+		    				<li role="presentation" data-toggle="modal" data-target="#aboutModal"><a role="menuitem" href="">About</a></li>
+				    	</ul>
 
 
 
+						<span class="fa-stack sidebar-item" style="font-size:1.0em" ng-click="">
+							<i class="fa fa-question-circle fa-stack-1x"></i>
+						</span>
+					</div>
+				</div>
 
-	<!-- Sidebar -->
-	<div class="sidebar">
-		<div class="sidebar-body">
+				<div class="video-div own-video">
+					<div class="video-overlay">
+						<span class="touchnone video-name">
+							{{$root.users[$root.clientId].name}}
+						</span>
+				
+						<div class="video-side video-side-top" ng-style="{background: $root.users[$root.clientId].color}">
+						</div>
+					</div>
+					
+					<video class="video-element flip" autoplay ng-src="{{peers[$root.clientId].url}}" ng-show="peers[$root.clientId].videoEnabled && peers[$root.clientId].hasVideo" video-chat-active video-zoom-active>
+					</video>
+				</div>
+			</div>
 
-			<!-- Video Widget -->
-			<div class="video-widget" ng-controller="VideoController">
-				<div class="active-video-div" ng-mouseenter="showActiveMenu = true" ng-mouseleave="showActiveMenu = false">
-					<div class="active-video-innerdiv">
-						<div class="absolute z1 translucent" ng-class="{opaque: showActiveMenu}">
-							<div>
-								<span class="fa-stack toolbar-text video-icon" data-toggle="dropdown" ng-show="focusPeerId == $root.clientId">
-									<i class="fa fa-video-camera fa-stack-1x video-icon-font" ></i>
-									<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peers[focusPeerId].videoEnabled || !peers[focusPeerId].hasVideo"></i>
-								</span>
-								<ul class="dropdown-menu video-selection-menu">
-				    				<label class="block">
-								    	<input type="radio" name="optionsRadios" value="Camera" ng-checked="currentVideoType == 'Camera'" ng-click="setVideo('Camera')" ngChecked>
-								    	Camera
-								  	</label>
-								  	<label class="block">
-								    	<input type="radio" name="optionsRadios" value="Screen" ng-checked="currentVideoType == 'Screen'" ng-click="setVideo('Screen')" ngChecked>
-								    	Screen
-								  	</label>
-								  	<label class="block">
-								    	<input type="radio" name="optionsRadios" value="None" ng-checked="currentVideoType == 'None'" ng-click="setVideo('None')" ngChecked>
-								    	None
-								  	</label>
-				    			</ul>
-								<span ng-show="focusPeerId != $root.clientId" class="fa-stack toolbar-text video-icon" ng-click="toggleVideo(focusPeerId)">
-									<i class="fa fa-video-camera fa-stack-1x video-icon-font" ></i>
-									<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peers[focusPeerId].videoEnabled || !peers[focusPeerId].hasVideo"></i>
-								</span>
-								<span class="fa-stack toolbar-text video-icon" ng-click="toggleAudio(focusPeerId)">
-									<i class="fa fa-microphone fa-stack-1x video-icon-font" ></i>
-									<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peers[focusPeerId].audioEnabled || !peers[focusPeerId].hasAudio"></i>
-								</span>
-							</div>
-							<span class="touchnone video-name" ng-style="{color: $root.users[focusPeerId].color}"><i class="fa fa-user" ng-show="focusPeerId == $parent.clientId"></i>
-								{{$root.users[focusPeerId].name}}
+			<div class="sidebar-bottom">
+				<div class="video-div others-video" ng-repeat="(peerId, peer) in peers" ng-hide="peerId == $root.clientId">
+					<div class="video-overlay">
+						<span class="touchnone video-name">
+							{{$root.users[peerId].name}}
+						</span>
+				
+						<div class="video-side" ng-style="{background: $root.users[peerId].color}">
+						</div>
+
+						<div class="others-video-controls">
+							<span class="fa-stack others-video-icon" ng-click="$parent.toggleVideo(peerId)">
+								<i class="fa fa-video-camera fa-stack-1x"></i>
+								<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peer.videoEnabled || !peer.hasVideo"></i>
+							</span>
+							<span class="fa-stack others-video-icon" ng-click="$parent.toggleAudio(peerId)">
+								<i class="fa fa-microphone fa-stack-1x"></i>
+								<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peer.audioEnabled || !peer.hasAudio"></i>
 							</span>
 						</div>
-					
-						<video class="active-video" autoplay ng-src="{{peers[focusPeerId].url}}" ng-show="peers[focusPeerId].videoEnabled && peers[focusPeerId].hasVideo" video-chat-active video-zoom-active>
-						</video>
 					</div>
+					
+					<video class="video-element flip" autoplay ng-src="{{peers[peerId].url}}" ng-show="peers[peerId].videoEnabled && peers[peerId].hasVideo" video-chat-active video-zoom-active>
+					</video>
 				</div>
-				<div class="inactive-video-div" >
-					<div class="inactive-video-item" ng-repeat="(peerId, peer) in peers" ng-hide="peerId == focusPeerId"
-					ng-mouseenter="showInactiveMenu = true" ng-mouseleave="showInactiveMenu = false">
-						<div>
-							<div class="absolute z1 translucent" ng-class="{opaque: showInactiveMenu}">
-								<div>
-									<span class="fa-stack toolbar-text video-icon" data-toggle="dropdown" ng-show="peerId == $root.clientId">
-										<i class="fa fa-video-camera fa-stack-1x video-icon-font" ></i>
-										<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peers[peerId].videoEnabled || !peers[peerId].hasVideo"></i>
-									</span>
-									<ul class="dropdown-menu video-selection-menu">
-					    				<label class="block">
-									    	<input type="radio" name="optionsRadiosInactive" value="Camera" ng-checked="$parent.currentVideoType == 'Camera'" ng-click="setVideo('Camera')" ngChecked>
-									    	Camera
-									  	</label>
-									  	<label class="block">
-									    	<input type="radio" name="optionsRadiosInactive" value="Screen" ng-checked="$parent.currentVideoType == 'Screen'" ng-click="setVideo('Screen')" ngChecked>
-									    	Screen
-									  	</label>
-									  	<label class="block">
-									    	<input type="radio" name="optionsRadiosInactive" value="None" ng-checked="$parent.currentVideoType == 'None'" ng-click="setVideo('None')" ngChecked>
-									    	None
-									  	</label>
-					    			</ul>
-									<span class="fa-stack toolbar-text video-icon" ng-click="$parent.toggleVideo(peerId)" ng-show="peerId != $root.clientId">
-										<i class="fa fa-video-camera fa-stack-1x video-icon-font"></i>
-										<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peer.videoEnabled || !peer.hasVideo" ></i>
-									</span>
-									<span class="fa-stack toolbar-text video-icon" ng-click="$parent.toggleAudio(peerId)">
-										<i class="fa fa-microphone fa-stack-1x video-icon-font"></i>
-										<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peer.audioEnabled || !peer.hasAudio"></i>
-									</span>
-								</div>
-								<span class="pointer video-name" ng-style="{color: $root.users[peerId].color}" ng-click="switchFocusPeer(peerId)">
-									<i class="fa fa-user" ng-show="peerId == $parent.clientId"></i>
-									{{$root.users[peerId].name}}
-								</span>
+			</div>
+		</div>
+
+		<!-- ChatWidget -->
+		<div ng-controller="ChatController">
+			<div class="chat-widget" ng-class="{chatWidgetHide: !showChatWidget}">
+				<div class="chat-widget-title" ng-class="{smallChatTitle: !showChatWidget}" ng-click="toggleShowChatWidget()">
+					<span class="touchnone">Chat</span>
+					<span class="chat-widget-title-right"><i class="fa fa-minus"></i></span>
+				</div>
+
+				<!-- Chat Widget -->
+				<div id="chat-widget" class="chat-widget-content" ng-show="showChatWidget">
+					<div class="chat-messages" chat-scroll>
+						<div class="chat-message" ng-repeat="chat in chatHistory">
+							<p ng-style="{color: $root.users[chat.peerId].color}" class="chat-message-name">{{$root.users[chat.peerId].name}}
+								<span class="chat-message-time">{{chat.timestamp | prettyDate}}</span>
+							</p>
+							<textarea readonly class="chat-message-text" chat-message-text>{{chat.text}}</textarea>
+						</div>
+					</div>
+					<textarea rows="1" class="chat-message-input" type="text" ng-model="text" placeholder="Type a message.." chat-input></textarea>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal for pdf link -->
+		<div id="openPDFLinkModal" class="modal fade">
+		  <div class="modal-dialog modal-dialog-center">
+		    <div class="modal-content">
+				<div class="modal-header">
+				  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				  <h4 class="modal-title">Open PDF Link</h4>
+				</div>
+				<div class="modal-body">
+					<input ng-model="pdflink" class="form-control" type="text" placeholder="Enter link here.."></input>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="openPDFLink(pdflink)">Open</button>
+				</div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
+		<!-- Modal for image link -->
+		<div id="openImageLinkModal" class="modal fade">
+		  <div class="modal-dialog modal-dialog-center">
+		    <div class="modal-content">
+				<div class="modal-header">
+				  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				  <h4 class="modal-title">Open Image Link</h4>
+				</div>
+				<div class="modal-body">
+					<input ng-model="imagelink" class="form-control" type="text" placeholder="Enter link here.."></input>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="openImageLink(imagelink)">Open</button>
+				</div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
+		<!-- Modal for change name -->
+		<div id="changeNameModal" class="modal fade">
+		  <div class="modal-dialog modal-dialog-center">
+		    <div class="modal-content">
+				<div class="modal-header">
+				  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				  <h4 class="modal-title">Set Display Name</h4>
+				</div>
+				<div class="modal-body">
+					<input ng-model="changename" class="form-control" type="text" placeholder="Enter display name here.." ng-value="$root.users[$root.clientId].name"></input>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="changeName(changename)">Save</button>
+				</div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
+		<!-- Modal for new tab -->
+		<div id="newBoardTabModel" class="modal fade">
+		  <div class="modal-dialog new-tab-modal-dialog-center">
+		    <div class="modal-content">
+				<div class="modal-header">
+				  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				  <h4 class="modal-title">Open A New Tab</h4>
+				</div>
+				<div class="modal-body">
+					<div class="new-tab-col">
+						<div class="new-tab-item " ng-click="newPlainBoard()" data-dismiss="modal">
+							<div class="new-tab-item-div new-tab-item-div-select pointer">
+								<i class="fa fa-square-o new-tab-center new-tab-icon"></i>
+								<p class="new-tab-text new-tab-center">Plain Board</p>
 							</div>
+						</div>
 						
-							<video class="inactive-video" autoplay ng-src="{{peer.url}}" ng-show="peer.videoEnabled && peer.hasVideo" ng-click="switchFocusPeer(peerId)" video-chat-inactive video-zoom-inactive>
-							</video>
+						<div class="new-tab-item">
+							<div class="new-tab-item-div">
+								<div class="new-tab-item-sub pointer" data-toggle="modal" data-target="#openPDFLinkModal" data-dismiss="modal">
+									<i class="fa fa-link new-tab-icon-small"></i>
+									<span class="new-tab-text-small">&nbsp;&nbsp;Share PDF Link</span>
+								</div>
+								<p class="new-tab-center new-tab-text touchnone">- PDF -</p>
+								<div class="new-tab-item-sub pointer" data-dismiss="modal" onclick="$('#pdf_file').click();">
+									<i class="fa fa-file-o new-tab-icon-small"></i>
+									<span class="new-tab-text-small">&nbsp;&nbsp;Upload PDF</span>
+								</div>
+								<input id="pdf_file" ng-show="false" type="file" name="pdf_file" accept="application/pdf" on-change-pdf-file></input>
+							</div>
+						</div>
+					</div>
+					<div class="new-tab-col pull-right">
+						<div class="new-tab-item">
+							<div class="new-tab-item-div new-tab-item-div-select pointer">
+								<i class="fa fa-desktop new-tab-icon new-tab-center"></i>
+								<p class="new-tab-text new-tab-center">Screen Share</p>
+							</div>
+						</div>
+						<div class="new-tab-item">
+							<div class="new-tab-item-div">
+								<div class="new-tab-item-sub pointer" data-toggle="modal" data-target="#openImageLinkModal" data-dismiss="modal">
+									<i class="fa fa-link new-tab-icon-small"></i>
+									<span class="new-tab-text-small">&nbsp;&nbsp;Share Image Link</span>
+								</div>
+								<p class="new-tab-center new-tab-text touchnone">- Image -</p>
+								<div class="new-tab-item-sub pointer" data-dismiss="modal" onclick="$('#image_file').click();">
+									<i class="fa fa-picture-o new-tab-icon-small"></i>
+									<span class="new-tab-text-small">&nbsp;&nbsp;Upload Image</span>
+								</div>
+								<input id="image_file" ng-show="false" type="file" name="image_file" accept="image/*" on-change-image-file></input>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-
-			
-		</div>
-	</div>
-
-
-	<!-- ChatWidget -->
-	<div ng-controller="ChatController">
-		<div class="chat-widget" ng-class="{chatWidgetHide: !showChatWidget}">
-			<div class="chat-widget-title" ng-class="{smallChatTitle: !showChatWidget}" ng-click="toggleShowChatWidget()">
-				<span class="touchnone">Chat</span>
-				<span class="touchnone chat-widget-title-right"><i class="fa fa-minus"></i></span>
-			</div>
-
-			<!-- Chat Widget -->
-			<div id="chat-widget" class="chat-widget-content" ng-show="showChatWidget">
-				<div class="chat-messages" chat-scroll>
-					<div class="chat-message" ng-repeat="chat in chatHistory">
-						<p ng-style="{color: $root.users[chat.peerId].color}" class="chat-message-name">{{$root.users[chat.peerId].name}}
-							<span class="chat-message-time">{{chat.timestamp | prettyDate}}</span>
-						</p>
-						<textarea readonly class="chat-message-text" chat-message-text>{{chat.text}}</textarea>
-					</div>
-				</div>
-				<textarea rows="1" class="chat-message-input" type="text" ng-model="text" placeholder="Type a message.." chat-input></textarea>
-			</div>
-		</div>
-	</div>
-
-
-
-
-
-
-	<!-- Modal for pdf link -->
-	<div id="openPdfLinkModal" class="modal fade">
-	  <div class="modal-dialog modal-dialog-center">
-	    <div class="modal-content">
-			<div class="modal-header">
-			  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			  <h4 class="modal-title">Open PDF Link</h4>
-			</div>
-			<div class="modal-body">
-				<input ng-model="pdflink" class="form-control" type="text" placeholder="Enter link here.."></input>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="openPDFLink(pdflink)">Open</button>
-			</div>
-	    </div><!-- /.modal-content -->
-	  </div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
-
-	<!-- Modal for image link -->
-	<div id="openImageLinkModal" class="modal fade">
-	  <div class="modal-dialog modal-dialog-center">
-	    <div class="modal-content">
-			<div class="modal-header">
-			  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			  <h4 class="modal-title">Open Image Link</h4>
-			</div>
-			<div class="modal-body">
-				<input ng-model="imagelink" class="form-control" type="text" placeholder="Enter link here.."></input>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="openImageLink(imagelink)">Open</button>
-			</div>
-	    </div><!-- /.modal-content -->
-	  </div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
-
-	<!-- Modal for change name -->
-	<div id="changeNameModal" class="modal fade">
-	  <div class="modal-dialog modal-dialog-center">
-	    <div class="modal-content">
-			<div class="modal-header">
-			  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			  <h4 class="modal-title">Set Display Name</h4>
-			</div>
-			<div class="modal-body">
-				<input ng-model="changename" class="form-control" type="text" placeholder="Enter display name here.." ng-value="$root.users[$root.clientId].name"></input>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="changeName(changename)">Save</button>
-			</div>
-	    </div><!-- /.modal-content -->
-	  </div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
-
-
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
 
 	</div>
-
 
 
 
