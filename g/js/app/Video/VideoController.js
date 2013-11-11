@@ -11,7 +11,6 @@ app.controller('VideoController', function($scope, $rootScope){
 
 	$scope.constraintsListener;
 	$scope.peers = {};
-	$scope.focusPeerId;
 	$rootScope.videoClient.setDelegate($scope);
 	
 	$scope.init = function(){
@@ -27,9 +26,6 @@ app.controller('VideoController', function($scope, $rootScope){
 			return;
 
 		$scope.peers[peerId] = {url:"", audioEnabled:true, videoEnabled:true, hasVideo:false, hasAudio: false};
-		
-		if (Object.keys($scope.peers).length == 1)
-			$scope.focusPeerId = peerId;
 
 		$scope.safeApply();
 	}
@@ -37,11 +33,6 @@ app.controller('VideoController', function($scope, $rootScope){
 
 	$scope.removePeer = function(peerId){
 		delete $scope.peers[peerId];
-
-		if ($scope.focusPeerId == peerId){
-			for (var first in $scope.peers)
-				$scope.focusPeerId = first;
-		}
 
 		$scope.safeApply();
 	}
@@ -86,12 +77,6 @@ app.controller('VideoController', function($scope, $rootScope){
 	}
 
 
-	$scope.switchFocusPeer = function(peerId){
-		$scope.focusPeerId = peerId;
-		$scope.safeApply();
-	}
-
-
 	$scope.toggleOwnVideo = function(type){
 		$scope.videoEnabled = !$scope.videoEnabled;
 
@@ -107,6 +92,7 @@ app.controller('VideoController', function($scope, $rootScope){
 	$scope.toggleOwnAudio = function(){
 		$scope.constraints.audio = !$scope.constraints.audio;
 
+		console.log($scope.constraints);
 		if ($scope.constraintsListener != undefined)
 			$scope.constraintsListener.constraintsChanged($scope.constraints);
 	}
@@ -123,7 +109,7 @@ app.controller('VideoController', function($scope, $rootScope){
 	}
 
 
-	$scope.toggleAudio = function(peerId){
+	$scope.toggleAudio = function(peerId){console.log(peerId);
 		var peer = $scope.peers[peerId];
 		if (peer.hasAudio){
 			peer.audioEnabled = !peer.audioEnabled;
@@ -149,7 +135,7 @@ app.controller('VideoController', function($scope, $rootScope){
 });
 
 
-app.directive('videoChatActive', function($window) {
+app.directive('videoChat', function($window) {
 	return function(scope, element, attrs) {
 		element[0].removeAttribute("controls");
 		
@@ -163,36 +149,9 @@ app.directive('videoChatActive', function($window) {
 	};
 });
 
-
-app.directive('videoChatInactive', function($window) {
+app.directive('videoZoomOwn', function($window) {
 	return function(scope, element, attrs) {
-		scope.$watch("peerId", function() {
-		    checkMute(scope.peerId, scope.$parent.$parent.clientId);
-	    });
-		
-		function checkMute(peerId, selfPeerId){
-			if (peerId == selfPeerId)
-				element.prop('muted', true);
-			else
-				element.prop('muted', false);
-		}
-		element[0].removeAttribute("controls");
-
-		function alive(){
-			try{
-				element[0].play();
-				setTimeout(alive, 1000);
-			} catch (err){console.log(err)}
-		}
-		alive();
-	};
-});
-
-
-
-app.directive('videoZoomActive', function($window) {
-	return function(scope, element, attrs) {
-		scope.$watch("peers[focusPeerId].url", function() {
+		scope.$watch("peers[$root.clientId].url", function() {
 			setTimeout(function(){
 				element.removeClass("transition-zoom");
 				element.addClass("transition-zoom");
@@ -202,8 +161,19 @@ app.directive('videoZoomActive', function($window) {
 });
 
 
-app.directive('videoZoomInactive', function($window) {
+app.directive('videoZoomOthers', function($window) {
 	return function(scope, element, attrs) {
+		console.log(scope.peerId);
+		console.log(scope);
+		console.log(scope.$parent.$parent.clientId);
+		function checkMute(){
+			if (scope.peerId == scope.$parent.$parent.clientId)
+				element.prop('muted', true);
+			else
+				element.prop('muted', false);
+		}
+		checkMute();
+
 		scope.$watch("peer.url", function() {
 			setTimeout(function(){
 				element.removeClass("transition-zoom");
