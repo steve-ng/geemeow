@@ -284,3 +284,23 @@ font-weight:700;
 li {
 	line-height: 30px;
 }
+
+.popover-title{
+
+	color:black;
+}
+
+.popover-content {
+	color:black;
+}
+
+.timer_score{
+	position: absolute;
+	bottom: 15%;
+	right: 50px;
+	display:none;
+}
+
+.kitten_conv{
+	text-align:right;
+}
