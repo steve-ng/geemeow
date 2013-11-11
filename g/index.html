@@ -47,14 +47,14 @@
 
 					<div id="board-sidebar" class="board-sidebar" ng-show="showToolbar">
 						<ul class="board-toolbar">
-							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='select'}" ng-click="toggleCanvasMode('select')"><i class="fa fa-hand-o-up toolbar-text"></i></li>
-							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='marker'}" ng-click="toggleCanvasMode('marker')"><i class="fa fa-pencil toolbar-text"></i></li>
-							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='highlighter'}" ng-click="toggleCanvasMode('highlighter')"><i class="fa fa-magic toolbar-text"></i></li>
-							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='eraser'}" ng-click="toggleCanvasMode('eraser')"><i class="fa fa-eraser toolbar-text"></i></li>
+							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='select'}" ng-click="toggleCanvasMode('select')" analytic-select> <i class="fa fa-hand-o-up toolbar-text"></i></li>
+							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='marker'}" ng-click="toggleCanvasMode('marker')" analytic-marker><i class="fa fa-pencil toolbar-text"></i></li>
+							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='highlighter'}" ng-click="toggleCanvasMode('highlighter')" analytic-highlighter><i class="fa fa-magic toolbar-text"></i></li>
+							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='eraser'}" ng-click="toggleCanvasMode('eraser')" analytic-eraser><i class="fa fa-eraser toolbar-text"></i></li>
 							<li class="toolbar-separator"></li>
 							
 							<div class="btn-group">
-							    <li type="button" class="toolbar-btn" data-toggle="dropdown"><i class="fa fa-square toolbar-text" ng-style="getStrokeColor(strokeColor)"></i></li>
+							    <li type="button" class="toolbar-btn" data-toggle="dropdown" analytic-change-color><i class="fa fa-square toolbar-text" ng-style="getStrokeColor(strokeColor)"></i></li>
 							    <ul class="dropdown-menu color-picker">
 							    	<li ng-repeat="color in strokeColors" type="button" class="toolbar-btn color-picker-item" data-toggle="dropdown">
 							    		
@@ -71,20 +71,20 @@
 
 							<li class="toolbar-separator"></li>
 
-							<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==2 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(2)">
+							<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==2 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(2)" analytic-stroke-small>
 								<i class="fa fa-circle toolbar-text" style="font-size:0.3em" ng-style="getStrokeColor(strokeColor)" ng-show="canvasMode == 'marker' || canvasMode == 'select' || canvasMode == 'highlighter'">
 								</i>
 								<i class="fa fa-circle-o toolbar-text" style="font-size:0.3em" ng-show="canvasMode == 'eraser'">
 								</i>
 							</li>
 
-							<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==5 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(5)">
+							<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==5 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(5)" analytic-stroke-med>
 								<i class="fa fa-circle toolbar-text" style="font-size:0.7em"  ng-style="getStrokeColor(strokeColor)" ng-show="canvasMode == 'marker' || canvasMode == 'select' || canvasMode == 'highlighter'"></i>
 								<i class="fa fa-circle-o toolbar-text" style="font-size:0.7em" ng-show="canvasMode == 'eraser'">
 								</i>
 							</li>
 
-							<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==20 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(20)">
+							<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==20 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(20)" analytic-stroke-large>
 								<i class="fa fa-circle toolbar-text" ng-style="getStrokeColor(strokeColor)" ng-show="canvasMode == 'marker' || canvasMode == 'select' || canvasMode == 'highlighter'"></i>
 								<i class="fa fa-circle-o toolbar-text" ng-show="canvasMode == 'eraser'">
 								</i>
@@ -93,25 +93,25 @@
 
 							<li class="toolbar-separator"></li>
 
-							<li type="button" class="toolbar-btn" ng-click="undoCanvas()">
+							<li type="button" class="toolbar-btn" ng-click="undoCanvas()" analytic-undo>
 								<i class="fa fa-undo toolbar-text">
 								</i>
 							</li>
 
-							<li type="button" class="toolbar-btn" ng-click="redoCanvas()">
+							<li type="button" class="toolbar-btn" ng-click="redoCanvas()" analytic-redo>
 								<i class="fa fa-repeat toolbar-text">
 								</i>
 							</li>
 
 
 							<li class="toolbar-separator"></li>
-							<li type="button" class="toolbar-btn"  ng-click="zoomIn()">
+							<li type="button" class="toolbar-btn"  ng-click="zoomIn()" analytic-zoom-in>
 								<span class="fa-stack fa-lg">
 								  	<i class="fa fa-search toolbar-text fa-stack-1x zoom-button"></i>
 								  	<i class="fa fa-plus toolbar-text fa-stack-1x zoom-plus-minus"></i>
 								</span>
 							</li>
-							<li type="button" class="toolbar-btn"  ng-click="zoomOut()">
+							<li type="button" class="toolbar-btn"  ng-click="zoomOut()" analytic-zoom-out>
 								<span class="fa-stack fa-lg">
 								  	<i class="fa fa-search toolbar-text fa-stack-1x zoom-button"></i>
 								  	<i class="fa fa-minus toolbar-text fa-stack-1x zoom-plus-minus"></i>
@@ -473,6 +473,8 @@
 
 	<!-- bootstrap -->
 	<script src="js/bootstrap.min.js"></script>
+
+	<script src="js/app/directive.js"></script>
 	
 	 <!-- Google analytics -->
     <script>
