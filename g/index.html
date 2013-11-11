@@ -128,7 +128,7 @@
 						<ul class="nav nav-tabs board-tab-header-list">
 							<li ng-repeat="tab in tabsArray">
 								<a class="board-tab-header-list-name" ng-class="{highlight: currentTabIndex == tab.tabIndex}"  ng-click="switchTab(tab.tabIndex)">{{tab.metadata.name | truncate:15}}&nbsp;
-									<span class="glyphicon glyphicon-remove-circle board-tab-header-close" ng-click="closeTab(tab.tabIndex); $event.stopPropagation();"></span>
+									<i class="fa fa-times board-tab-header-close" ng-click="closeTab(tab.tabIndex); $event.stopPropagation();"></i>
 								</a>
 							</li>
 
@@ -436,6 +436,8 @@
 	<script src="js/angular.min.js"></script>
 	<script src="js/pretty.js"></script>
 	<script src="http://ec2-54-254-128-239.ap-southeast-1.compute.amazonaws.com:3217/socket.io/socket.io.js"></script>
+	<script src="js/socket.io.min.js"></script>
+	<script src="js/jquery.autosize.min.js"></script>
 
 	<!-- RTCStarJS -->
 	<script src="js/RTCStarJS/adapter.js"></script>
