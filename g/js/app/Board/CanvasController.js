@@ -1,4 +1,4 @@
-var CanvasController = function(canvasJquery, requestCanvasAction, toolDataSource, peerId){
+var CanvasController = function(tab, canvasJquery, requestCanvasAction, toolDataSource, peerId){
 	//	Data
 	var canvas = canvasJquery[0];
 	var context = canvas.getContext('2d');
@@ -161,7 +161,7 @@ var CanvasController = function(canvasJquery, requestCanvasAction, toolDataSourc
 		context.beginPath();
 		context.lineJoin = "round";
     	context.lineCap = 'round';
-		context.lineWidth = canvasData.size;
+		context.lineWidth = canvasData.size*tab.scale;
     	if (canvasData.mode == 'marker'){
 			context.globalCompositeOperation = 'source-over';
 			context.strokeStyle = canvasData.color;
@@ -194,7 +194,7 @@ var CanvasController = function(canvasJquery, requestCanvasAction, toolDataSourc
 
 		context.lineJoin = "round";
 		context.lineCap = 'round';
-		context.lineWidth = canvasData.size;
+		context.lineWidth = canvasData.size*tab.scale;
 		if (canvasData.mode == 'marker'){
 			context.globalCompositeOperation = 'source-over';
 			context.strokeStyle = canvasData.color;
