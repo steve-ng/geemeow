@@ -441,7 +441,7 @@ app.directive('canvasDrawing', function($window) {
   		canvasAction.tabIndex = tab.tabIndex;
   		scope.boardClient.canvasAction(canvasAction);
   	}
-  	scope.page.canvasController = new CanvasController(element, requestCanvasAction, scope.$parent, scope.boardClient.peerId());
+  	scope.page.canvasController = new CanvasController(scope.tab, element, requestCanvasAction, scope.$parent, scope.boardClient.peerId());
 
   };
 });
