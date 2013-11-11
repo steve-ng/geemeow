@@ -3,7 +3,6 @@ var http = require('http');
 var socketio = require('socket.io');
 var crypto = require('crypto');
 var NodeStarServer = require('NodeStarServer/NodeStarServer');
-
 var app = express();
 var server = http.createServer(app);
 var io = socketio.listen(server);
@@ -27,9 +26,11 @@ function socketConnectionInstance(socket) {
 			serverId = crypto.createHash('md5').update(new Date().getTime()+randstr).digest("hex");
 			nodeStarServer = new NodeStarServer(serverId);
 			nodeStarServers[serverId] = nodeStarServer;
-		} 
-		else 
+		} else {
+			if (nodeStarServers[serverId] == undefined)
+				nodeStarServers[serverId] = new NodeStarServer(serverId);
 		 	nodeStarServer = nodeStarServers[serverId];
+		}
 		 socket.emit('open', serverId);
 		 nodeStarServer.socketOpenHandler(socket);
     });

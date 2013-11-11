@@ -45,7 +45,7 @@
 						<i class="fa fa-chevron-circle-up toolbar-toggle-text" ng-show="showToolbar"></i>
 					</div>
 
-					<div id="board-sidebar" class="board-sidebar" ng-show="showToolbar">
+					<div id="board-sidebar" class="board-sidebar" board-toolbar>
 						<ul class="board-toolbar">
 							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='select'}" ng-click="toggleCanvasMode('select')"><i class="fa fa-hand-o-up toolbar-text"></i></li>
 							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='marker'}" ng-click="toggleCanvasMode('marker')"><i class="fa fa-pencil toolbar-text"></i></li>
