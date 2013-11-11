@@ -9,6 +9,7 @@ app.controller('BoardController', function($scope, $rootScope){
     $scope.colorIndex = 0;
     $scope.sendCursorUpdate = true;
     $scope.showToolbar = true;
+    $scope.toolbarElement;
 
     //  Board state
     $scope.strokeSize = 2;
@@ -40,6 +41,10 @@ app.controller('BoardController', function($scope, $rootScope){
 
     $scope.toggleToolbar = function(){
         $scope.showToolbar = !$scope.showToolbar;  
+        if ($scope.showToolbar)
+          $scope.toolbarElement.slideDown('fast');
+        else
+          $scope.toolbarElement.slideUp('fast');
     }
 
     $scope.toggleCanvasMode = function(mode){
@@ -275,6 +280,13 @@ app.directive('onChangeImageFile', function($window) {
     element.on('change',function(){
       scope.uploadImage(element[0].files[0]);
     });
+  };
+});
+
+
+app.directive('boardToolbar', function($window) {
+  return function(scope, element, attrs) {
+    scope.toolbarElement = element;
   };
 });
 
