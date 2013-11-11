@@ -104,7 +104,7 @@ app.directive('chatScroll', function() {
 app.directive('chatMessageText', function() {
     return function(scope, element, attrs) {
         setTimeout(function(){
-        	element.height(element[0].scrollHeight);
+        	element.autosize();
         },0);
     };
 });
