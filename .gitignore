@@ -1,4 +1,4 @@
 .DS_Store
-servers/websocket_server/node_modules
+servers/websocket_server/node_modules/*
 !servers/websocket_server/node_modules/NodeStarServer
 servers/peerjs_server/node_modules
