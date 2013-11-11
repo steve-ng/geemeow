@@ -169,10 +169,7 @@ function RTCStarServer(){
       /*** Connection Handlers ***/
       conn.on('data', function(data){connDataHandler(id, data);});
       conn.on('close', function(){connCloseHandler(id);});
-      conn.on('error', function(err){
-        delete peerConnections[id];
-        connCloseHandler(id);
-      });
+      conn.on('error', function(err){connCloseHandler(id);});
     });
   }
 
@@ -236,8 +233,10 @@ function RTCStarServer(){
 
   //  Connection Close
   var connCloseHandler = function(id){
-    if (peerConnections[id] == null)
+      if (peerConnections[id] == null)
         return;
+
+      delete peerConnections[id];
 
       if (eventHandlers['ClientLeave'] != null)
         for (var i in eventHandlers['ClientLeave'])

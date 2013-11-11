@@ -2,7 +2,7 @@ var express = require('express');
 var http = require('http');
 var socketio = require('socket.io');
 var crypto = require('crypto');
-var NodeStarServer = require('NodeStarServer');
+var NodeStarServer = require('NodeStarServer/NodeStarServer');
 
 var app = express();
 var server = http.createServer(app);
