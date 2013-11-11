@@ -210,11 +210,11 @@
 				<div class="sidebar-items">
 					<span class="fa-stack sidebar-item" ng-click="toggleOwnVideo()">
 						<i class="fa fa-video-camera fa-stack-1x"></i>
-						<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peers[$root.clientId].videoEnabled || !peers[$root.clientId].hasVideo"></i>
+						<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peers[$root.clientId].hasVideo"></i>
 					</span>
 					<span class="fa-stack sidebar-item" ng-click="toggleOwnAudio()">
 						<i class="fa fa-microphone fa-stack-1x"></i>
-						<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peers[$root.clientId].audioEnabled || !peers[$root.clientId].hasAudio"></i>
+						<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peers[$root.clientId].hasAudio"></i>
 					</span>
 					
 
@@ -251,7 +251,7 @@
 						</div>
 					</div>
 					
-					<video class="video-element flip" autoplay ng-src="{{peers[$root.clientId].url}}" ng-show="peers[$root.clientId].videoEnabled && peers[$root.clientId].hasVideo" video-chat-active video-zoom-active>
+					<video class="video-element flip" autoplay ng-src="{{peers[$root.clientId].url}}" ng-show="peers[$root.clientId].hasVideo" video-chat video-zoom-own muted>
 					</video>
 				</div>
 			</div>
@@ -278,7 +278,7 @@
 						</div>
 					</div>
 					
-					<video class="video-element flip" autoplay ng-src="{{peers[peerId].url}}" ng-show="peers[peerId].videoEnabled && peers[peerId].hasVideo" video-chat-active video-zoom-active>
+					<video class="video-element flip" autoplay ng-src="{{peer.url}}" ng-show="peer.videoEnabled && peer.hasVideo" video-chat video-zoom-others>
 					</video>
 				</div>
 			</div>

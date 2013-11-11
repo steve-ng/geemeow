@@ -120,5 +120,6 @@ var VideoClient = function(client){
 		var callConn = client.call(peerId, localMediaStream);
 		callConn.metadata = {time:new Date().getTime()};
 		callerConnections[peerId] = callConn;
+		console.log("calling "+peerId);
 	}
 }
