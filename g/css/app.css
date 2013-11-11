@@ -80,6 +80,7 @@ html, body {
 	height:3.0em;
 	top:0em;
 	right:0em;
+	padding-left:0.2em;
 }
 
 
@@ -231,7 +232,7 @@ box-shadow: 0 0 0px #719ECE;
 }
 
 .highlight {
- 	background-color: rgba(138,138,138,1);
+ 	background-color: white;
  	color:white;
 }
 
