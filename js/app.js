@@ -187,9 +187,9 @@ $(document).ready(function () {
 		if(score <5){
 			remark = "Are you using your toe to play this game?";
 		}else if(score <10){
-			remark = "Nyan cat can play better than you man! Blah";
+			remark = "My nyan grannie can play better than you man! Blah";
 		}else if(score <15){
-			remark = "Not bad, as good as my grandma";
+			remark = "Not bad, as good as my nyan grannie";
 		}else if (score < 20){
 			remark = "Getting there..., you can do it!";
 		}else {
