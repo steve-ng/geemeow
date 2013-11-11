@@ -309,3 +309,17 @@ li {
 	font-family: Raleway,sans-serif;
 	font-size:1.2rem;
 }
+
+.small {
+	font-size: 75%;
+}
+
+.popover_thing{
+	font-family: Raleway,sans-serif;
+	font-size: 1.6rem;
+}
+
+.popover_btn{
+	background-color: #1abc9c;
+	color:white;
+}
