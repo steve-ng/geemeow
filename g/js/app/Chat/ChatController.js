@@ -4,12 +4,14 @@ app.controller('ChatController', function($scope, $rootScope){
 	$scope.chatHistory = [];
 	$scope.scrollDiv;
 	$rootScope.chatClient.setDelegate($scope);
+	$scope.badgeCount = 0;
 
 	$scope.text;
 
 
 	$scope.toggleShowChatWidget = function(){
 		$scope.showChatWidget = !$scope.showChatWidget;
+		$scope.badgeCount = 0;
 	}
 
 	$scope.sendChat = function(){
@@ -26,6 +28,8 @@ app.controller('ChatController', function($scope, $rootScope){
 			autoScroll = true;
 
 		$scope.chatHistory.push(message);
+		if (!$scope.showChatWidget)
+			$scope.badgeCount++;
 		$scope.safeApply(function(){
 			setTimeout(function(){
 				if (autoScroll){
