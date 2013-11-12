@@ -48,6 +48,7 @@ app.run(function($rootScope){
 		$rootScope.client.key = apikey;
 		$rootScope.client.host = apihost;
 		$rootScope.client.port = apiport;
+		$rootScope.client.onMessage('MessageProgress', updateProgress);
 	    $rootScope.client.debug($rootScope.debug);
 	    $rootScope.client.onClientEvent('Open',function(clientPeerId){
 			$("#loading-screen").hide();
@@ -141,5 +142,12 @@ app.run(function($rootScope){
 
 	$rootScope.getGeemeowURL = function(){
 		return window.location.href;
+	}
+
+	function updateProgress(message){
+		$rootScope.progress = message.data;
+		if ($rootScope.progress >= 1)
+			$rootScope.progress = 0;
+		$rootScope.$apply();
 	}
 });

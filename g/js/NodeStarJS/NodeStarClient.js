@@ -9,7 +9,7 @@ function NodeStarClient(){
   var eventHandlers = {}; //  Open, Close, Error, ClientEnter, ClientLeave, ClientList, Call
   var messageHandlers = {};
   var debug = false;
-  var messageLimit = 50000;
+  var messageLimit = 1000;
   var socket;
   this.key = "";
   this.host = "0.peerjs.com";
@@ -26,14 +26,14 @@ function NodeStarClient(){
 
   //  Adds a handler to a particular client event
   this.onClientEvent = function(event, handler){
-    if (eventHandlers[event] == null)
+    if (eventHandlers[event] == undefined)
       eventHandlers[event] = [];
     eventHandlers[event].push(handler);
   }
 
   //  Removes a handler for a particular server event
   this.removeOnClientEvent = function(event, handler){
-    if (eventHandlers[event] != null){
+    if (eventHandlers[event] != undefined){
       var index = eventHandlers[event].indexOf(handler);
       if (index > -1) 
         eventHandlers[event].splice(index, 1);
@@ -42,14 +42,14 @@ function NodeStarClient(){
 
   // Adds a handler to a particular message. Message is a json object.
   this.onMessage = function(type, handler){
-    if (messageHandlers[type] == null)
+    if (messageHandlers[type] == undefined)
       messageHandlers[type] = [];
     messageHandlers[type].push(handler);
   }
 
   //  Removes a handler for a particular message
   this.removeOnMessage = function(type, handler){
-    if (messageHandlers[type] != null){
+    if (messageHandlers[type] != undefined){
       var index = messageHandlers[type].indexOf(handler);
       if (index > -1) 
         messageHandlers[type].splice(index, 1);
@@ -72,6 +72,7 @@ function NodeStarClient(){
 
   //  Function to segment messages that are too long
   var serverConnectionSend = function(message){
+      var messageSize = message.length;
       if (message.length < messageLimit){
           serverConnection.emit('data', message);
       } else {
@@ -80,7 +81,7 @@ function NodeStarClient(){
           message = message.substring(messageLimit);
 
           while (message.length > messageLimit){
-            serverConnection.emit('data', "segment:"+message.substring(0, messageLimit));
+            serverConnection.emit('data', "segment:"+(messageSize-message.length)+","+messageSize+","+message.substring(0, messageLimit));
             message = message.substring(messageLimit); 
           }
 
@@ -136,7 +137,7 @@ function NodeStarClient(){
 
   //  Client Call
   function peerjsCallHandler(callConn){
-    if (eventHandlers['Call'] != null)
+    if (eventHandlers['Call'] != undefined)
       for (var i in eventHandlers['Call'])
         eventHandlers['Call'][i](callConn);
   }
@@ -156,7 +157,7 @@ function NodeStarClient(){
     if (debug)
       console.log("Client connected, id: "+clientPeer.id);
     
-    if (eventHandlers['Open'] != null)
+    if (eventHandlers['Open'] != undefined)
       for (var i in eventHandlers['Open'])
         eventHandlers['Open'][i](clientPeer.id, serverPeerId);
   }
@@ -164,7 +165,7 @@ function NodeStarClient(){
 
     //  Client Close
   function closeHandler(){
-    if (eventHandlers['Close'] != null)
+    if (eventHandlers['Close'] != undefined)
       for (var i in eventHandlers['Close'])
         eventHandlers['Close'][i](serverPeerId);
   }
@@ -193,18 +194,18 @@ function NodeStarClient(){
 
     //  Normal message
     var message = JSON.parse(messageString);
-    if (message['type'] == null)
+    if (message['type'] == undefined)
       return;
 
     //  Events
     if (datatype == "event"){
-      if (eventHandlers[message.type] != null)
+      if (eventHandlers[message.type] != undefined)
         for (var i in eventHandlers[message.type])
           eventHandlers[message.type][i](message);
 
     //  Messages
     } else if (datatype == "message"){
-      if (messageHandlers[message.type] != null)
+      if (messageHandlers[message.type] != undefined)
         for (var i in messageHandlers[message.type])
           messageHandlers[message.type][i](message);
     }

@@ -136,6 +136,15 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 		},0);
 	}
 
+	$scope.screenshotPageAsTab = function(pageIndex){
+        var canvas = $scope.pages[pageIndex].getScreenshot();
+		var metadata = new Object();
+	    metadata.sourceType = "ImageFile";
+	    metadata.name = $scope.tab.metadata.name+ ' page'+ (pageIndex+1);
+	    metadata.imageFile = canvas.toDataURL();
+	    $scope.boardClient.newTab(metadata);
+	}
+
 	$scope.downloadSource = function(){
 		if ($scope.tab.metadata.sourceType == "PDFFile")
 			$scope.downloadOriginalPDF();
