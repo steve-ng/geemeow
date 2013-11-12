@@ -131,7 +131,9 @@ var BoardClient = function(client){
 			client.request(request);  
         }
 
-		navigator.getMedia({video: {mandatory: { chromeMediaSource: 'screen', maxHeight: screen.height, maxWidth:screen.width }}}, gotScreenStream,
+		navigator.getMedia({video: {mandatory: { chromeMediaSource: 'screen'}}}, gotScreenStream,
+	    
+		//navigator.getMedia({video: {mandatory: { chromeMediaSource: 'screen', maxHeight: screen.height, maxWidth:screen.width }}}, gotScreenStream,
 	        // errorCallback
 	        function(err) {
 	         	console.log(err);
