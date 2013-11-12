@@ -15,8 +15,8 @@ function NodeStarClient(){
   this.host = "0.peerjs.com";
   this.port = 9000;
   this.secure = false;
-  this.socketHost = "http://ec2-54-254-128-239.ap-southeast-1.compute.amazonaws.com";
-  //this.socketHost = "http://localhost";
+  //this.socketHost = "http://ec2-54-254-128-239.ap-southeast-1.compute.amazonaws.com";
+  this.socketHost = "http://localhost";
   this.socketPort = 3217;
 
   /*** Public methods ***/

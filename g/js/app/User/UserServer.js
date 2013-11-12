@@ -24,7 +24,7 @@ function UserServer(server){
 		users[peerId].peerId = peerId;
 		var randomCat = cats[Math.floor(Math.random()*cats.length)];
 		var randomColor = Math.floor(Math.random()*colors.length);
-		users[peerId].name = colorsName[randomColor] + " " +cat;
+		users[peerId].name = colorsName[randomColor] + " " +randomCat;
 		users[peerId].color = colors[randomColor];
 
 		colors2.push(colors[randomColor]);
