@@ -1,7 +1,7 @@
 
 app.controller('VideoController', function($scope, $rootScope){
 	$scope.videoType = {'CameraLow': {mandatory: { maxWidth: 320, maxHeight: 180 }},
-						'CameraHigh': {mandatory: { maxWidth: 640, maxHeight: 360 }}};
+						'CameraHigh': {mandatory: { minWidth: 1280, minHeight: 720 }}};
 	$scope.currentVideoType = 'CameraLow';
 	$scope.videoEnabled = false;			
 	$scope.constraints = {
@@ -12,6 +12,7 @@ app.controller('VideoController', function($scope, $rootScope){
 	$scope.constraintsListener;
 	$scope.peers = {};
 	$rootScope.videoClient.setDelegate($scope);
+	$scope.fullscreenPeer;
 	
 	$scope.init = function(){
 		//	Restart localstream based on constraints
@@ -80,10 +81,7 @@ app.controller('VideoController', function($scope, $rootScope){
 	$scope.toggleOwnVideo = function(type){
 		$scope.videoEnabled = !$scope.videoEnabled;
 
-		if ($scope.videoEnabled)
-			$scope.constraints.video = $scope.videoType[$scope.currentVideoType];
-		else
-			$scope.constraints.video = false;
+		rebuildConstraints();
 
 		if ($scope.constraintsListener != undefined)
 			$scope.constraintsListener.constraintsChanged($scope.constraints);
@@ -92,7 +90,6 @@ app.controller('VideoController', function($scope, $rootScope){
 	$scope.toggleOwnAudio = function(){
 		$scope.constraints.audio = !$scope.constraints.audio;
 
-		console.log($scope.constraints);
 		if ($scope.constraintsListener != undefined)
 			$scope.constraintsListener.constraintsChanged($scope.constraints);
 	}
@@ -109,7 +106,7 @@ app.controller('VideoController', function($scope, $rootScope){
 	}
 
 
-	$scope.toggleAudio = function(peerId){console.log(peerId);
+	$scope.toggleAudio = function(peerId){
 		var peer = $scope.peers[peerId];
 		if (peer.hasAudio){
 			peer.audioEnabled = !peer.audioEnabled;
@@ -117,6 +114,32 @@ app.controller('VideoController', function($scope, $rootScope){
 			for (var i in tracks)
 				tracks[i].enabled = peer.audioEnabled;
 		}
+	}
+
+	$scope.toggleHD = function(peerId){
+		if ($scope.currentVideoType == 'CameraLow')
+			$scope.currentVideoType = 'CameraHigh';
+		else
+			$scope.currentVideoType = 'CameraLow';
+
+		rebuildConstraints();
+
+		if ($scope.constraintsListener != undefined)
+			$scope.constraintsListener.constraintsChanged($scope.constraints);
+	}
+
+	var rebuildConstraints = function(){
+		if ($scope.videoEnabled)
+			$scope.constraints.video = $scope.videoType[$scope.currentVideoType];
+		else
+			$scope.constraints.video = false;
+	}
+
+	$scope.setFullscreenPeer = function(peerId){
+		if(peerId != undefined && $scope.peers[peerId].hasVideo)
+			$scope.fullscreenPeer = $scope.peers[peerId];
+		else
+			$scope.fullscreenPeer = undefined;
 	}
 
 
@@ -163,9 +186,6 @@ app.directive('videoZoomOwn', function($window) {
 
 app.directive('videoZoomOthers', function($window) {
 	return function(scope, element, attrs) {
-		console.log(scope.peerId);
-		console.log(scope);
-		console.log(scope.$parent.$parent.clientId);
 		function checkMute(){
 			if (scope.peerId == scope.$parent.$parent.clientId)
 				element.prop('muted', true);
@@ -179,6 +199,32 @@ app.directive('videoZoomOthers', function($window) {
 				element.removeClass("transition-zoom");
 				element.addClass("transition-zoom");
 			},0);
+	    });
+	};
+});
+
+
+app.directive('fullscreenVideo', function($window) {
+	return function(scope, element, attrs) {
+		scope.$watch("fullscreenPeer.url", function() {
+			setTimeout(function(){
+				element.removeClass("transition-zoom");
+				element.addClass("transition-zoom");
+			},0);
+	    });
+
+	    $(window).on('keydown',function(e){
+	      if (e.keyCode == 27 && scope.fullscreenPeer != undefined){
+	        scope.fullscreenPeer = undefined;
+	        scope.$apply();
+	      } 
+	    });
+
+	    element.on('click',function(e){
+	      if (scope.fullscreenPeer != undefined){
+	        scope.fullscreenPeer = undefined;
+	        scope.$apply();
+	      } 
 	    });
 	};
 });

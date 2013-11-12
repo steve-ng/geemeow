@@ -52,6 +52,8 @@ app.run(function($rootScope){
 	    $rootScope.client.onClientEvent('Open',function(clientPeerId){
 			$("#loading-screen").hide();
 			$("#app").show();
+			if ($rootScope.serverPeerId == undefined || $rootScope.serverPeerId.length == 0)
+				$("#inviteModal").modal("show");
 			$rootScope.clientId = clientPeerId;
 
 			clearTimeout($rootScope.setupTimer);
@@ -132,5 +134,7 @@ app.run(function($rootScope){
     	$rootScope.$broadcast('UploadImage', file);
 	}
 
-
+	$rootScope.getGeemeowURL = function(){
+		return window.location.href;
+	}
 });

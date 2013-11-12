@@ -43,6 +43,8 @@ app.run(function($rootScope){
 	    $rootScope.client.onClientEvent('Open',function(clientPeerId, serverPeerId){
 			$("#loading-screen").hide();
 			$("#app").show();
+			if ($rootScope.serverPeerId == undefined || $rootScope.serverPeerId.length == 0)
+				$("#inviteModal").modal("show");
 			$rootScope.clientId = clientPeerId;
 			$rootScope.serverPeerId = serverPeerId;
 			window.location.hash = $rootScope.serverPeerId;
@@ -100,5 +102,7 @@ app.run(function($rootScope){
     	$rootScope.$broadcast('UploadImage', file);
 	}
 
-
+	$rootScope.getGeemeowURL = function(){
+		return window.location.href;
+	}
 });
