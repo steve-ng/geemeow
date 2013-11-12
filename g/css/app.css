@@ -448,7 +448,7 @@ box-shadow: 0 0 0px #719ECE;
 
 
 .pointer{
-	cursor: pointer
+	cursor: pointer !important;
 }
 
 
@@ -544,6 +544,6 @@ box-shadow: 0 0 0px #719ECE;
 	height:100%;
 	top:0;
 	left:0;
-	background: rgba(0,0,0,0.9);
+	background: rgba(0,0,0,0.8);
 	z-index:2000;
 }
