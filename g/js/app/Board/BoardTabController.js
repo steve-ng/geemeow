@@ -228,7 +228,7 @@ app.directive('scrollPosition', function($window) {
 
     var counter = 0;
     var updateTimer;
-	element.on('mousemove', function(e){
+	element.on('vmousemove', function(e){
 		function update(){
 			scope.cursorData = {left: (e.pageX - element.offset().left -3)/element.width(), top: (e.pageY - element.offset().top-3)/element.height()};
 			if (!scope.sendCursorUpdate)

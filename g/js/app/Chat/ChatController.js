@@ -5,7 +5,7 @@ app.controller('ChatController', function($scope, $rootScope){
 	$scope.scrollDiv;
 	$rootScope.chatClient.setDelegate($scope);
 	$scope.badgeCount = 0;
-
+	$scope.originSize;
 	$scope.text;
 
 
@@ -122,6 +122,68 @@ app.directive('chatInput', function() {
               	e.preventDefault();
             }
         });
+    };
+});
+
+
+app.directive('topLeftResizer', function() {
+    return function(scope, element, attrs) {
+        var parent = element.parent();
+        var content = parent.find('.chat-widget-content');
+        var xShift = false, yShift = false;
+
+        if (element.hasClass('chat-topLeft-resizer')){
+        	xShift = true;
+        	yShift = true;
+        } else if (element.hasClass('chat-left-resizer')){
+        	xShift = true;
+        } else if (element.hasClass('chat-top-resizer')){
+        	yShift = true;
+        }
+
+        var dragging = false;
+        var origin;
+
+        element.on('vmousedown', function(e){
+        	e.stopPropagation();
+        	dragging = true;
+        	origin = {x: e.pageX, y: e.pageY};
+        	content.addClass('touchnone');
+        });
+        $(document).on('vmousemove', function(e){
+        	if (!dragging)
+        		return;
+        	e.preventDefault();
+        	e.stopPropagation();
+        });
+        $(document).on('vmouseup', function(e){
+        	if (!dragging)
+        		return;
+
+        	var parentWidth = parent.width();
+        	var parentHeight = parent.height();
+        	if (scope.originSize == undefined)
+        		scope.originSize = {width: parentWidth, height: parentHeight};
+        	var changeX = origin.x - e.pageX;
+        	var changeY = origin.y - e.pageY;
+        	origin = {x: e.pageX, y: e.pageY};
+
+
+        	changeX = Math.max(5,Math.max(scope.originSize.width/2, parentWidth + changeX)) - parentWidth;
+        	changeY = Math.max(5,Math.max(scope.originSize.height/2, parentHeight + changeY)) - parentHeight;
+
+        	if (xShift)
+        		parent.width(parentWidth+changeX);
+        	if (yShift){
+        		parent.height(parentHeight+changeY);
+        		content.height(content.height()+changeY);
+        	}
+
+        	dragging = false;
+        	content.removeClass('touchnone');
+        	parent.find('.chat-message-text').resize();
+        });
+
     };
 });
 
