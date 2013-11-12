@@ -39,6 +39,10 @@ app.controller('BoardController', function($scope, $rootScope){
       $scope.addPlainTab();
     });
 
+    $scope.$on('Screenshare', function(event, message){
+      $scope.addScreenshareTab();
+    });
+
     $scope.toggleToolbar = function(){
         $scope.showToolbar = !$scope.showToolbar;  
         if ($scope.showToolbar)
@@ -114,6 +118,10 @@ app.controller('BoardController', function($scope, $rootScope){
       });
     }
 
+    $scope.addScreenshareTab = function(){
+      $scope.boardClient.screenshare();
+    }
+
   	$scope.switchTab = function(tabIndex){
   		$scope.boardClient.switchTab(tabIndex);
   	}
@@ -158,6 +166,12 @@ app.controller('BoardController', function($scope, $rootScope){
   		$scope.tabsArray.push(tab);
       currentTabIndex = tab.tabIndex;
       $scope.currentTabIndex = message.tabIndex;
+
+      if ($scope.tabs[message.tabIndex].metadata.sourceType == 'Screenshare' && 
+        $scope.tabs[message.tabIndex].metadata.peerId == $scope.boardClient.peerId()){
+        $scope.boardClient.startScreenshare();
+      }
+
   		$scope.$apply();
   	}
 
@@ -168,6 +182,10 @@ app.controller('BoardController', function($scope, $rootScope){
 
   	$scope.onCloseTab = function(message){
   		$scope.tabsArray.splice($scope.tabsArray.indexOf($scope.tabs[message.tabIndex]), 1);
+      if ($scope.tabs[message.tabIndex].metadata.sourceType == 'Screenshare' && 
+        $scope.tabs[message.tabIndex].metadata.peerId == $scope.boardClient.peerId()){
+        $scope.boardClient.endScreenshare();
+      }
   		delete $scope.tabs[message.tabIndex];
   		$scope.$apply();
   	}
@@ -220,6 +238,9 @@ app.controller('BoardController', function($scope, $rootScope){
       $scope.$apply();
     }
 
+    $scope.getScreenshareUrl = function(tab){
+      return $scope.boardClient.screenStreams[tab.metadata.peerId].url;
+    }
 
     var readFile = function(file, callback){
       var reader;
