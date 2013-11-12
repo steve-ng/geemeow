@@ -31,6 +31,7 @@ function socketConnectionInstance(socket) {
 				nodeStarServers[serverId] = new NodeStarServer(serverId);
 		 	nodeStarServer = nodeStarServers[serverId];
 		}
+		console.log(serverId);
 		 socket.emit('open', serverId);
 		 nodeStarServer.socketOpenHandler(socket);
     });

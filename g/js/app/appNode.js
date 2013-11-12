@@ -22,8 +22,7 @@ app.run(function($rootScope){
 
 	$rootScope.debug = true;
 	$rootScope.serverPeerId = "";
-	$rootScope.setupTimer;
-	$rootScope.progress = 0.4;
+	$rootScope.progress = 0;
 
 
 	//	Setup
@@ -46,13 +45,15 @@ app.run(function($rootScope){
 	    $rootScope.client.onClientEvent('Open',function(clientPeerId, serverPeerId){
 			$("#loading-screen").hide();
 			$("#app").show();
-			if ($rootScope.serverPeerId == undefined || $rootScope.serverPeerId.length == 0)
+			if ($rootScope.serverPeerId == undefined || $rootScope.serverPeerId.length == 0){
+				$rootScope.serverPeerId = serverPeerId;
 				$("#inviteModal").modal("show");
-			$rootScope.clientId = clientPeerId;
-			$rootScope.serverPeerId = serverPeerId;
-			window.location.hash = $rootScope.serverPeerId;
+			} else
+				$rootScope.serverPeerId = serverPeerId;
 
-			clearTimeout($rootScope.setupTimer);
+			$rootScope.clientId = clientPeerId;
+			window.location.hash = $rootScope.serverPeerId;
+			console.log(window.location.hash);
 	    });
 
 	    //	Plugins
