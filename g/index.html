@@ -167,6 +167,7 @@
 				    						<canvas class="board-tab-page-drawing" canvas-drawing ng-class="{drawingFront: tab.tabIndex==currentTabIndex, disablePointerEvents: canvasMode=='select'}" tabindex="1"></canvas>
 				    						<div class="board-tab-page-text textLayer"></div>
 				    						<canvas class="board-tab-page-background"></canvas>
+				    						<video width="0px"></video>
 
 
 
@@ -433,7 +434,7 @@
 						</div>
 					</div>
 					<div class="new-tab-col pull-right">
-						<div class="new-tab-item">
+						<div class="new-tab-item" ng-click="screenshare()" data-dismiss="modal">
 							<div class="new-tab-item-div new-tab-item-div-select pointer">
 								<i class="fa fa-desktop new-tab-icon new-tab-center"></i>
 								<p class="new-tab-text new-tab-center">Screen Share</p>

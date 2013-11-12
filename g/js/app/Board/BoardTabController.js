@@ -39,6 +39,8 @@ app.controller('BoardTabController', function($scope,$rootScope) {
  				$scope.$apply();
 		    }
 		    image.src = $scope.tab.metadata.imageFile;
+		} else if ($scope.tab.metadata.sourceType == "Screenshare"){
+ 			$scope.pages[0] = {streamSrc: $scope.boardClient.screenStreams, peerId: $scope.tab.metadata.peerId};
 		}
   	};
   	initTab();
@@ -279,7 +281,8 @@ app.directive('boardPage', function($window) {
 		var drawingLayer = element.children().eq(0);
 		var textLayer = element.children().eq(1);
 		var backgroundLayer = element.children().eq(2);
-		var canvasMenu = element.children().eq(3);
+		var hiddenVideo = element.children().eq(3)[0];
+		var canvasMenu = element.children().eq(4);
 		var parentHeight = parent.parent().innerHeight()-1;
 		var tabScale = tab.scale;
 
@@ -351,6 +354,41 @@ app.directive('boardPage', function($window) {
 		  	drawingLayer[0].width = pageDisplayWidth;
 			drawingLayer[0].height = pageDisplayHeight;
 			backgroundLayer[0].getContext('2d').drawImage(image, 0, 0, pageDisplayWidth, pageDisplayHeight);
+	  	} else if (tab.metadata.sourceType == "Screenshare"){
+			var parentWidth = parent.parent().innerWidth()-1;
+
+			var pageDisplayWidth = parentWidth*tabScale;
+			var pageDisplayHeight = parentHeight*tabScale;
+
+		  	
+			element.width(pageDisplayWidth);
+			element.height(pageDisplayHeight);
+		  	backgroundLayer[0].width = pageDisplayWidth;
+			backgroundLayer[0].height = pageDisplayHeight;
+		  	textLayer.width(pageDisplayWidth);
+			textLayer.height(pageDisplayHeight);
+		  	drawingLayer[0].width = pageDisplayWidth;
+			drawingLayer[0].height = pageDisplayHeight;
+
+			var context = backgroundLayer[0].getContext('2d');
+		  	var page = scope.$parent.pages[scope.$index];
+			if (page.streamSrc[page.peerId] != undefined)
+				hiddenVideo.src = page.streamSrc[page.peerId].url;
+
+		  	hiddenVideo.play();
+			function draw() {
+		    	try {
+		    		if (hiddenVideo.src == undefined || hiddenVideo.src.length == 0){
+		    			hiddenVideo.src = page.streamSrc[page.peerId].url;
+		    			hiddenVideo.play();
+		    		}
+		    		else
+		      			context.drawImage(hiddenVideo, 0, 0, pageDisplayWidth, pageDisplayHeight);
+		    	} catch (e) {
+		    	}
+				requestAnimationFrame(draw);
+		  	}
+			requestAnimationFrame(draw);
 	  	}
 
 	  	//	Setup canvas init data
@@ -463,6 +501,9 @@ angular.module('truncateFilter', []).filter('truncate', function () {
         }
 
     };
+
+    var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                              window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 });
 
 

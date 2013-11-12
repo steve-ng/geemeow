@@ -41,10 +41,11 @@ var CanvasController = function(tab, canvasJquery, requestCanvasAction, toolData
 
 		canvasAction.type = "AddStroke";
 		canvasAction.points = [{x: (mouseX-1)/canvasWidth, y: (mouseY-1)/canvasHeight},
-								{x: mouseX/canvasWidth, y: mouseY/canvasHeight},
-								{x: mouseX/canvasWidth, y: mouseY/canvasHeight},
-								{x: (mouseX+1)/canvasWidth, y: (mouseY+1)/canvasHeight},];
+								{x: (mouseX-1)/canvasWidth, y: (mouseY-1)/canvasHeight},
+								{x: (mouseX)/canvasWidth, y: (mouseY)/canvasHeight},];
 		canvasAction.size = toolDataSource.getStrokeSize();
+		if (toolDataSource.getCanvasMode() == 'eraser')	//	make eraser bigger
+			canvasAction.size = toolDataSource.getStrokeSize()*2;
 		canvasAction.color = toolDataSource.getStrokeColor();
 		canvasAction.peakCoord = {x: (mouseX-1)/canvasWidth, y: (mouseY-1)/canvasHeight};
 		drawing = true;

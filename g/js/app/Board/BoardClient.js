@@ -1,6 +1,15 @@
 
 
 var BoardClient = function(client){
+	var localScreenStream;
+	var screenStreams = {};
+	this.screenStreams = screenStreams;
+	var clientConns = {};
+	client.onClientEvent('Call', receiveScreenHandler);
+	client.onClientEvent('ClientList', clientListHandler);
+	client.onClientEvent('ClientEnter', clientEnterHandler);
+	client.onClientEvent('ClientLeave', clientLeaveHandler);
+
 	this.peerId = function(){
 		return client.getClientPeerId();
 	}
@@ -73,6 +82,7 @@ var BoardClient = function(client){
 		client.request(request);
 	}
 
+	
 	//	Message
 	var messageHandler = function(message){
 		if (message.subType == "UpdateCursor")
@@ -99,4 +109,113 @@ var BoardClient = function(client){
 			delegate.onCloseTab(message);
 	};
 	client.onMessage('Board', messageHandler);
+
+
+
+
+
+
+	this.screenshare = function(){
+		if (localScreenStream != undefined)
+			return;
+
+
+		var gotScreenStream = function(localStream){
+        	localScreenStream = localStream;
+        	screenStreams[client.getClientPeerId()] = {stream:localStream, url:URL.createObjectURL(localStream)};
+
+			var request = new Object();
+			request.type = "Board";
+			request.subType = "NewTab";
+			request.metadata = {sourceType:'Screenshare', peerId:client.getClientPeerId(), name:client.getClientPeerId()};
+			client.request(request);  
+        }
+
+		navigator.getMedia({video: {mandatory: { chromeMediaSource: 'screen', maxHeight: screen.height, maxWidth:screen.width }}}, gotScreenStream,
+	        // errorCallback
+	        function(err) {
+	         	console.log(err);
+	        }
+	    );
+	}
+
+	this.endScreenshare = function(){
+		for (var peerId in clientConns){
+			if (clientConns[peerId].close != undefined)
+				clientConns[peerId].close();
+			clientConns[peerId] = "";
+		}
+		localScreenStream.stop();
+        localScreenStream = undefined;
+        delete screenStreams[client.getClientPeerId()];
+	}
+
+	this.startScreenshare = function(){
+		for (var peerId in clientConns)
+			screenPeer(peerId);
+	}
+
+
+
+	/*	Screenshare helper */
+
+	client.onClientEvent('ClientList', clientListHandler);
+	client.onClientEvent('ClientEnter', clientEnterHandler);
+	client.onClientEvent('ClientLeave', clientLeaveHandler);
+	function clientListHandler(peerList){
+		for (var i in peerList.data){
+			if (peerList.data[i] != client.getClientPeerId())
+				clientConns[peerList.data[i]] = "";
+		}
+	}
+
+
+	function clientEnterHandler(message){
+		var peerId = message.data;
+		if (peerId == client.getClientPeerId())
+			return; 
+
+		clientConns[peerId] = "";
+		screenPeer(peerId);
+	}
+
+
+	function clientLeaveHandler(message){
+		var peerId = message.data;
+		delete clientConns[peerId];
+	}
+
+
+	function receiveScreenHandler(screenConn){
+		if (screenConn.metadata.type != 'screen')
+			return;
+
+		screenConn.answer(undefined);
+
+		screenConn.on('stream',function(stream){
+			screenStreams[screenConn.peer] = {stream:stream, url:URL.createObjectURL(stream)};
+		});
+
+		screenConn.on('close',function(){
+			delete screenStreams[screenConn.peer];
+		});
+
+		screenConn.on('error',function(err){
+			delete screenStreams[screenConn.peer];
+		});
+	}
+
+
+
+	function screenPeer(peerId){
+		if (localScreenStream == undefined)
+			return;
+
+		var screenConn = client.call(peerId, localScreenStream);
+		screenConn.metadata = {time:new Date().getTime(), type:'screen'};
+		clientConns[peerId] = screenConn;
+	}
+
+	
+
 }

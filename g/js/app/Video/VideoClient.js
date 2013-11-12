@@ -54,6 +54,8 @@ var VideoClient = function(client){
 
 	
 	function receiveCallHandler(callConn){
+		if (callConn.metadata.type != 'video')
+			return;
 		connections[callConn.peer] = callConn;
 		callConn.answer(undefined);
 
@@ -118,8 +120,7 @@ var VideoClient = function(client){
 			return;
 
 		var callConn = client.call(peerId, localMediaStream);
-		callConn.metadata = {time:new Date().getTime()};
+		callConn.metadata = {time:new Date().getTime(), type:'video'};
 		callerConnections[peerId] = callConn;
-		console.log("calling "+peerId);
 	}
 }

@@ -134,6 +134,11 @@ app.run(function($rootScope){
     	$rootScope.$broadcast('UploadImage', file);
 	}
 
+	$rootScope.screenshare = function(){
+    	$rootScope.$broadcast('Screenshare');
+	}
+
+
 	$rootScope.getGeemeowURL = function(){
 		return window.location.href;
 	}
