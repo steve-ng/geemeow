@@ -22,26 +22,34 @@
 	height:100%;
 }
 .board-tab-header-list-name{
+	top:0.5em;
+    height:2.5em;
     cursor:pointer;
-    padding-left:0.5em !important;
-    padding-right:0.5em !important;
-    padding-top:0.4em !important;
-    border-radius: 0 0 0 0 !important;
+    padding:0.55em !important;
+	border-top-left-radius: 10px !important;
+	border-top-right-radius: 10px !important;
     border: 0 solid white !important;
+	color:rgba(128,128,128,1) !important;
 }
 .board-tab-header-list-name:hover{
     background-color: rgba(200,200,200,1) !important;
-    color:white;
+    color:white!important;
 }
 .board-tab-header-list-name:active{
     background-color: rgba(200,200,200,1) !important;
-    color:white;
+    color:white!important;
 }
 .board-new-tab-button{
-    width:3em;
-    height: 3em;
-    background: rgba(138,138,138,1);
-    color:white;
+	top:0.8em;
+    height:2em;
+    width:2em;
+    padding:0.4em !important;
+	padding-top:0.3em !important;
+	border-radius: 5px !important;
+	border-top-right-radius: 15px !important;
+    background: transparent;
+	border: 0.2em dotted rgba(138,138,138,1) !important;
+    color:rgba(138,138,138,1);
 }
 .board-new-tab-button:hover{
     color:white;
@@ -52,11 +60,10 @@
     background: rgba(58,58,58,1);
 }
 .board-new-tab-text{
-    padding:0.25em;
-    font-size:1.5em;
+    font-size:1em;
 }
 .board-tab-header-close{
-	font-size: 1.5em;
+	font-size: 1em;
 }
 .board-tab-header-close:hover{
     color: rgba(0,0,0,1);
@@ -157,6 +164,8 @@
     background: rgba(58, 58, 58, 1);
     color: white;
     cursor: pointer;
+	border-top-left-radius:0.3em;
+	border-top-right-radius:0.3em;
 }
 .toolbar-toggle:hover{
     background: rgba(138, 138, 138, 1);
@@ -260,8 +269,10 @@
     padding: 0.25em;
     padding-left: 0.5em;
     padding-right: 0.5em;
-    width:6em;
-    right:20em;
+	border-bottom-left-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+	width:6em;
+    right:18em;
     top:3em;
     z-index:1000;
     cursor:pointer;
