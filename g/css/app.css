@@ -547,3 +547,16 @@ box-shadow: 0 0 0px #719ECE;
 	background: rgba(0,0,0,0.8);
 	z-index:2000;
 }
+
+
+.global-progress{
+	position: fixed;
+	height:0.4em;
+	top:0;
+	left:0;
+	background: rgba(255,255,255,1);
+	z-index:2000;
+	-moz-box-shadow:1px 2px 4px black;
+	-webkit-box-shadow: 1px 2px 4px black;
+	box-shadow: 1px 2px 4px black;
+}

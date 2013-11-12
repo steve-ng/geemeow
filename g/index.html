@@ -178,6 +178,7 @@
 											    	<li class="divider"></li>
 											    	<li><a href="" ng-click="clearCanvas($index)">Clear Page</a></li>
 											    	<li><a href="" ng-click="screenshotPage($index)">Screenshot Page</a></li>
+											    	<li><a href="" ng-click="screenshotPageAsTab($index)">Screenshot Page As Tab</a></li>
 											    	<li ng-show="tab.metadata.sourceType == 'PDFFile'"><a href="" ng-click="downloadSource()">Download Attached PDF</a></li>
 											    	<li ng-show="tab.metadata.sourceType == 'PDFLink'"><a href="" ng-click="downloadSource()">Download Attached PDF</a></li>
 											    	<li ng-show="tab.metadata.sourceType == 'ImageFile'"><a href="" ng-click="downloadSource()">Download Attached Image</a></li>
@@ -460,6 +461,10 @@
 		  </div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
 
+
+
+		<div class="global-progress" ng-style="{width: progress*100+'%'}">
+		</div>
 	</div>
 
 

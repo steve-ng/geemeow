@@ -7,6 +7,7 @@ function RTCStarServer(){
   this.host = "0.peerjs.com";
   this.port = 9000;
   this.secure = false;
+  var self = this;
 
   /** Data **/
   var connBuffer;
@@ -23,14 +24,14 @@ function RTCStarServer(){
 
   // Adds a handler to a particular server event
   this.onServerEvent = function(event, handler){
-    if (eventHandlers[event] == null)
+    if (eventHandlers[event] == undefined)
       eventHandlers[event] = [];
     eventHandlers[event].push(handler);
   }
 
   //  Removes a handler for a particular server event
   this.removeOnServerEvent = function(event, handler){
-    if (eventHandlers[event] != null){
+    if (eventHandlers[event] != undefined){
       var index = eventHandlers[event].indexOf(handler);
       if (index > -1) 
         eventHandlers[event].splice(index, 1);
@@ -39,14 +40,14 @@ function RTCStarServer(){
 
   // Adds a handler to a particular request
   this.onRequest = function(type, handler){
-    if (requestHandlers[type] == null)
+    if (requestHandlers[type] == undefined)
       requestHandlers[type] = [];
     requestHandlers[type].push(handler);
   }
 
   //  Removes a handler for a particular request
   this.removeOnRequest = function(type, handler){
-    if (requestHandlers[type] != null){
+    if (requestHandlers[type] != undefined){
       var index = requestHandlers[type].indexOf(handler);
       if (index > -1) 
         requestHandlers[type].splice(index, 1);
@@ -132,7 +133,7 @@ function RTCStarServer(){
     peerConnections = {};
     connBuffer = {};
     
-    if (eventHandlers['Open'] != null)
+    if (eventHandlers['Open'] != undefined)
       for (var i in eventHandlers['Open'])
         eventHandlers['Open'][i](serverPeer.id);
   }
@@ -140,14 +141,14 @@ function RTCStarServer(){
 
   //  PeerJS Close
   function peerjsCloseHandler(){
-    if (eventHandlers['Close'] != null)
+    if (eventHandlers['Close'] != undefined)
       for (var i in eventHandlers['Close'])
         eventHandlers['Close'][i]();
   }
 
   //  PeerJS Error
   function peerjsErrorHandler(err){
-    if (eventHandlers['Error'] != null)
+    if (eventHandlers['Error'] != undefined)
       for (var i in eventHandlers['Error'])
         eventHandlers['Error'][i](err);
   }
@@ -189,7 +190,7 @@ function RTCStarServer(){
       send(id, "event:"+JSON.stringify(message));
 
       //  ClientEnter handler
-      if (eventHandlers['ClientEnter'] != null)
+      if (eventHandlers['ClientEnter'] != undefined)
           for (var i in eventHandlers['ClientEnter'])
               eventHandlers['ClientEnter'][i](id);
   }
@@ -204,6 +205,14 @@ function RTCStarServer(){
 
       //  Segmented message
       if (datatype == 'segment'){
+          var sent = messageString.substring(0,messageString.indexOf(","));
+          messageString = messageString.substring(messageString.indexOf(",")+1, messageString.length);
+          var total = messageString.substring(0,messageString.indexOf(","));
+          messageString = messageString.substring(messageString.indexOf(",")+1, messageString.length);
+          var progressMessage = new Message(parseFloat(sent)/parseFloat(total));
+          progressMessage.type = "MessageProgress";
+          self.send(id, progressMessage);
+          
           connBuffer[id] += messageString;
           return;
       } else if (datatype == 'segmentstart'){
@@ -212,6 +221,9 @@ function RTCStarServer(){
       } else if (datatype == 'segmentend'){
           connBuffer[id] += messageString;
           connDataHandler(id, connBuffer[id]);
+          var progressMessage = new Message(1);
+          progressMessage.type = "MessageProgress";
+          self.send(id, progressMessage);
           delete connBuffer[id];
           return;
       }
@@ -225,7 +237,7 @@ function RTCStarServer(){
         broadcast("message:"+messageString);
       } else if (datatype == 'request'){
         var type = message['type'];
-        if (requestHandlers[type] != null)
+        if (requestHandlers[type] != undefined)
           for (var i in requestHandlers[type])
             requestHandlers[type][i](message);
       } 
@@ -233,12 +245,12 @@ function RTCStarServer(){
 
   //  Connection Close
   var connCloseHandler = function(id){
-      if (peerConnections[id] == null)
+      if (peerConnections[id] == undefined)
         return;
 
       delete peerConnections[id];
 
-      if (eventHandlers['ClientLeave'] != null)
+      if (eventHandlers['ClientLeave'] != undefined)
         for (var i in eventHandlers['ClientLeave'])
           eventHandlers['ClientLeave'][i](id);
 
