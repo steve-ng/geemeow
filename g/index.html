@@ -206,6 +206,9 @@
 
 		<!-- Sidebar -->
 		<div class="sidebar" ng-controller="VideoController">
+			<video class="fullscreen-video flip" autoplay ng-src="{{fullscreenPeer.url}}" ng-show="fullscreenPeer.hasVideo" video-chat fullscreen-video muted>
+			</video>
+
 			<div class="sidebar-top">
 				<div class="sidebar-items">
 					<span class="fa-stack sidebar-item" ng-click="toggleOwnVideo()">
@@ -221,12 +224,12 @@
 					<div class="pull-right" style="margin-right: 0.3em">
 						<span class="fa-stack sidebar-item" data-toggle="dropdown">
 							<i class="fa fa-bars fa-stack-1x"></i>
-
 						</span>
 
 						<ul class="dropdown-menu" style="top:3em; right:0.5em">
 		    				<li role="presentation" class="dropdown-header">Menu</li>
 		    				<li role="presentation" data-toggle="modal" data-target="#changeNameModal"><a role="menuitem" href="">Set Name</a></li>
+		    				<li role="presentation"><a role="menuitem" href="" ng-click="$event.stopPropagation();toggleHD();">HD Video<i class="fa fa-check pull-right" style="padding-top:0.2em" ng-show="currentVideoType == 'CameraHigh'"></i></a></li>
 		    				<li role="presentation" data-toggle="modal" data-target="#quitModal"><a role="menuitem" href="">Quit</a></li>
 							<li class="divider"></li>
 		    				<li role="presentation" data-toggle="modal" data-target="#inviteModal"><a role="menuitem" href="">Invite</a></li>
@@ -246,8 +249,15 @@
 						<span class="touchnone video-name">
 							{{$root.users[$root.clientId].name}}
 						</span>
+						
 				
 						<div class="video-side video-side-top" ng-style="{background: $root.users[$root.clientId].color}">
+						</div>
+
+						<div class="others-video-controls">
+							<span class="fa-stack others-video-icon" ng-click="setFullscreenPeer($root.clientId)">
+								<i class="fa fa-expand fa-stack-1x"></i>
+							</span>
 						</div>
 					</div>
 					
@@ -261,12 +271,15 @@
 					<div class="video-overlay">
 						<span class="touchnone video-name">
 							{{$root.users[peerId].name}}
+							
 						</span>
+						
 				
 						<div class="video-side" ng-style="{background: $root.users[peerId].color}">
 						</div>
 
 						<div class="others-video-controls">
+							
 							<span class="fa-stack others-video-icon" ng-click="$parent.toggleVideo(peerId)">
 								<i class="fa fa-video-camera fa-stack-1x"></i>
 								<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peer.videoEnabled || !peer.hasVideo"></i>
@@ -274,6 +287,9 @@
 							<span class="fa-stack others-video-icon" ng-click="$parent.toggleAudio(peerId)">
 								<i class="fa fa-microphone fa-stack-1x"></i>
 								<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peer.audioEnabled || !peer.hasAudio"></i>
+							</span>
+							<span class="fa-stack others-video-icon" ng-click="$parent.setFullscreenPeer(peerId)">
+								<i class="fa fa-expand fa-stack-1x"></i>
 							</span>
 						</div>
 					</div>
@@ -307,6 +323,25 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- Modal for invite -->
+		<div id="inviteModal" class="modal fade">
+		  <div class="modal-dialog modal-dialog-center">
+		    <div class="modal-content">
+				<div class="modal-header">
+				  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				  <h4 class="modal-title"><i class="fa fa-share"></i>&nbsp;Invite</h4>
+				</div>
+				<div class="modal-body">
+					<p>Share link with anyone:</p>
+					<input class="form-control pointer" type="text" onclick="this.focus();this.select();" readonly="readonly" ng-value="getGeemeowURL()">
+					   
+					</input>
+				</div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+		
 
 		<!-- Modal for pdf link -->
 		<div id="openPDFLinkModal" class="modal fade">

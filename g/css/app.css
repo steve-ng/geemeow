@@ -80,6 +80,7 @@ html, body {
 	height:3.0em;
 	top:0em;
 	right:0em;
+	padding-left:0.2em;
 }
 
 
@@ -231,7 +232,7 @@ box-shadow: 0 0 0px #719ECE;
 }
 
 .highlight {
- 	background-color: rgba(138,138,138,1);
+ 	background-color: white;
  	color:white;
 }
 
@@ -535,4 +536,14 @@ box-shadow: 0 0 0px #719ECE;
 }
 .new-tab-item-sub:active{
 	background: rgba(38,38,38,1);
+}
+
+.fullscreen-video{
+	position: fixed;
+	width: 100%;
+	height:100%;
+	top:0;
+	left:0;
+	background: rgba(0,0,0,0.9);
+	z-index:2000;
 }
