@@ -25,7 +25,6 @@ $(document).ready(function () {
 
     animation.one('webkitAnimationEnd oanimationend msAnimationEnd animationend',   
     function(e) {
-    	console.log("called!");
 	    
 	    $('#little_cat').removeClass('tuna-walk');
 	    $('#little_cat').addClass('tuna-sit');
@@ -33,14 +32,7 @@ $(document).ready(function () {
 	    createKittyPopOver();
 	    
     });
-    var popoverContent =  "<div class=\"popover_thing\"> "+
-    							"I've been a naughty kitten, play a game of <b> Hit the Meow? </b> </br></br> " +
-	    						"<small> Game rule: Try to hit me while I'm on the run :P </small> </br></br> " +
-	    						"<div class=\"kitten_conv\">" + 
-	    						"<button id=\"tuna_challenge_yes\" class=\"btn popover_btn\">Yes </button> &nbsp&nbsp"+
-	    						"<button id=\"tuna_challenge_no\" class=\"btn btn-danger\">Close</button>" +
-	    						"</div> " + 
-	    						"</div>";
+    var popoverContent;
 
 	function getPopOverContent(){
 		return popoverContent;
@@ -48,7 +40,14 @@ $(document).ready(function () {
 
 	function createKittyPopOver(){
 
-	    
+		popoverContent =  "<div class=\"popover_thing\"> "+
+    						"I've been a naughty kitten, play a game of <b> Hit the Meow? </b> </br></br> " +
+	    					"<small> Gameplay: Try to hit me while I'm on the run :P </small> </br></br> " +
+	    					"<div class=\"kitten_conv\">" + 
+	    					"<button id=\"tuna_challenge_yes\" class=\"btn popover_btn\">Yes </button> &nbsp&nbsp"+
+	    					"<button id=\"tuna_challenge_no\" class=\"btn btn-danger\">Close</button>" +
+	    					"</div> " + 
+	    					"</div>";
 
 	    $('#little_cat').popover({
 	    	html:true,
@@ -68,7 +67,7 @@ $(document).ready(function () {
 
 
 	    $('#tuna_challenge_no').click(function(event){
-	    	console.log('clicked!');
+			$('#little_cat').bind("click",createKittyPopOver);
 	    	$('#little_cat').popover('hide');
 	    });
 	}
@@ -77,6 +76,9 @@ $(document).ready(function () {
 	var score =0;
 
 	function startGame(){
+
+
+		$('#little_cat').unbind("click",createKittyPopOver);
 
 		//start the cat animation to run
 	    $('#little_cat_container').removeClass('tuna_container');
@@ -124,13 +126,12 @@ $(document).ready(function () {
 	}
 
 	function stopGame(){
-		console.log('called stop game!');
 
 	    $('#little_cat').unbind("click",updateScoreAndPulsate);
-
 	    $('#timer_left').text('0');
 
 		clearInterval(gameInterval);
+
 		$('#little_cat').removeClass('tuna-run-left');
 		$('#little_cat').removeClass('tuna-run-right');
 		$('#little_cat_container').removeClass('tuna_run_container');
@@ -176,7 +177,6 @@ $(document).ready(function () {
 
 
 	    $('#tuna_challenge_no').click(function(event){
-	    	console.log('clicked!');
 	    	$('#little_cat').popover('hide');
 	    });
 	}
@@ -187,9 +187,9 @@ $(document).ready(function () {
 		if(score <5){
 			remark = "Are you using your toe to play this game?";
 		}else if(score <10){
-			remark = "My nyan grannie can play better than you man! Blah";
+			remark = "My nyan grannie can play better than you man! Blah.";
 		}else if(score <15){
-			remark = "Not bad, as good as my nyan grannie";
+			remark = "Not bad, as good as my nyan grannie.";
 		}else if (score < 20){
 			remark = "Getting there..., you can do it!";
 		}else {
@@ -198,7 +198,7 @@ $(document).ready(function () {
 
 		popoverContent =  "<div class=\"popover_thing\"> "+
 								remark+ 
-								"</br> Play again?" + 
+								" Play again?" + 
 								"</br> </br>" +
 	    						"<div class=\"kitten_conv\">" + 
 	    						"<button id=\"tuna_challenge_yes\" class=\"btn popover_btn\">Yes </button> &nbsp&nbsp"+
@@ -216,17 +216,11 @@ $(document).ready(function () {
 
 
 	    $('#tuna_challenge_no').click(function(event){
-	    	console.log('clicked!');
+			$('#little_cat').bind("click",startAgain);
 	    	$('#little_cat').popover('hide');
-			$('#little_cat_container').bind("click",startAgain);
 	    });
 	}
 
 
-
-    $('#little_cat').click(function(event) {
-    	event.preventDefault();
-    	//createKittyPopOver();
-    });
 
 });
