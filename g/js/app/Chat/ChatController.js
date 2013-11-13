@@ -39,6 +39,7 @@ app.controller('ChatController', function($scope, $rootScope){
 				}
 			},0);
 		});
+        $rootScope.notify();
 	}
 
 	$scope.onInit = function(message){

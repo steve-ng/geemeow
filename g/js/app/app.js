@@ -23,6 +23,14 @@ app.run(function($rootScope){
 	$rootScope.debug = true;
 	$rootScope.serverPeerId = "";
 	$rootScope.setupTimer;
+	$rootScope.progress = 0;
+	
+	$rootScope.notificationInterval;
+	$rootScope.documentTitle;
+	var totalNotificationCount = 0;
+	$rootScope.notificationText = "\u9FB4\u2180\u25E1\u2180\u9FB4";
+	$rootScope.sound = true;
+
 
 	//	Setup
 	function setup(){
@@ -34,6 +42,13 @@ app.run(function($rootScope){
 			$rootScope.serverPeerId = window.location.hash.substring(1);
 		    $rootScope.client.start($rootScope.serverPeerId);
 		}
+
+		$(window).focus(function() {
+			clearInterval($rootScope.notificationInterval);
+			document.title = $rootScope.documentTitle;
+			totalNotificationCount = 0;
+		});
+		$rootScope.documentTitle = document.title;
 	}
 	setup();
 
@@ -150,4 +165,40 @@ app.run(function($rootScope){
 			$rootScope.progress = 0;
 		$rootScope.$apply();
 	}
+
+	$rootScope.toggleSound = function(){
+		$rootScope.sound = !$rootScope.sound;
+	}
+
+	var audioElement = document.createElement('audio');
+    audioElement.setAttribute('src', 'assets/sound/alert.mp3');
+    var lastPlayed = 0;
+	$rootScope.notify = function(){
+		if (document.hasFocus())
+			return;
+
+		if ($rootScope.sound && new Date().getTime() > lastPlayed + 2000){
+			audioElement.play();
+			lastPlayed = new Date().getTime();
+		}
+
+		if (totalNotificationCount > 10)
+			return;
+		if ($rootScope.notificationInterval != undefined){
+			clearInterval($rootScope.notificationInterval);
+		}
+
+		var count = 0;
+		$rootScope.notificationInterval = setInterval(function(){
+			if (document.title == $rootScope.documentTitle || count > 2){
+				document.title = $rootScope.notificationText;
+				totalNotificationCount++;
+			}
+			else
+				document.title = $rootScope.documentTitle;
+			count++;
+		}, 1000);
+	}
+
+
 });

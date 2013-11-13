@@ -65,6 +65,7 @@ app.controller('VideoController', function($scope, $rootScope){
 				$scope.peers[peerId].hasAudio = true;
 		
 		
+        $rootScope.notify();
 		$scope.safeApply();
 	} 
 
