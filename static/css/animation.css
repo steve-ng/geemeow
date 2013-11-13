@@ -1,0 +1,240 @@
+.bottom_right{
+
+	position: absolute;
+	bottom:0;
+	right:15%;
+	width:30%;
+}
+
+.tuna_container {
+	-webkit-animation: moon-walk 5s 1 ease-in;
+	-moz-animation: moon-walk 5s 1 ease-in;
+	animation: moon-walk 5s 1 ease-in;
+}
+
+.tuna_run_container{
+	-webkit-animation: tuna-run 1s ease-in 1 infinite;
+	-moz-animation: tuna-run 1s ease-in 1 infinite;
+	animation: tuna-run 1s ease-in 1 infinite;
+}
+
+.tuna-walk{
+    -webkit-animation: walk-cycle 1s steps(12) infinite;
+    -moz-animation: walk-cycle 1s steps(12) infinite;
+    animation: walk-cycle 1s steps(12) infinite;
+    background: url(../img/cat_spirite.png) 0 0 no-repeat;
+    height: 70px;
+    width: 150px;
+    z-index: 100;
+}
+
+.tuna-sit{
+    -webkit-animation: sit-cycle 1s steps(6) 1;
+    -moz-animation: sit-cycle 1s steps(6) 1;
+    animation: sit-cycle 1s steps(6) 1;
+    background: url(../img/cat_spirite.png) -150 -377 no-repeat;
+    height: 70px;
+    width: 150px;
+    z-index: 100;
+}
+
+.tuna-run-right{
+    -webkit-animation: run-right-cycle 0.2s steps(12) infinite;
+    -moz-animation: run-right-cycle 0.2s steps(12) infinite;
+    animation: run-right-cycle 0.2s steps(12) infinite;
+    background: url(../img/cat_spirite.png) -600 0 no-repeat;
+    height: 70px;
+    width: 150px;
+    z-index: 100;
+}
+
+.tuna-run-left{
+    -webkit-animation: run-left-cycle 0.2s steps(12) infinite;
+    -moz-animation: run-left-cycle 0.2s steps(12) infinite;
+    animation: run-left-cycle 0.2s steps(12) infinite;
+    background: url(../img/cat_spirite.png) -450 0 no-repeat;
+    height: 70px;
+    width: 150px;
+    z-index: 100;
+}
+
+
+@-webkit-keyframes moon-right-run {  
+
+  0% {
+        margin-left:10%;
+  }
+  100% {
+        margin-left:90%%;
+  } /* Must be full height of sprite or skipping will happen.*/
+}
+
+@keyframes moon-right-run {  
+
+  0% {
+        margin-left:10%;
+  }
+  100% {
+        margin-left:90%%;
+  } /* Must be full height of sprite or skipping will happen.*/
+}
+
+@-webkit-keyframes tuna-run{
+  0% {
+        margin-left:10%;
+  } 
+  25% {
+  		margin-left:40%;
+  }
+  50% {
+        margin-left:95%%;
+  }
+
+  75% {
+        margin-left:40%%;
+  }
+
+  100% {
+        margin-left:10%%;
+  }
+   /* Must be full height of sprite or skipping will happen.*/
+}
+
+
+@keyframes tuna-run{
+  0% {
+        margin-left:10%;
+  } 
+  25% {
+  		margin-left:40%;
+  }
+  50% {
+        margin-left:95%%;
+  }
+
+  75% {
+        margin-left:40%%;
+  }
+
+  100% {
+        margin-left:10%%;
+  }
+   /* Must be full height of sprite or skipping will happen.*/
+}
+
+@-webkit-keyframes run-right-cycle {
+  0% {
+    background-position: -600 0; 
+  } 
+
+  100% {
+    background-position: -600 -907; 
+  } /* Must be full height of sprite or skipping will happen.*/
+
+}
+
+@keyframes run-right-cycle {
+  0% {
+    background-position: -600 0; 
+  } 
+
+  100% {
+    background-position: -600 -907; 
+  } /* Must be full height of sprite or skipping will happen.*/
+
+}
+
+@-webkit-keyframes run-left-cycle {
+  0% {
+    background-position: -450 0; 
+  } 
+
+  100% {
+    background-position: -450 -907; 
+  } /* Must be full height of sprite or skipping will happen.*/
+
+}
+
+@keyframes run-left-cycle {
+  0% {
+    background-position: -450 0; 
+  } 
+
+  100% {
+    background-position: -450 -907; 
+  } /* Must be full height of sprite or skipping will happen.*/
+
+}
+
+
+@-webkit-keyframes sit-cycle {  
+
+  0% {
+    background-position: -150 0; 
+  } 
+
+  100% {
+    background-position: -150 -453; 
+  } /* Must be full height of sprite or skipping will happen.*/
+
+}
+@keyframes sit-cycle {  
+
+  0% {
+    background-position: -150 0; 
+  } 
+
+  100% {
+    background-position: -150 -453; 
+  } /* Must be full height of sprite or skipping will happen.*/
+
+}
+
+
+@-webkit-keyframes walk-cycle {  
+
+  0% {
+    background-position: 0 0; 
+  } 
+
+  100% {
+    background-position: 0 -907; 
+  } /* Must be full height of sprite or skipping will happen.*/
+
+}
+
+@keyframes walk-cycle {  
+
+  0% {
+    background-position: 0 0; 
+  } 
+
+  100% {
+    background-position: 0 -907; 
+  } /* Must be full height of sprite or skipping will happen.*/
+
+}
+
+@-webkit-keyframes moon-walk {  
+
+  0% {
+        margin-left:80%;
+  } 
+
+  100% {
+        margin-left:10%%;
+  } /* Must be full height of sprite or skipping will happen.*/
+
+}
+
+@keyframes moon-walk {  
+
+  0% {
+        margin-left:80%;
+  } 
+
+  100% {
+        margin-left:10%%;
+  } /* Must be full height of sprite or skipping will happen.*/
+
+}
