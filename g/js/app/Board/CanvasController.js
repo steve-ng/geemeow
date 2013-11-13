@@ -15,7 +15,6 @@ var CanvasController = function(tab, canvasJquery, requestCanvasAction, toolData
 	canvasJquery.on('vmousedown', function(e){
 		e.preventDefault();
 		e.originalEvent.preventDefault();
-		e.stopPropagation();
 
 		if (e.which != 1 && e.which != 0)
 			return;
@@ -56,7 +55,6 @@ var CanvasController = function(tab, canvasJquery, requestCanvasAction, toolData
 
 	canvasJquery.on('vmousemove', function(e){
 		e.preventDefault();
-		e.stopPropagation();
 
 		extendStrokeWithEvent(e)
 	});

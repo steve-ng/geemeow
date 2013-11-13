@@ -153,31 +153,29 @@ app.directive('topLeftResizer', function() {
         $(document).on('vmousemove', function(e){
         	if (!dragging)
         		return;
-        	e.preventDefault();
-        	e.stopPropagation();
+
+            var parentWidth = parent.width();
+            var parentHeight = parent.height();
+            if (scope.originSize == undefined)
+                scope.originSize = {width: parentWidth, height: parentHeight};
+            var changeX = origin.x - e.pageX;
+            var changeY = origin.y - e.pageY;
+            origin = {x: e.pageX, y: e.pageY};
+
+
+            changeX = Math.max(scope.originSize.width/2, parentWidth + changeX) - parentWidth;
+            changeY = Math.max(scope.originSize.height/2, parentHeight + changeY) - parentHeight;
+
+            if (xShift)
+                parent.width(parentWidth+changeX);
+            if (yShift){
+                parent.height(parentHeight+changeY);
+                content.height(content.height()+changeY);
+            }
         });
         $(document).on('vmouseup', function(e){
         	if (!dragging)
         		return;
-
-        	var parentWidth = parent.width();
-        	var parentHeight = parent.height();
-        	if (scope.originSize == undefined)
-        		scope.originSize = {width: parentWidth, height: parentHeight};
-        	var changeX = origin.x - e.pageX;
-        	var changeY = origin.y - e.pageY;
-        	origin = {x: e.pageX, y: e.pageY};
-
-
-        	changeX = Math.max(5,Math.max(scope.originSize.width/2, parentWidth + changeX)) - parentWidth;
-        	changeY = Math.max(5,Math.max(scope.originSize.height/2, parentHeight + changeY)) - parentHeight;
-
-        	if (xShift)
-        		parent.width(parentWidth+changeX);
-        	if (yShift){
-        		parent.height(parentHeight+changeY);
-        		content.height(content.height()+changeY);
-        	}
 
         	dragging = false;
         	content.removeClass('touchnone');
