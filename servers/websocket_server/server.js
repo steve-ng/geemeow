@@ -17,12 +17,17 @@ var randstr = "";	//	To edit
 
 
 function checkServer(server){
+	var almostDied = false;
 	interval = setInterval(function(){
 		if (server.isEmpty()){
-			delete nodeStarServers[server.getServerNodeId()];
-			clearInterval(interval);
-		}
-	}, 60000);
+			if (almostDied){
+				delete nodeStarServers[server.getServerNodeId()];
+				clearInterval(interval);
+			} else
+				almostDied = true;
+		} else
+			almostDied = false;
+	}, 300000);
 }
 
 function socketConnectionInstance(socket) {
