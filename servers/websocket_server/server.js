@@ -1,3 +1,4 @@
+var fs = require('fs');
 var https = require('https');
 var socketio = require('socket.io');
 var crypto = require('crypto');
