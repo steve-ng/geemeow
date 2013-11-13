@@ -49,7 +49,7 @@
 						<ul class="board-toolbar">
 							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='select'}" ng-click="toggleCanvasMode('select')"><i class="fa fa-hand-o-up toolbar-text"></i></li>
 							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='marker'}" ng-click="toggleCanvasMode('marker')"><i class="fa fa-pencil toolbar-text"></i></li>
-							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='highlighter'}" ng-click="toggleCanvasMode('highlighter')"><i class="fa fa-magic toolbar-text"></i></li>
+							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='highlighter'}" ng-click="toggleCanvasMode('highlighter')"><i class="fa fa-magic toolbar-text toolbar-btn-highligher"></i></li>
 							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='eraser'}" ng-click="toggleCanvasMode('eraser')"><i class="fa fa-eraser toolbar-text"></i></li>
 							<li class="toolbar-separator"></li>
 							
@@ -305,9 +305,9 @@
 		<!-- ChatWidget -->
 		<div ng-controller="ChatController">
 			<div class="chat-widget" ng-class="{chatWidgetHide: !showChatWidget}">
-				<div class="chat-topLeft-resizer" top-left-resizer> </div>
-				<div class="chat-left-resizer" top-left-resizer> </div>
-				<div class="chat-top-resizer" top-left-resizer> </div>
+				<div class="chat-topLeft-resizer" top-left-resizer ng-show="showChatWidget"> </div>
+				<div class="chat-left-resizer" top-left-resizer ng-show="showChatWidget"> </div>
+				<div class="chat-top-resizer" top-left-resizer ng-show="showChatWidget"> </div>
 				<div class="chat-widget-title" ng-class="{smallChatTitle: !showChatWidget}" ng-click="toggleShowChatWidget()">
 					<span class="touchnone">Chat&nbsp;</span>
 					<span class="chat-widget-title-right"><i class="fa fa-minus"></i></span>
