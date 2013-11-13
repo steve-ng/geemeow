@@ -15,6 +15,16 @@ io.sockets.on('connection', socketConnectionInstance);
 var nodeStarServers = {};
 var randstr = "";	//	To edit
 
+
+function checkServer(server){
+	interval = setInterval(function(){
+		if (server.isEmpty()){
+			delete nodeStarServers[server.getServerNodeId()];
+			clearInterval(interval);
+		}
+	}, 60000);
+}
+
 function socketConnectionInstance(socket) {
     socket.on('connect', function(message) {
         var peerId = message.peerId;
@@ -26,9 +36,12 @@ function socketConnectionInstance(socket) {
 			serverId = crypto.createHash('md5').update(new Date().getTime()+randstr).digest("hex");
 			nodeStarServer = new NodeStarServer(serverId);
 			nodeStarServers[serverId] = nodeStarServer;
+			checkServer(nodeStarServer);
 		} else {
-			if (nodeStarServers[serverId] == undefined)
+			if (nodeStarServers[serverId] == undefined){
 				nodeStarServers[serverId] = new NodeStarServer(serverId);
+				checkServer(nodeStarServers[serverId]);
+			}
 		 	nodeStarServer = nodeStarServers[serverId];
 		}
 		console.log(serverId);
