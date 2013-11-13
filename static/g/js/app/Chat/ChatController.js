@@ -1,6 +1,6 @@
 //	Controller for Chat
 app.controller('ChatController', function($scope, $rootScope){
-	$scope.showChatWidget = false;
+	$scope.showChatWidget = true;
 	$scope.chatHistory = [];
 	$scope.scrollDiv;
 	$rootScope.chatClient.setDelegate($scope);
@@ -15,6 +15,8 @@ app.controller('ChatController', function($scope, $rootScope){
 	}
 
 	$scope.sendChat = function(){
+        if ($scope.text.length == 0)
+            return;
 		$scope.chatClient.sendChat($scope.text);
 		$scope.text = "";
 		$scope.safeApply();
@@ -101,7 +103,7 @@ app.directive('chatScroll', function() {
         scope.scrollDiv = element;
         setTimeout(function(){
         	element[0].scrollTop = element[0].scrollHeight - element.height()
-        },0);
+        },1000);
     };
 });
 
