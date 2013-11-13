@@ -284,14 +284,15 @@ app.directive('boardPage', function($window) {
       element.resize();
     });
 
+
+	var tab = scope.$parent.tab;
+	var parent = element.parent();
+	var drawingLayer = element.children().eq(0);
+	var textLayer = element.children().eq(1);
+	var backgroundLayer = element.children().eq(2);
+	var hiddenVideo = element.children().eq(3)[0];
+	var canvasMenu = element.children().eq(4);
   	element.on('resize',function(e){
-  		var tab = scope.$parent.tab;
-  		var parent = element.parent();
-		var drawingLayer = element.children().eq(0);
-		var textLayer = element.children().eq(1);
-		var backgroundLayer = element.children().eq(2);
-		var hiddenVideo = element.children().eq(3)[0];
-		var canvasMenu = element.children().eq(4);
 		var parentHeight = parent.parent().innerHeight()-1;
 		var tabScale = tab.scale;
 
@@ -417,49 +418,60 @@ app.directive('boardPage', function($window) {
 	  	},0);
 
 
-  		//	Context menu
-  		function hideHandler(e){
-  			if (canvasMenu.css('display') == 'none')
-  				return;
-			canvasMenu.hide();
-			$(document).unbind('click', this);
-			drawingLayer.focus();
-		}
-
-	  	function openContextMenu(e){
-	  		if (!canvasMenu.is(':hidden')){
-	  			canvasMenu.hide();
-	  			return;
-	  		}
-
-	  		if (e.stopPropagation != undefined){
-	  			e.stopPropagation();
-				canvasMenu.css({display: 'block', left: element[0].offsetLeft + e.offsetX, 
-												top: element[0].offsetTop +e.offsetY});
-			} else {
-				canvasMenu.css({display: 'block', left: element.parent().parent().scrollLeft() + e.offsetX, 
-												top: element.parent().parent().scrollTop() +e.offsetY});
-			}
-
-			$(document).click(hideHandler);
-			return false;
-		}
-
-		canvasMenu.on('click', 'a', function(e){
-			hideHandler(e);
-		});
-
-
-		drawingLayer.on('contextmenu', openContextMenu);
-		textLayer.on('contextmenu', openContextMenu);
-		backgroundLayer.on('contextmenu', openContextMenu);
-
-
-	    scope.$parent.$on('OpenContextMenu'+scope.$index, function(event, e){
-	      	openContextMenu(e);
-	    });
+  		
 	});
 
+	//	Context menu
+	function hideHandler(e){
+		if (canvasMenu.css('display') == 'none')
+			return;
+		canvasMenu.hide();
+		$(document).unbind('click', this);
+		drawingLayer.focus();
+	}
+
+  	function openContextMenu(e){
+  		if (e.stopPropagation != undefined){
+  			e.stopPropagation();
+  			e.preventDefault();
+  		}
+
+  		if (!canvasMenu.is(':hidden')){
+  			canvasMenu.hide();
+  			return false;
+  		}
+
+  		var left, top;
+  		if (e.stopPropagation != undefined){
+			left = element[0].offsetLeft + e.offsetX;
+			top = element[0].offsetTop +e.offsetY;
+		} else {
+			left = element.parent().parent().scrollLeft() + e.offsetX;
+			top = element.parent().parent().scrollTop() +e.offsetY;
+		}
+		left = Math.min(left, element.offset().left + element.width() - canvasMenu.width() + element.parent().parent().scrollLeft()-20);
+		top = Math.min(top, element.offset().top + element.height() - canvasMenu.height() 
+				+ element.parent().parent().scrollTop()-element.parent().parent().offset().top-20);
+
+		canvasMenu.css({display: 'block', left: left, top: top});
+
+		$(document).click(hideHandler);
+		return false;
+	}
+
+	canvasMenu.on('click', 'a', function(e){
+		hideHandler(e);
+	});
+
+
+	drawingLayer.on('contextmenu', openContextMenu);
+	textLayer.on('contextmenu', openContextMenu);
+	backgroundLayer.on('contextmenu', openContextMenu);
+
+
+    scope.$parent.$on('OpenContextMenu'+scope.$index, function(event, e){
+      	openContextMenu(e);
+    });
 
 	scope.$parent.pages[scope.$index].getScreenshot = function(){
 		var canvas = document.createElement("canvas");
