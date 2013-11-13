@@ -9,7 +9,7 @@ var httpsOptions = {
     cert: fs.readFileSync('/etc/ssl/certs/server.crt')
 };
 
-var app = http.createServer(httpsOptions);
+var app = https.createServer(httpsOptions);
 var io = socketio.listen(app);
 app.listen(3217);
 
