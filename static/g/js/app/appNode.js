@@ -1,6 +1,6 @@
 //var apikey = 'fxv643daihuuwhfr';
 var apikey = '';
-var apihost = "ec2-54-254-128-239.ap-southeast-1.compute.amazonaws.com";
+var apihost = "geemeow.com";
 var apiport = 3216;
 
 var app = angular.module('Geemeow', ['prettyDateFilter', 'truncateFilter']);
