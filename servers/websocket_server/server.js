@@ -50,8 +50,13 @@ function socketConnectionInstance(socket) {
 		 	nodeStarServer = nodeStarServers[serverId];
 		}
 		console.log(serverId);
-		 socket.emit('open', serverId);
-		 nodeStarServer.socketOpenHandler(socket);
+		if (nodeStarServer.isFull()){
+			socket.emit('disconnected', 'Room is currently full :/');
+			socket.disconnect();
+		} else {
+			socket.emit('open', serverId);
+			nodeStarServer.socketOpenHandler(socket);
+		}
     });
 	socket.emit('ready');
 }
