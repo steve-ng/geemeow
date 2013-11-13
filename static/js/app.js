@@ -1,5 +1,12 @@
 $(document).ready(function () {
 
+	$('#try_now_btn').click(function(e){
+
+		var room_name_selected = $('#room_name').val();
+		window.location.replace("/g/#"+room_name_selected);
+
+	})
+
 	if(document.body.style.MozTransform!=undefined)  {
 		console.log('firefox!');
 	  $('#cat_holder').hide();
@@ -19,7 +26,6 @@ $(document).ready(function () {
     //prevent clicking to highlight
     $('#cat_holder').mousedown(function(){ return false; })
     $('#little_cat_container').mousedown(function(){ return false; })
-    $('.home-section').mousedown(function(){ return false; })
 
     var animation = $('.tuna_container');
 

@@ -111,8 +111,8 @@ font-weight:700;
 	color: #fff;
 	text-transform: uppercase;
 	font-weight: 300;
-	font-size: 24px;
-	padding: 10px 20px;
+	font-size: 22px;
+	padding: 5px 20px;
 	background: rgb(219, 82, 47);
 	display: inline-block;
 	-webkit-border-radius: 9px;
@@ -322,4 +322,14 @@ li {
 .popover_btn{
 	background-color: #1abc9c;
 	color:white;
+}
+
+.noblock{
+	display:inline;
+	width:80%;
+}
+
+.steps{
+	display:inline-block;
+	text-align:left;
 }
