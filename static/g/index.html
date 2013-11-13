@@ -438,10 +438,11 @@
 						</div>
 					</div>
 					<div class="new-tab-col pull-right">
-						<div class="new-tab-item touchnone" ng-click="" data-dismiss="modal" style="opacity:0.5">
+						<div class="new-tab-item" ng-click="screenshare()" data-dismiss="modal">
 							<div class="new-tab-item-div new-tab-item-div-select pointer">
 								<i class="fa fa-desktop new-tab-icon new-tab-center"></i>
 								<p class="new-tab-text new-tab-center">Screen Share</p>
+								<p class="new-tab-center">(For Chrome)</p>
 							</div>
 						</div>
 						<div class="new-tab-item">
@@ -485,6 +486,22 @@
 	    </div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
+
+
+
+
+	<!-- Alerts -->
+	<div id="cameraFailAlert" class="alert alert-danger alert-top-right">
+	  Unable to access camera :/
+	  <a class="close" data-dismiss="alert" href="" aria-hidden="true">&times;</a>
+	</div>
+
+	<div id="chromeScreenshareFailAlert" class="alert alert-danger alert-top-right">
+	  Unable to start screenshare :/ Try this <a href="http://www.youtube.com/watch?v=ZCatVxcyEpI" class="alert-link" target="_blank">Youtube</a> video.
+	  <a class="close" data-dismiss="alert" href="" aria-hidden="true">&times;</a>
+	</div>
+
+
 
 
 	<!-- JS -->

@@ -137,6 +137,8 @@ var BoardClient = function(client){
 	        // errorCallback
 	        function(err) {
 	         	console.log(err);
+		        //$('#chromeScreenshareFailAlert').hide();
+		        //$('#chromeScreenshareFailAlert').show();
 	        }
 	    );
 	}

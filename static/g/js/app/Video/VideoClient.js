@@ -105,6 +105,9 @@ var VideoClient = function(client){
 		        // errorCallback
 		        function(err) {
 		         	console.log(err);
+		         	//$('#cameraFailAlert').hide('slow',function(){
+		         	//	$('#cameraFailAlert').show();
+		         	//});
 		        }
 		    );
 		}

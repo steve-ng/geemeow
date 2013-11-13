@@ -572,3 +572,11 @@ box-shadow: 0 0 0px #719ECE;
 	-webkit-box-shadow: 1px 2px 4px black;
 	box-shadow: 1px 2px 4px black;
 }
+
+.alert-top-right{
+	display:none;
+	right:1.5em;
+	top:1.5em;
+	z-index:50000;
+	position:absolute;
+}
