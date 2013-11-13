@@ -6,7 +6,7 @@ var NodeStarServer = require('NodeStarServer/NodeStarServer');
 
 var httpsOptions = {
     key: fs.readFileSync('/etc/ssl/private/privatekey.pem'),
-    cert: fs.readFileSync('/etc/ssl/certs/server.crt')
+    cert: fs.readFileSync('/etc/ssl/certs/primary_intermediate_certs.crt')
 };
 
 var app = https.createServer(httpsOptions);
