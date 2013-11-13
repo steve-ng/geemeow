@@ -53,6 +53,7 @@ app.run(function($rootScope){
 		$rootScope.client.key = apikey;
 		$rootScope.client.host = apihost;
 		$rootScope.client.port = apiport;
+		$rootScope.client.secure = true;
 		$rootScope.client.onMessage('MessageProgress', updateProgress);
 		$rootScope.client.onClientEvent('Close', closeHandler);
 	    $rootScope.client.debug($rootScope.debug);
