@@ -49,7 +49,7 @@
 						<ul class="board-toolbar">
 							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='select'}" ng-click="toggleCanvasMode('select')" analytic-select> <i class="fa fa-hand-o-up toolbar-text"></i></li>
 							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='marker'}" ng-click="toggleCanvasMode('marker')" analytic-marker><i class="fa fa-pencil toolbar-text"></i></li>
-							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='highlighter'}" ng-click="toggleCanvasMode('highlighter')" analytic-highlighter><i class="fa fa-magic toolbar-text"></i></li>
+							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='highlighter'}" ng-click="toggleCanvasMode('highlighter')" analytic-highlighter><i class="fa fa-magic toolbar-text toolbar-btn-highligher"></i></li>
 							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='eraser'}" ng-click="toggleCanvasMode('eraser')" analytic-eraser><i class="fa fa-eraser toolbar-text"></i></li>
 							<li class="toolbar-separator"></li>
 							
@@ -305,9 +305,9 @@
 		<!-- ChatWidget -->
 		<div ng-controller="ChatController">
 			<div class="chat-widget" ng-class="{chatWidgetHide: !showChatWidget}">
-				<div class="chat-topLeft-resizer" top-left-resizer> </div>
-				<div class="chat-left-resizer" top-left-resizer> </div>
-				<div class="chat-top-resizer" top-left-resizer> </div>
+				<div class="chat-topLeft-resizer" top-left-resizer ng-show="showChatWidget"> </div>
+				<div class="chat-left-resizer" top-left-resizer ng-show="showChatWidget"> </div>
+				<div class="chat-top-resizer" top-left-resizer ng-show="showChatWidget"> </div>
 				<div class="chat-widget-title" ng-class="{smallChatTitle: !showChatWidget}" ng-click="toggleShowChatWidget()">
 					<span class="touchnone">Chat&nbsp;</span>
 					<span class="chat-widget-title-right"><i class="fa fa-minus"></i></span>
@@ -438,7 +438,7 @@
 						</div>
 					</div>
 					<div class="new-tab-col pull-right">
-						<div class="new-tab-item" ng-click="screenshare()" data-dismiss="modal">
+						<div class="new-tab-item touchnone" ng-click="" data-dismiss="modal" style="opacity:0.5">
 							<div class="new-tab-item-div new-tab-item-div-select pointer">
 								<i class="fa fa-desktop new-tab-icon new-tab-center"></i>
 								<p class="new-tab-text new-tab-center">Screen Share</p>
@@ -464,13 +464,27 @@
 		  </div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
 
-
-
+		
 		<div class="global-progress" ng-style="{width: progress*100+'%'}">
 		</div>
 	</div>
 
 
+
+	<!-- Modal for invite -->
+	<div id="unableToJoinModal" class="modal fade" style="z-index:10000000">
+	  <div class="modal-dialog modal-dialog-center">
+	    <div class="modal-content">
+			<div class="modal-header">
+			  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			  <h4 class="modal-title"><i class="fa fa-meh-o"></i>&nbsp;Sorry..</h4>
+			</div>
+			<div class="modal-body">
+				<p>Unable to join room :/</p>
+			</div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 
 
 	<!-- JS -->

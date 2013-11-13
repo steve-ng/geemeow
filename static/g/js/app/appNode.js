@@ -54,6 +54,7 @@ app.run(function($rootScope){
 		$rootScope.client.host = apihost;
 		$rootScope.client.port = apiport;
 		$rootScope.client.onMessage('MessageProgress', updateProgress);
+		$rootScope.client.onClientEvent('Close', closeHandler);
 	    $rootScope.client.debug($rootScope.debug);
 	    $rootScope.client.onClientEvent('Open',function(clientPeerId, serverPeerId){
 			$("#loading-screen").hide();
@@ -132,6 +133,10 @@ app.run(function($rootScope){
 		if ($rootScope.progress  >= 1)
 			$rootScope.progress = 0;
 		$rootScope.$apply();
+	}
+
+	function closeHandler(message){
+		$('#unableToJoinModal').modal('show');
 	}
 
 	$rootScope.toggleSound = function(){

@@ -132,7 +132,7 @@ function NodeStarClient(){
     serverConnection.on('ready', readyHandler);
     serverConnection.on('open', openHandler);
     serverConnection.on('data', dataHandler);
-    serverConnection.on('disconnect', closeHandler);
+    serverConnection.on('disconnected', closeHandler);
   }
 
   //  Client Call
@@ -165,6 +165,9 @@ function NodeStarClient(){
 
     //  Client Close
   function closeHandler(){
+    if (debug)
+      console.log("Client closed");
+
     if (eventHandlers['Close'] != undefined)
       for (var i in eventHandlers['Close'])
         eventHandlers['Close'][i](serverPeerId);
