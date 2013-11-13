@@ -172,6 +172,7 @@ app.controller('BoardController', function($scope, $rootScope){
         $scope.boardClient.startScreenshare();
       }
 
+      $rootScope.notify();
   		$scope.$apply();
   	}
 
@@ -219,6 +220,7 @@ app.controller('BoardController', function($scope, $rootScope){
     }
 
     $scope.onCanvasAction = function(message){
+      $rootScope.notify();
       $scope.$broadcast('TabCanvasAction'+message.canvasAction.tabIndex, message);
     }
 
