@@ -1,12 +1,16 @@
-var express = require('express');
-var http = require('http');
+var https = require('https');
 var socketio = require('socket.io');
 var crypto = require('crypto');
 var NodeStarServer = require('NodeStarServer/NodeStarServer');
-var app = express();
-var server = http.createServer(app);
-var io = socketio.listen(server);
-server.listen(3217);
+
+var httpsOptions = {
+    key: fs.readFileSync('/etc/ssl/private/privatekey.pem'),
+    cert: fs.readFileSync('/etc/ssl/certs/server.crt')
+};
+
+var app = http.createServer(httpsOptions);
+var io = socketio.listen(app);
+app.listen(3217);
 
 io.set('log level', 1);
 io.sockets.on('connection', socketConnectionInstance);
