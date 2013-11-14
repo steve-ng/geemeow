@@ -283,6 +283,19 @@ app.directive('boardPage', function($window) {
   	scope.$watch("$parent.tab.scale", function() {
       element.resize();
     });
+    var resizeTimer;
+    var windowWidth = $(window).width();
+    var windowHeight = $(window).height();
+    $(window).on('resize',function(){
+    	var windowWidthCur = $(window).width();
+    	var windowHeightCur = $(window).height();
+    	if (windowWidthCur == windowWidth && windowHeightCur == windowHeight)
+    		return;
+    	clearTimeout(resizeTimer);
+    	resizeTimer = setTimeout(function(){
+    		element.resize();
+    	},500);
+    });
 
 
 	var tab = scope.$parent.tab;
