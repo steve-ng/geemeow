@@ -610,3 +610,9 @@ box-shadow: 0 0 0px #719ECE;
 #room_tab_tutorial{
 	display:none;
 }
+
+.highlighter_logo {
+	width:19px;
+	height:20px;
+	background: url("../img/highlighter.png");
+}
