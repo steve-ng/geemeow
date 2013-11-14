@@ -484,24 +484,6 @@ box-shadow: 0 0 0px #719ECE;
 
 
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
- 
-/* Track */
-::-webkit-scrollbar-track {
-}
- 
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background: rgba(138,138,138,1); 
-}
-::-webkit-scrollbar-thumb:window-inactive {
-    background: rgba(138,138,138,1); 
-}
-
 
 
 
