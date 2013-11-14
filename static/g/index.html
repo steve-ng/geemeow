@@ -5,12 +5,12 @@
 	 <title>Geemeow</title>
  
 	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/joyride-2.1.css">
 	<link rel="stylesheet" href="css/app.css">
 	<link rel="stylesheet" href="css/board.css">
 	<link rel="stylesheet" href="css/tinyloader.css">
 	<link rel="stylesheet" href="css/textlayerbuilder.css">
 	<link rel="stylesheet" href="css/font-awesome.min.css">
-	<link rel="stylesheet" href="css/joyride-2.1.css">
 
 	<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 </head>
@@ -133,8 +133,8 @@
 								</a>
 							</li>
 
-							<li data-toggle="modal" data-target="#newBoardTabModel">
-								<a class="board-tab-header-list-name board-new-tab-button">
+							<li data-toggle="modal" data-target="#newBoardTabModel" >
+								<a class="board-tab-header-list-name board-new-tab-button" id="room_tab">
 									<i class="fa fa-plus board-new-tab-text"></i>
 								</a>
 							</li>
@@ -195,9 +195,9 @@
 				    					</div>
 
 					    					<!-- Page index -->
-			    						<div class="fixed board-tab-page-index" ng-show="tab.tabIndex==currentTabIndex" ng-click="openContextMenu($event)">
+			    						<div class="fixed board-tab-page-index" ng-show="tab.tabIndex==currentTabIndex" ng-click="openContextMenu($event)" >
 			    							<span class="touchnone">Page {{currentPage+1}}</span>
-											<i class="fa fa-chevron-down pull-right touchnone" style="padding-top:0.1em;"></i>
+											<i class="fa fa-chevron-down pull-right touchnone" style="padding-top:0.1em;" id="room_page"></i>
 			    						</div>
 
 					    			</div>
@@ -221,7 +221,7 @@
 
 			<div class="sidebar-top">
 				<div class="sidebar-items">
-					<span class="fa-stack sidebar-item" ng-click="toggleOwnVideo()">
+					<span class="fa-stack sidebar-item" ng-click="toggleOwnVideo()" id="room_video">
 						<i class="fa fa-video-camera fa-stack-1x"></i>
 						<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peers[$root.clientId].hasVideo"></i>
 					</span>
@@ -232,7 +232,7 @@
 					
 
 					<div class="pull-right" style="margin-right: 0.3em">
-						<span class="fa-stack sidebar-item" data-toggle="dropdown">
+						<span class="fa-stack sidebar-item" data-toggle="dropdown" id="room_setting">
 							<i class="fa fa-bars fa-stack-1x"></i>
 						</span>
 
@@ -515,6 +515,37 @@
 	</div><!-- /.modal -->
 
 
+	<!-- Joyride tutorial -->
+	<ol id="room_tab_tutorial">
+	  <!-- data-id needs to be the same as the parent it will attach to -->
+	  <li data-id="room_tab" data-text="Next" class="tutorial-left-align">
+	  	<p> Open a new canvas, share a pdf, image or screenshare (chrome only) here! </p>
+	  </li>
+
+	  <li data-id="room_page" data-options="tipLocation:left" data-text="Next" class="tutorial-top-align">
+	  	<p> Download shared resources, screenshot or clear the entire page here.   </p>
+	  </li>
+
+	  <li data-id="room_video" data-options="tipLocation:left" class="tutorial-big-z" >
+	  	<p> Mute or enable your webcam and mic here! </p>
+	  </li>
+
+	  <li data-id="room_setting" data-options="tipLocation:left" class="tutorial-big-z">
+	  	<p> Change your name, invite other, or disable sound here!  </p>
+	  </li>
+
+	  <!-- using 'data-button' lets you have custom button text -->
+	 <!-- 
+	 <li data-class="parent-element-class" data-options="tipLocation:bottom;tipAnimation:fade" data-button="Second Button"></li>
+	 -->
+
+	  <!-- you can put a class for custom styling -->
+	  <!--  
+	  <li data-id="parentElementID" class="custom-class">Content...</li>
+	  -->
+
+
+	</ol>
 
 
 	<!-- JS -->
@@ -563,6 +594,9 @@
 	<!-- Video Widget -->
 	<script src="js/app/Video/VideoClient.js"></script>
 	<script src="js/app/Video/VideoController.js"></script>
+
+	<!-- tutorial -->
+	<script src="js/app/tutorial.js"></script>
 
 	<!-- bootstrap -->
 	<script src="js/bootstrap.min.js"></script>
