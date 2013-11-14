@@ -3,7 +3,7 @@ $(document).ready(function () {
 	$('#try_now_btn').click(function(e){
 
 		var room_name_selected = $('#room_name').val();
-		window.location.replace("/g/#"+room_name_selected);
+		window.location.replace("/g#"+room_name_selected);
 
 	})
 
