@@ -56,7 +56,7 @@ function socketConnectionInstance(socket) {
 		}
 		console.log(serverId);
 		if (nodeStarServer.isFull()){
-			socket.emit('disconnected', 'Room is currently full :/');
+			socket.emit('disconnected', 'RoomFull');
 			socket.disconnect();
 		} else {
 			socket.emit('open', serverId);

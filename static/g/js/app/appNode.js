@@ -142,8 +142,8 @@ app.run(function($rootScope){
 		$rootScope.$apply();
 	}
 
-	function closeHandler(message){
-		$('#unableToJoinModal').modal('show');
+	function closeHandler(){
+		showErrorAlert("Connection Lost", "You've disconnected from the server :/ Please re-enter.")
 	}
 
 	$rootScope.toggleSound = function(){
@@ -183,6 +183,8 @@ app.run(function($rootScope){
 	$rootScope.showErrorAlert = function(title, message){
 		$rootScope.errorTitle = title;
 		$rootScope.errorMessage = message;
+		$rootScope.$apply();
+		$('#errorModal').hide();
 		$('#errorModal').modal('show');
 	}
 	showErrorAlert = $rootScope.showErrorAlert;

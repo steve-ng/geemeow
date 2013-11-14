@@ -164,13 +164,13 @@ function NodeStarClient(){
 
 
     //  Client Close
-  function closeHandler(){
+  function closeHandler(message){
     if (debug)
       console.log("Client closed");
 
     if (eventHandlers['Close'] != undefined)
       for (var i in eventHandlers['Close'])
-        eventHandlers['Close'][i](serverPeerId);
+        eventHandlers['Close'][i](message);
   }
 
   //  Client Data
