@@ -75,6 +75,7 @@ $(document).ready(function () {
 	    $('#tuna_challenge_no').click(function(event){
 			$('#little_cat').bind("click",createKittyPopOver);
 	    	$('#little_cat').popover('hide');
+	    	$('#timer_score').hide();
 	    });
 	}
 
@@ -174,6 +175,7 @@ $(document).ready(function () {
 	    						"</div>" ;
 
 	    $('#little_cat').popover('show');
+	    $('#timer_score').show();
 
 	    $('#tuna_challenge_yes').click(function(event){
 	    	$('#little_cat').popover('hide');
@@ -184,6 +186,7 @@ $(document).ready(function () {
 
 	    $('#tuna_challenge_no').click(function(event){
 	    	$('#little_cat').popover('hide');
+	    	$('#timer_score').hide();
 	    });
 	}
 
@@ -224,6 +227,7 @@ $(document).ready(function () {
 	    $('#tuna_challenge_no').click(function(event){
 			$('#little_cat').bind("click",startAgain);
 	    	$('#little_cat').popover('hide');
+	    	$('#timer_score').hide();
 	    });
 	}
 
