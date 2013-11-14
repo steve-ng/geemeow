@@ -1,5 +1,27 @@
 $(document).ready(function () {
 
+	$('#for_geek').popover({
+		title: "",
+		html:"true",
+		content:"GeeMeow has an experimental version that uses entirely webRTC technology, no data transfer through a server! </br></br>"+
+				"<button id=\"geek_redirect\" disabled=\"disabled\" class=\"btn popover_btn\">Try me!  </button> &nbsp &nbsp" + 
+				"<button id=\"geek_close_btn\" class=\"btn btn-danger\">Close </button>"
+	});
+
+	$('#for_geek').on('shown.bs.popover', function () {
+  		
+  		$('#geek_redirect').disabled = true;
+
+		// $('#geek_redirect').click(function(e){
+
+		// })
+
+		$('#geek_close_btn').click(function(e){
+			$('#for_geek').popover('hide');
+		})
+	})
+
+
 	$('#try_now_btn').click(function(e){
 
 		var room_name_selected = $('#room_name').val();
