@@ -59,7 +59,7 @@ var CanvasController = function(tab, canvasJquery, requestCanvasAction, toolData
 		extendStrokeWithEvent(e)
 	});
 
-	canvasJquery.on('vmouseup vmouseout', function(e){
+	canvasJquery.on('vmouseup', function(e){
 		if (!drawing)
 			return;
 
