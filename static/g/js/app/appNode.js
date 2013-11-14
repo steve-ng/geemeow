@@ -66,13 +66,15 @@ app.run(function($rootScope){
 			$("#app").show();
 			if ($rootScope.serverPeerId == undefined || $rootScope.serverPeerId.length == 0){
 				$rootScope.serverPeerId = serverPeerId;
-				$("#inviteModal").modal("show");
 			} else
 				$rootScope.serverPeerId = serverPeerId;
 
 			$rootScope.clientId = clientPeerId;
 			window.location.hash = $rootScope.serverPeerId;
-			console.log(window.location.hash);
+	    });
+	    $rootScope.client.onClientEvent('ClientList', function(message){console.log(message);
+	    	if (message.data.length == 1)
+				$("#inviteModal").modal("show");
 	    });
 
 	    //	Plugins

@@ -27,6 +27,7 @@ var BoardClient = function(client){
 		request.metadata = metadata;
 		client.request(request);
 	}
+	var newTab = this.newTab;
 
 	this.closeTab = function(tabId){
 		var request = new Object();
@@ -125,7 +126,7 @@ var BoardClient = function(client){
         	screenStreams[client.getClientPeerId()] = {stream:localStream, url:URL.createObjectURL(localStream)};
 			
 			var metadata = {sourceType:'Screenshare', peerId:client.getClientPeerId(), name:client.getClientPeerId()};
-			this.newTab(metadata);
+			newTab(metadata);
         }
 
 		//navigator.getMedia({video: {mandatory: { chromeMediaSource: 'screen'}}}, gotScreenStream,
