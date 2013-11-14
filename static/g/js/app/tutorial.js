@@ -10,11 +10,10 @@ app.run(function($rootScope){
 		$.cookie("firstTimerCookie","present");
 
 		if(firstTime == null ){
-			showTutorial();
+			$rootScope.showTutorial();
 		}
 		
-		function showTutorial(){
-
+		$rootScope.showTutorial = function(){
 			$('#room_tab_tutorial').joyride({
 				'autoStart' : true,
 				'tipLocation': 'bottom',
@@ -24,7 +23,6 @@ app.run(function($rootScope){
 				'tipAnimation' : 'pop'
 			});
 		}
-
 
 	});
 
