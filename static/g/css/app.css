@@ -400,10 +400,10 @@ box-shadow: 0 0 0px #719ECE;
 	opacity: 1.0;
 	font-size: 1.5em;
 	color: rgba(255, 36, 0, 1.0);
-	-webkit-transform: rotate(45deg);
-	-moz-transform: rotate(45deg);
-	-ms-transform: rotate(45deg);
-	-o-transform: rotate(45deg);
+	-webkit-transform: rotate(45deg) scale(1, 0.4);
+	-moz-transform: rotate(45deg) scale(1, 0.4);
+	-ms-transform: rotate(45deg) scale(1, 0.4);
+	-o-transform: rotate(45deg) scale(1, 0.4);
 }
 
 
@@ -483,24 +483,6 @@ box-shadow: 0 0 0px #719ECE;
 }
 
 
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
- 
-/* Track */
-::-webkit-scrollbar-track {
-}
- 
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background: rgba(138,138,138,1); 
-}
-::-webkit-scrollbar-thumb:window-inactive {
-    background: rgba(138,138,138,1); 
-}
 
 
 

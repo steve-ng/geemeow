@@ -72,7 +72,7 @@ app.run(function($rootScope){
 			$rootScope.clientId = clientPeerId;
 			window.location.hash = $rootScope.serverPeerId;
 	    });
-	    $rootScope.client.onClientEvent('ClientList', function(message){console.log(message);
+	    $rootScope.client.onClientEvent('ClientList', function(message){
 	    	if (message.data.length == 1)
 				$("#inviteModal").modal("show");
 	    });
