@@ -599,3 +599,30 @@ box-shadow: 0 0 0px #719ECE;
 	line-height:50;
 	z-index:1;
 }
+
+/** tooltip overwrite **/
+.joyride-tip-guide .joyride-next-tip{
+
+	background: #1abc9c;
+	
+}
+
+
+.tutorial-left-align{
+	z-index:999;
+	margin-left: -25px;	
+}
+
+.tutorial-big-z{
+	z-index:999;
+}
+
+.tutorial-top-align{
+	margin-top: -25px;
+	z-index:999;
+	margin-left:-5px;
+}
+
+.joyride-expose-wrapper{
+	background-color:rgba(255, 255, 255, 0.71);
+}
