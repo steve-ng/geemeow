@@ -123,12 +123,9 @@ var BoardClient = function(client){
 		var gotScreenStream = function(localStream){
         	localScreenStream = localStream;
         	screenStreams[client.getClientPeerId()] = {stream:localStream, url:URL.createObjectURL(localStream)};
-
-			var request = new Object();
-			request.type = "Board";
-			request.subType = "NewTab";
-			request.metadata = {sourceType:'Screenshare', peerId:client.getClientPeerId(), name:client.getClientPeerId()};
-			client.request(request);  
+			
+			var metadata = {sourceType:'Screenshare', peerId:client.getClientPeerId(), name:client.getClientPeerId()};
+			this.newTab(metadata);
         }
 
 		//navigator.getMedia({video: {mandatory: { chromeMediaSource: 'screen'}}}, gotScreenStream,
@@ -137,8 +134,7 @@ var BoardClient = function(client){
 	        // errorCallback
 	        function(err) {
 	         	console.log(err);
-		        //$('#chromeScreenshareFailAlert').hide();
-		        //$('#chromeScreenshareFailAlert').show();
+		        showErrorAlert('Screenshare spoilt', 'Unable to get screenshare working. Note that it is only supported on Chrome. Checkout if this <a href="http://www.youtube.com/watch?v=ZCatVxcyEpI" target="_blank">Youtube</a> video helps.');
 	        }
 	    );
 	}

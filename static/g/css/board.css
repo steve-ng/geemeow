@@ -47,9 +47,10 @@
 	padding-top:0.3em !important;
 	border-radius: 5px !important;
 	border-top-right-radius: 15px !important;
-    background: transparent;
+    background: rgba(231,185,67,1);
 	border: 0.2em dotted rgba(138,138,138,1) !important;
-    color:rgba(138,138,138,1);
+    color: white !important
+    margin-left:0.15em;
 }
 .board-new-tab-button:hover{
     color:white;
@@ -95,7 +96,7 @@
     right:0;
     top:0;
     bottom:0;
-    z-index:1;
+    z-index:2;
     background: grey;
     position:absolute;
 }

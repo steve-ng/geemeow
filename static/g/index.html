@@ -140,9 +140,14 @@
 						</ul>
 
 					</div>
-
+   
 					<!-- Board Main -->
 					<div class="board-main" board-main>
+
+						<span class="empty-board-span">
+							Hit the yellow + button above to begin!
+						</span>
+
 						<div class = "board-wrapper">
 						    <div id = "board-content">
 						    	<div class="board-cursor" ng-style="{background: $root.users[peerId].color}" ng-repeat="(peerId, cursor) in cursors" cursor-position>
@@ -199,6 +204,8 @@
 						    	</div>
 						    </div>
 						</div>
+
+
 					</div>
 
 				</div>
@@ -491,15 +498,20 @@
 
 
 	<!-- Alerts -->
-	<div id="cameraFailAlert" class="alert alert-danger alert-top-right">
-	  Unable to access camera :/
-	  <a class="close" data-dismiss="alert" href="" aria-hidden="true">&times;</a>
-	</div>
-
-	<div id="chromeScreenshareFailAlert" class="alert alert-danger alert-top-right">
-	  Unable to start screenshare :/ Try this <a href="http://www.youtube.com/watch?v=ZCatVxcyEpI" class="alert-link" target="_blank">Youtube</a> video.
-	  <a class="close" data-dismiss="alert" href="" aria-hidden="true">&times;</a>
-	</div>
+	<!-- Modal for invite -->
+	<div id="errorModal" class="modal fade" style="z-index:10000000">
+	  <div class="modal-dialog modal-dialog-center">
+	    <div class="modal-content">
+			<div class="modal-header">
+			  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			  <h4 class="modal-title"><i class="fa fa-meh-o"></i>&nbsp;{{errorTitle}}</h4>
+			</div>
+			<div class="modal-body">
+				<p ng-bind-html-unsafe="errorMessage"></p>
+			</div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 
 
 

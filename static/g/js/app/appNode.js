@@ -5,6 +5,7 @@ var apiport = 3216;
 
 var app = angular.module('Geemeow', ['prettyDateFilter', 'truncateFilter']);
 var rootScope;
+var showErrorAlert;
 
 app.run(function($rootScope){
 	rootScope = $rootScope;
@@ -29,6 +30,8 @@ app.run(function($rootScope){
 	var totalNotificationCount = 0;
 	$rootScope.notificationText = "\u9FB4\u2180\u25E1\u2180\u9FB4";
 	$rootScope.sound = true;
+	$rootScope.errorTitle = "";
+	$rootScope.errorMessage = "";
 
 
 	//	Setup
@@ -55,6 +58,7 @@ app.run(function($rootScope){
 		$rootScope.client.port = apiport;
 		$rootScope.client.secure = true;
 		$rootScope.client.onMessage('MessageProgress', updateProgress);
+		$rootScope.client.onMessage('Error', showError);
 		$rootScope.client.onClientEvent('Close', closeHandler);
 	    $rootScope.client.debug($rootScope.debug);
 	    $rootScope.client.onClientEvent('Open',function(clientPeerId, serverPeerId){
@@ -174,4 +178,14 @@ app.run(function($rootScope){
 		}, 1000);
 	}
 
+	$rootScope.showErrorAlert = function(title, message){
+		$rootScope.errorTitle = title;
+		$rootScope.errorMessage = message;
+		$('#errorModal').modal('show');
+	}
+	showErrorAlert = $rootScope.showErrorAlert;
+
+	function showError(message){
+		showErrorAlert(message.errorTitle, message.errorMessage);
+	}
 });

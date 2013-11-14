@@ -1,10 +1,11 @@
 
-var apikey = 'fxv643daihuuwhfr';
+var apikey = '';
 var apihost = "geemeow.com";
 var apiport = 3216;
 
 var app = angular.module('Geemeow', ['prettyDateFilter', 'truncateFilter']);
 var rootScope;
+var showErrorAlert;
 
 app.run(function($rootScope){
 	rootScope = $rootScope;
@@ -30,7 +31,8 @@ app.run(function($rootScope){
 	var totalNotificationCount = 0;
 	$rootScope.notificationText = "\u9FB4\u2180\u25E1\u2180\u9FB4";
 	$rootScope.sound = true;
-
+	$rootScope.errorTitle = "";
+	$rootScope.errorMessage = "";
 
 	//	Setup
 	function setup(){
@@ -65,6 +67,7 @@ app.run(function($rootScope){
 		$rootScope.client.port = apiport;
 		$rootScope.client.secure = true;
 		$rootScope.client.onMessage('MessageProgress', updateProgress);
+		$rootScope.client.onMessage('Error', showError);
 	    $rootScope.client.debug($rootScope.debug);
 	    $rootScope.client.onClientEvent('Open',function(clientPeerId){
 			$("#loading-screen").hide();
@@ -90,6 +93,7 @@ app.run(function($rootScope){
 		$rootScope.server.key = apikey;
 		$rootScope.server.host = apihost;
 		$rootScope.server.port = apiport;
+		$rootScope.server.secure = true;
 		$rootScope.server.debug($rootScope.debug);
 		$rootScope.server.onServerEvent('Open', function(serverPeerId){
 			$rootScope.serverPeerId = serverPeerId;
@@ -202,4 +206,18 @@ app.run(function($rootScope){
 	}
 
 
+	$rootScope.showErrorAlert = function(title, message){
+		$rootScope.errorTitle = title;
+		$rootScope.errorMessage = message;
+		$rootScope.$apply();
+		$('#errorModal').hide();
+		$('#errorModal').modal('show');
+	}
+	showErrorAlert = $rootScope.showErrorAlert;
+
+	function showError(message){
+		showErrorAlert(message.errorTitle, message.errorMessage);
+	}
 });
+
+
