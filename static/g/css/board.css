@@ -165,8 +165,8 @@
     background: rgba(58, 58, 58, 1);
     color: white;
     cursor: pointer;
-	border-top-left-radius:0.3em;
-	border-top-right-radius:0.3em;
+	border-top-left-radius:1em;
+	border-top-right-radius:0em;
 }
 .toolbar-toggle:hover{
     background: rgba(138, 138, 138, 1);
