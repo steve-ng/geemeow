@@ -6,7 +6,7 @@ if(BAROMETER == undefined) {
 BAROMETER.load = function(barometer_id) {
   this.barometer_id = barometer_id;
   this.empty_url = "https://getbarometer.s3.amazonaws.com/assets/barometer/images/transparent.gif";
-  this.feedback_url = 'https://getbarometer.com/system/feedback_form/' + this.barometer_id;
+  this.feedback_url = 'http://getbarometer.com/system/feedback_form/' + this.barometer_id;
 
   this.tab_html = '<a id="barometer_tab" onclick="BAROMETER.show();" href="#">Feedback</a>';
   this.overlay_html = '<div id="barometer_overlay" style="display: none;">' +
