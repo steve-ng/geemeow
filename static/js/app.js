@@ -4,17 +4,16 @@ $(document).ready(function () {
 		title: "",
 		html:"true",
 		content:"GeeMeow has an experimental version that uses entirely webRTC technology, no data transfer through a server! </br></br>"+
-				"<button id=\"geek_redirect\" disabled=\"disabled\" class=\"btn popover_btn\">Try me!  </button> &nbsp &nbsp" + 
-				"<button id=\"geek_close_btn\" class=\"btn btn-danger\">Close </button>"
+				"<button id=\"geek_redirect\" class=\"btn popover_btn\">Try now! (Chrome Beta Only)  </button> &nbsp &nbsp" 
 	});
 
 	$('#for_geek').on('shown.bs.popover', function () {
   		
-  		$('#geek_redirect').disabled = true;
 
-		// $('#geek_redirect').click(function(e){
+		$('#geek_redirect').click(function(e){
 
-		// })
+		window.location.replace("/g/experimental.html");
+		})
 
 		$('#geek_close_btn').click(function(e){
 			$('#for_geek').popover('hide');
