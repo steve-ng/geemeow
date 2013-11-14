@@ -196,7 +196,8 @@
 
 					    					<!-- Page index -->
 			    						<div class="fixed board-tab-page-index" ng-show="tab.tabIndex==currentTabIndex" ng-click="openContextMenu($event)">
-			    							<span class="touchnone">Page {{currentPage+1}}</span>
+			    							<span class="touchnone" ng-show="pages.length > 1">Page {{currentPage+1}}</span>
+			    							<span class="touchnone" ng-show="pages.length == 1">&nbsp;&nbsp;Menu</span>
 											<i class="fa fa-chevron-down pull-right touchnone" style="padding-top:0.1em;"></i>
 			    						</div>
 
