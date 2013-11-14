@@ -22,7 +22,7 @@ html, body {
 	left:0;
 	right:0;
 	position:absolute;
-	background: grey;
+	background: rgba(231,185,67,1);
 	z-index: 10000;
 }
 .center-screen{
@@ -116,8 +116,8 @@ html, body {
 	position: absolute;
 	background: white;
 	-moz-box-shadow: inset 0 0 2px #777777;
-   	-webkit-box-shadow: inset 0 0 2px #777777;
-   	box-shadow: inset 0 0 2px #777777;
+ 	-webkit-box-shadow: inset 0 0 2px #777777;
+	box-shadow: inset 0 0 2px #777777;
    	z-index: 100;
 }
 .chat-widget-title{
@@ -125,7 +125,7 @@ html, body {
 	height:2.5em;
 	font-size:1em;
 	width:100%;
-	background: #1abc9c;
+	background: rgba(231,185,67,1);
 	cursor: pointer;
 }
 .chat-widget-title-right{
@@ -353,9 +353,10 @@ box-shadow: 0 0 0px #719ECE;
 	padding: 0;
 	padding-left: 0.8em;
 }
-.own-video-name{
-	background-color: rgba(0,0,0,0.5);
-	
+
+.own-video-name:hover{
+	opacity:0.5;
+	cursor: pointer;
 }
 .video-element{
 	background-color: rgba(0, 0, 0, 1);
