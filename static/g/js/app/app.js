@@ -68,6 +68,7 @@ app.run(function($rootScope){
 		$rootScope.client.secure = true;
 		$rootScope.client.onMessage('MessageProgress', updateProgress);
 		$rootScope.client.onMessage('Error', showError);
+		$rootScope.client.onClientEvent('Close', closeHandler);
 	    $rootScope.client.debug($rootScope.debug);
 	    $rootScope.client.onClientEvent('Open',function(clientPeerId){
 			$("#loading-screen").hide();

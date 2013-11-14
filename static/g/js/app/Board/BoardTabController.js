@@ -183,9 +183,9 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 	//	Canvas Context Menu handler
 	$scope.openContextMenu = function(e){
 		e.stopPropagation();
-		var element = e.srcElement;
+		var element = e.target;
       	$scope.$broadcast('OpenContextMenu'+$scope.currentPage, 
-      		{offsetX: element.offsetLeft - element.scrollWidth, offsetY: element.offsetTop});
+      		{offsetX: element.offsetLeft - element.scrollWidth, offsetY: element.offsetTop-10});
 	}
 
  });
