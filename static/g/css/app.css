@@ -626,3 +626,7 @@ box-shadow: 0 0 0px #719ECE;
 .joyride-expose-wrapper{
 	background-color:rgba(255, 255, 255, 0.71);
 }
+
+#room_tab_tutorial{
+	display:none;
+}
