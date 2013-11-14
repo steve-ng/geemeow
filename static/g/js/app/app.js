@@ -176,6 +176,10 @@ app.run(function($rootScope){
 		$rootScope.sound = !$rootScope.sound;
 	}
 
+	function closeHandler(){
+		showErrorAlert("Connection Lost", "You've disconnected from the server :/ Please re-enter.")
+	}
+
 	var audioElement = document.createElement('audio');
     audioElement.setAttribute('src', 'assets/sound/alert.mp3');
     var lastPlayed = 0;

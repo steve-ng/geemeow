@@ -445,6 +445,18 @@ box-shadow: 0 0 0px #719ECE;
 }
 
 
+.touchtext{
+	-webkit-touch-callout: text;
+	-webkit-user-select: text;
+	-khtml-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
+	pointer-events: auto;
+}
+
+
+
 
 
 @keyframes zoom {

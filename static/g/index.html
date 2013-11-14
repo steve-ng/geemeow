@@ -487,10 +487,28 @@
 	    <div class="modal-content">
 			<div class="modal-header">
 			  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			  <h4 class="modal-title"><i class="fa fa-meh-o"></i>&nbsp;Sorry..</h4>
+			  <h4 class="modal-title"><i class="fa fa-frown-o"></i>&nbsp;Sorry..</h4>
 			</div>
 			<div class="modal-body">
-				<p>Unable to join room :/</p>
+				<p></p>
+			</div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+
+	<!-- Modal for invite -->
+	<div id="aboutModal" class="modal fade" style="z-index:10000000" tabindex="-1">
+	  <div class="modal-dialog modal-dialog-center">
+	    <div class="modal-content">
+			<div class="modal-header">
+			  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			  <h4 class="modal-title"><i class="fa fa-info-circle"></i>&nbsp;&nbsp;About GeeMeow</h4>
+			</div>
+			<div class="modal-body touchtext">
+				<p>A web collaboration platofrm built for speed, simplicity and usability</p>
+				<p><i>Geemeow is currently in beta!</i></p>
+				<p>Contact us at <a href="mailto:contact@geemeow.com">contact@geemeow.com</a></p>
 			</div>
 	    </div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
@@ -506,7 +524,7 @@
 	    <div class="modal-content">
 			<div class="modal-header">
 			  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			  <h4 class="modal-title"><i class="fa fa-meh-o"></i>&nbsp;{{errorTitle}}</h4>
+			  <h4 class="modal-title"><i class="fa fa-frown-o"></i>&nbsp;{{errorTitle}}</h4>
 			</div>
 			<div class="modal-body">
 				<p ng-bind-html-unsafe="errorMessage"></p>
