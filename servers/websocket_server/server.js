@@ -23,7 +23,7 @@ var randstr = "";	//	To edit
 
 function checkServer(server){
 	var almostDied = false;
-	interval = setInterval(function(){
+	var interval = setInterval(function(){
 		if (server.isEmpty()){
 			if (almostDied){
 				delete nodeStarServers[server.getServerNodeId()];

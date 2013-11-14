@@ -68,7 +68,6 @@ html, body {
 	bottom:0em;
 	width:3em;
 	z-index:100;
-	overflow: visible;
 }
 
 
@@ -90,7 +89,6 @@ html, body {
 	top:3em;
 	bottom:0em;
 	right:0em;
-	overflow-y:auto;
 }
 
 
