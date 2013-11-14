@@ -49,7 +49,7 @@
 	border-top-right-radius: 15px !important;
     background: rgba(231,185,67,1);
 	border: 0.2em dotted rgba(138,138,138,1) !important;
-    color: white !important
+    color: white !important;
     margin-left:0.15em;
 }
 .board-new-tab-button:hover{
