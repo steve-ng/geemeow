@@ -58,13 +58,13 @@ function socketConnectionInstance(socket) {
 		if (nodeStarServer.isFull()){
 			socket.emit('disconnected', 'RoomFull');
 			socket.disconnect();
-			socket.on('disconnect', function(){
-				delete socket;
-			});
 		} else {
 			socket.emit('open', serverId);
 			nodeStarServer.socketOpenHandler(socket);
 		}
+		socket.on('disconnect', function(){
+			delete socket;
+		});
     });
 	socket.emit('ready');
 }
