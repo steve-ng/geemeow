@@ -246,7 +246,25 @@
     <!-- <style type='text/css'>@import url('http://getbarometer.s3.amazonaws.com/assets/barometer/css/barometer.css');</style> -->
     <!-- <script src='http://getbarometer.s3.amazonaws.com/assets/barometer/javascripts/barometer.js' type='text/javascript'></script> -->
     <script type="text/javascript" charset="utf-8">
-      BAROMETER.load('QKDD89YxzrbFxzzgDdGB5');
+    //  BAROMETER.load('QKDD89YxzrbFxzzgDdGB5');
+    </script>
+
+
+    <script type="text/javascript" src="js/zenbox.js"></script>
+    <style type="text/css" media="screen, projection">
+      @import url(css/zenbox.css);
+    </style>
+    <script type="text/javascript">
+      if (typeof(Zenbox) !== "undefined") {
+        Zenbox.init({
+          dropboxID:   "20089489",
+          url:         "https://geemeow.zendesk.com",
+          tabTooltip:  "Feedback",
+          tabImageURL: "https://assets.zendesk.com/external/zenbox/images/tab_feedback.png",
+          tabColor:    "black",
+          tabPosition: "Left"
+        });
+      }
     </script>
 
 </body>
