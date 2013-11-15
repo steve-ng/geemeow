@@ -9,10 +9,6 @@ app.run(function($rootScope){
 		console.log('setting cookie!');
 		$.cookie("firstTimerCookie","present");
 
-		if(firstTime == null ){
-			$rootScope.showTutorial();
-		}
-		
 		$rootScope.showTutorial = function(){
 			$('#room_tab_tutorial').joyride({
 				'autoStart' : true,
@@ -22,6 +18,10 @@ app.run(function($rootScope){
 				'expose' : true,
 				'tipAnimation' : 'pop'
 			});
+		}
+
+		if(firstTime == null ){
+			$rootScope.showTutorial();
 		}
 
 	});
