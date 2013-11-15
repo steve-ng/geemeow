@@ -32,7 +32,7 @@ function checkServer(server){
 				almostDied = true;
 		} else
 			almostDied = false;
-	}, 300000);
+	}, 3000);
 }
 
 function socketConnectionInstance(socket) {
