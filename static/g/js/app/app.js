@@ -60,7 +60,7 @@ app.run(function($rootScope){
 			function(){
 				window.location.href = "";
 			}
-		, 10000);
+		, 20000);
 		$rootScope.client = new RTCStarClient();
 		$rootScope.client.key = apikey;
 		$rootScope.client.host = apihost;

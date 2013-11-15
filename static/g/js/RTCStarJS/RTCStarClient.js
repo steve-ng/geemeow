@@ -88,9 +88,11 @@ function RTCStarClient(){
   //  To start the client
   this.start = function(serverId){
     //  Create peer
-    var options = {key: this.key, host: this.host, port: this.port, secure: this.secure};
-    if (this.key.length == 0)
-      delete options.key;
+    var options = {host: this.host, port: this.port};
+    if (this.key && this.key.length > 0)
+      options.key = this.key;
+    if (this.secure)
+      options.secure = this.secure;
     
     clientPeer = new Peer(options);
     serverPeerId = serverId;
