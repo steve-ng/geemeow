@@ -62,10 +62,10 @@ function socketConnectionInstance(socket) {
 			socket.emit('open', serverId);
 			nodeStarServer.socketOpenHandler(socket);
 		}
-		socket.on('disconnect', function(){
-			delete socket;
-		});
     });
+	socket.on('disconnect', function(){
+		delete socket;
+	});
 	socket.emit('ready');
 }
 
