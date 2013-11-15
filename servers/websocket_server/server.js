@@ -32,7 +32,7 @@ function checkServer(server){
 				almostDied = true;
 		} else
 			almostDied = false;
-	}, 300000);
+	}, 3000);
 }
 
 function socketConnectionInstance(socket) {
@@ -58,6 +58,9 @@ function socketConnectionInstance(socket) {
 		if (nodeStarServer.isFull()){
 			socket.emit('disconnected', 'RoomFull');
 			socket.disconnect();
+			socket.on('disconnect', function(){
+				delete socket;
+			});
 		} else {
 			socket.emit('open', serverId);
 			nodeStarServer.socketOpenHandler(socket);
