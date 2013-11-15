@@ -1,4 +1,4 @@
-//var apikey = 'fxv643daihuuwhfr';
+
 var apikey = '';
 var apihost = "geemeow.com";
 var apiport = 3216;

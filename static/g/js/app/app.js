@@ -1,6 +1,6 @@
 
-var apikey = 'fxv643daihuuwhfr';
-var apihost = "0.peerjs.com";
+var apikey = '';
+var apihost = "geemeow.com";
 var apiport = 3216;
 
 var app = angular.module('Geemeow', ['prettyDateFilter', 'truncateFilter']);
@@ -60,7 +60,7 @@ app.run(function($rootScope){
 			function(){
 				window.location.href = "";
 			}
-		, 10000);
+		, 20000);
 		$rootScope.client = new RTCStarClient();
 		$rootScope.client.key = apikey;
 		$rootScope.client.host = apihost;
