@@ -148,13 +148,14 @@ html, body {
 }
 .chat-message-input{
 	position:absolute;
-	bottom: 0.5em;
-	left: 0.5em;
-	right: 0.5em;
-	height:3em;
-	padding:0.5em;
+	bottom: 0.0em;
+	left: 0.0em;
+	right: 0.0em;
+	height:4em;
+	padding:0.3em;
+	width:100%;
 	background-color: rgba(149, 165, 166, 0.5);
-	border: 0 solid transparent;
+	border: 0.3em solid white;
 	resize:none;
 }
 .chat-messages{
