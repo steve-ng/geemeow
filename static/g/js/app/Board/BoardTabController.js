@@ -31,7 +31,13 @@ app.controller('BoardTabController', function($scope,$rootScope) {
  				$scope.pages[0] = {image: image};
  				$scope.$apply();
 		    }
+		    image.onerror = function(){
+		    	$scope.boardClient.closeTab(tab.tabIndex);
+				$rootScope.showErrorAlert("Unable to download image", "The website hosting the image link could have blocked us :/");
+			}
+    		image.crossOrigin = "anonymous";
 		    image.src = $scope.tab.metadata.imageLink;
+
 		} else if ($scope.tab.metadata.sourceType == "ImageFile"){
 			var image = new Image();
  			image.onload = function(){
@@ -169,7 +175,7 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 	}
 
 	$scope.downloadOriginalImage = function(){
-		var download = document.createElement('a');
+		var download = document.createElement('a');z
 		download.href = $scope.tab.metadata.imageFile;
 		download.download = $scope.tab.metadata.name;
 		download.click();

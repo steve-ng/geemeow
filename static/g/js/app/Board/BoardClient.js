@@ -29,11 +29,11 @@ var BoardClient = function(client){
 	}
 	var newTab = this.newTab;
 
-	this.closeTab = function(tabId){
+	this.closeTab = function(tabIndex){
 		var request = new Object();
 		request.type = "Board";
 		request.subType = "CloseTab";
-		request.tabIndex = tabId;
+		request.tabIndex = tabIndex;
 		client.request(request);
 	}
 
