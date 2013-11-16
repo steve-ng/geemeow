@@ -311,6 +311,20 @@ app.directive('boardPage', function($window) {
 	var backgroundLayer = element.children().eq(2);
 	var hiddenVideo = element.children().eq(3)[0];
 	var canvasMenu = element.children().eq(4);
+
+
+	var index = scope.$index;
+  	var tab = scope.$parent.$parent.tab;
+  	function requestCanvasAction(canvasAction){
+  		canvasAction.pageIndex = index;
+  		canvasAction.tabIndex = tab.tabIndex;
+  		scope.boardClient.canvasAction(canvasAction);
+  	}
+  	scope.page.canvasController = new CanvasController(scope.tab, drawingLayer, requestCanvasAction, scope.$parent, scope.boardClient.peerId());
+
+
+
+
   	element.on('resize',function(e){
 		var parentHeight = parent.parent().innerHeight()-1;
 		var tabScale = tab.scale;
@@ -509,20 +523,6 @@ app.directive('boardPage', function($window) {
 	}
 }});
 
-
-app.directive('canvasDrawing', function($window) {
-  return function(scope, element, attrs) {
-  	var index = scope.$index;
-  	var tab = scope.$parent.$parent.tab;
-  	function requestCanvasAction(canvasAction){
-  		canvasAction.pageIndex = index;
-  		canvasAction.tabIndex = tab.tabIndex;
-  		scope.boardClient.canvasAction(canvasAction);
-  	}
-  	scope.page.canvasController = new CanvasController(scope.tab, element, requestCanvasAction, scope.$parent, scope.boardClient.peerId());
-
-  };
-});
 
 
 angular.module('truncateFilter', []).filter('truncate', function () {
