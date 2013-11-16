@@ -2,6 +2,7 @@
 <html lang="en" ng-app="Geemeow">
 <head>
 	<meta charset="utf-8">
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' /
 	 <title>GeeMeow</title>
  
 	<link rel="stylesheet" href="css/bootstrap.css">
@@ -52,6 +53,7 @@
 							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='marker'}" ng-click="toggleCanvasMode('marker')" analytic-marker><i class="fa fa-pencil toolbar-text"></i></li>
 							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='highlighter'}" ng-click="toggleCanvasMode('highlighter')" analytic-highlighter><i class="fa fa-magic toolbar-text toolbar-btn-highligher"></i></li>
 							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='eraser'}" ng-click="toggleCanvasMode('eraser')" analytic-eraser><i class="fa fa-eraser toolbar-text"></i></li>
+							<li type="button" class="toolbar-btn" ng-class="{itemSelected: canvasMode=='text'}" ng-click="toggleCanvasMode('text')" analytic-text><i class="fa fa-font toolbar-text"></i></li>
 							<li class="toolbar-separator"></li>
 							
 							<div class="btn-group">
@@ -66,30 +68,49 @@
 
 							    		
 							    	</li>
+
 							    </ul>
 							</div>
 
 
 							<li class="toolbar-separator"></li>
 
-							<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==2 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(2)" analytic-stroke-small>
+							<li type="button" class="toolbar-btn" ng-show="canvasMode == 'marker' || canvasMode == 'highlighter' || canvasMode == 'eraser'" ng-class="{itemSelected: strokeSize==2 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(2)" analytic-stroke-small>
 								<i class="fa fa-circle toolbar-text" style="font-size:0.3em" ng-style="getStrokeColor(strokeColor)" ng-show="canvasMode == 'marker' || canvasMode == 'select' || canvasMode == 'highlighter'">
 								</i>
 								<i class="fa fa-circle-o toolbar-text" style="font-size:0.3em" ng-show="canvasMode == 'eraser'">
 								</i>
 							</li>
 
-							<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==5 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(5)" analytic-stroke-med>
+							<li type="button" class="toolbar-btn" ng-show="canvasMode == 'marker' || canvasMode == 'highlighter' || canvasMode == 'eraser'" ng-class="{itemSelected: strokeSize==5 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(5)" analytic-stroke-med>
 								<i class="fa fa-circle toolbar-text" style="font-size:0.7em"  ng-style="getStrokeColor(strokeColor)" ng-show="canvasMode == 'marker' || canvasMode == 'select' || canvasMode == 'highlighter'"></i>
 								<i class="fa fa-circle-o toolbar-text" style="font-size:0.7em" ng-show="canvasMode == 'eraser'">
 								</i>
 							</li>
 
-							<li type="button" class="toolbar-btn" ng-class="{itemSelected: strokeSize==20 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(20)" analytic-stroke-large>
+							<li type="button" class="toolbar-btn" ng-show="canvasMode == 'marker' || canvasMode == 'highlighter' || canvasMode == 'eraser'" ng-class="{itemSelected: strokeSize==20 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(20)" analytic-stroke-large>
 								<i class="fa fa-circle toolbar-text" ng-style="getStrokeColor(strokeColor)" ng-show="canvasMode == 'marker' || canvasMode == 'select' || canvasMode == 'highlighter'"></i>
 								<i class="fa fa-circle-o toolbar-text" ng-show="canvasMode == 'eraser'">
 								</i>
 							</li>
+
+
+							<div class="btn-group" ng-show="canvasMode == 'text' || canvasMode == 'select'" >
+							    <li type="button" class="toolbar-btn" data-toggle="dropdown">
+					    			<i class="fa fa-text-height toolbar-text" ng-style="getStrokeColor(strokeColor)"></i>
+					    		</li>
+
+							    <ul class="dropdown-menu fontsize-picker">
+							    	<li ng-repeat="fontSize in fontSizes" type="button" class="toolbar-btn " data-toggle="dropdown" ng-click="setFontSize(fontSize)">
+							    			{{fontSize*10}}
+											<i class="fa fa-check font-check" ng-show="fontSize == $parent.fontSize"></i>
+							    			
+							    	</li>
+
+							    </ul>
+							</div>
+
+					    	
 
 
 							<li class="toolbar-separator"></li>
@@ -128,7 +149,7 @@
 
 						<ul class="nav nav-tabs board-tab-header-list">
 							<li ng-repeat="tab in tabsArray">
-								<a class="board-tab-header-list-name" ng-class="{highlight: currentTabIndex == tab.tabIndex}"  ng-click="switchTab(tab.tabIndex)">{{tab.metadata.name | truncate:15}}&nbsp;
+								<a class="board-tab-header-list-name" ng-class="{highlight: currentTabIndex == tab.tabIndex}"  ng-click="clickTab($event, tab.tabIndex)">{{tab.metadata.name | truncate:15}}&nbsp;
 									<i class="fa fa-times board-tab-header-close" ng-click="closeTab(tab.tabIndex); $event.stopPropagation();"></i>
 								</a>
 							</li>
@@ -146,7 +167,7 @@
 					<div class="board-main" board-main>
 
 						<span class="empty-board-span">
-							Hit the yellow + button above to begin!
+							Hit the + button right there <i class="fa fa-arrow-left empty-tab-arrow"></i> to begin!
 						</span>
 
 						<div class = "board-wrapper">
@@ -170,7 +191,12 @@
 
 				    					<div class="board-tab-page" ng-repeat="page in pages" board-page>
 
-				    						<canvas class="board-tab-page-drawing" canvas-drawing ng-class="{drawingFront: tab.tabIndex==currentTabIndex, disablePointerEvents: canvasMode=='select'}" tabindex="1"></canvas>
+				    						<canvas class="board-tab-page-drawing" ng-class="{drawingFront: tab.tabIndex==currentTabIndex, disablePointerEvents: (canvasMode=='select' || canvasMode == 'text')}" tabindex="1"></canvas>
+				    						<div class="board-tab-page-annotation" ng-controller="BoardTabPageAnnotationController" ng-click="addAnnotation($event);" ng-class="{annotationFront: tab.tabIndex==currentTabIndex, disablePointerEvents: (canvasMode != 'text')}">
+				    							<textarea class="board-annotation touchtext" ng-repeat="(annotationIndex, annotation) in annotations" ng-click="beginUpdateAnnotation(annotationIndex)" ng-class="{boardAnnotationEditing: editing}" ng-style="getStyle(annotation)" ng-readonly="annotationIndex != editingIndex" placeholder="Add an annotation.." annotation ng-model="annotation.text"></textarea>
+				    							<i ng-repeat="(annotationIndex, annotation) in annotations" class="fa fa-times-circle-o board-annotation-close touchtext" ng-show="annotationIndex == editingIndex" ng-style="getCloseStyle(annotation)" ng-click="deleteAnnotation(annotationIndex)"></i>
+				    							<div ng-repeat="(annotationIndex, annotation) in annotations" class="board-annotation-bar touchtext" ng-show="annotationIndex == editingIndex" ng-style="getBarStyle(annotation)"annotation-bar></div>
+				    						</div>
 				    						<div class="board-tab-page-text textLayer"></div>
 				    						<canvas class="board-tab-page-background"></canvas>
 				    						<video width="0px"></video>
@@ -258,7 +284,7 @@
 				<div class="video-div own-video">
 					<div class="video-overlay">
 						<span class="video-name own-video-name" data-toggle="modal" data-target="#changeNameModal">
-							{{$root.users[$root.clientId].name}}
+							<i class="fa fa-user"></i>&nbsp;{{$root.users[$root.clientId].name}}
 						</span>
 						
 				
@@ -578,6 +604,7 @@
 	<script src="js/jquery.autosize.min.js"></script>
 	<script src="js/jquery.cookie.js"></script>
 	<script src="js/jquery.joyride-2.1.js"></script>
+	<script src="js/html2canvas.js"></script>
 
 	<!-- RTCStarJS -->
 	<script src="js/RTCStarJS/adapter.js"></script>
@@ -607,6 +634,7 @@
 	<script src="js/app/Board/BoardServer.js"></script>
 	<script src="js/app/Board/BoardController.js"></script>
 	<script src="js/app/Board/BoardTabController.js"></script>
+	<script src="js/app/Board/BoardTabPageAnnotationController.js"></script>
 	<script src="js/app/Board/CanvasController.js"></script>
 
 	<!-- Video Widget -->
