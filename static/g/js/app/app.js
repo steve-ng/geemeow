@@ -21,7 +21,7 @@ app.run(function($rootScope){
 	$rootScope.userClient;
 	$rootScope.userServer;
 
-	$rootScope.debug = true;
+	$rootScope.debug = false;
 	$rootScope.serverPeerId = "";
 	$rootScope.setupTimer;
 	$rootScope.progress = 0;
@@ -81,11 +81,11 @@ app.run(function($rootScope){
 	    });
 
 	    //	Plugins
+	    $rootScope.userClient = new UserClient($rootScope.client);
+	    $rootScope.userClient.setDelegate($rootScope);
 	    $rootScope.chatClient = new ChatClient($rootScope.client);
 	    $rootScope.boardClient = new BoardClient($rootScope.client);
 	    $rootScope.videoClient = new VideoClient($rootScope.client);
-	    $rootScope.userClient = new UserClient($rootScope.client);
-	    $rootScope.userClient.setDelegate($rootScope);
 	}
 
 
