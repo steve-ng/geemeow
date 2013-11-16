@@ -105,7 +105,7 @@ var VideoClient = function(client){
 		        // errorCallback
 		        function(err) {
 		         	console.log(err);
-					showErrorAlert('Video spoilt', 'Unable to access camera. Checkout if this <a href="https://support.google.com/chrome/answer/2693767" target="_blank">link</a> helps.');
+					showErrorAlert('Unable to access camera', 'You might need to enable webcam on your browser. Checkout if this <a href="https://support.google.com/chrome/answer/2693767" target="_blank">link</a> helps.');
 		        }
 		    );
 		}
