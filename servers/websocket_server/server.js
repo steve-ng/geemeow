@@ -42,7 +42,7 @@ function socketConnectionInstance(socket) {
 
         var serverId = message.serverId;
         var nodeStarServer;
-		if (serverId == undefined || serverId.length == 0){
+		if (serverId == undefined || serverId.length == 0 || serverId.length) > 128){
 			serverId = crypto.createHash('md5').update(new Date().getTime()+randstr).digest("hex");
 			nodeStarServer = new NodeStarServer(serverId);
 			nodeStarServers[serverId] = nodeStarServer;

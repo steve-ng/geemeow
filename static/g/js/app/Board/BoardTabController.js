@@ -91,6 +91,11 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 		$scope.pages[message.canvasAction.pageIndex].canvasController.onCanvasAction(message.canvasAction);
 	});
 
+	//	Annotation Action handler
+	$scope.$on('TabAnnotationAction'+$scope.tab.tabIndex, function(event, message){
+		$scope.pages[message.annotationAction.pageIndex].annotationController.onAnnotationAction(message.annotationAction);
+	});
+
 	//	Canvas Undo handler
 	$scope.$on('TabCanvasUndo'+$scope.tab.tabIndex, function(event){
 		$scope.undoCanvas();
@@ -134,21 +139,26 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 
 	$scope.screenshotPage = function(pageIndex){
 		setTimeout(function(){
-	        var canvas = $scope.pages[pageIndex].getScreenshot();
-	        var download = document.createElement('a');
-			download.href = canvas.toDataURL();
-			download.download = $scope.tab.metadata.name+ ' page'+ (pageIndex+1) +'.png';
-			download.click();
+	        var callback = function(canvas){
+	        	var download = document.createElement('a');
+				download.href = canvas.toDataURL();
+				download.download = $scope.tab.metadata.name+ ' page'+ (pageIndex+1) +'.png';
+				download.click();
+			}
+	        $scope.pages[pageIndex].getScreenshot(callback);
 		},0);
 	}
 
 	$scope.screenshotPageAsTab = function(pageIndex){
-        var canvas = $scope.pages[pageIndex].getScreenshot();
-		var metadata = new Object();
-	    metadata.sourceType = "ImageFile";
-	    metadata.name = $scope.tab.metadata.name+ ' page'+ (pageIndex+1);
-	    metadata.imageFile = canvas.toDataURL();
-	    $scope.boardClient.newTab(metadata);
+        var callback = function(canvas){
+			var metadata = new Object();
+		    metadata.sourceType = "ImageFile";
+		    metadata.name = $scope.tab.metadata.name+ ' page'+ (pageIndex+1);
+		    metadata.imageFile = canvas.toDataURL();
+		    $scope.boardClient.newTab(metadata);
+		};
+
+	    $scope.pages[pageIndex].getScreenshot(callback);
 	}
 
 	$scope.downloadSource = function(){
@@ -307,10 +317,11 @@ app.directive('boardPage', function($window) {
 	var tab = scope.$parent.tab;
 	var parent = element.parent();
 	var drawingLayer = element.children().eq(0);
-	var textLayer = element.children().eq(1);
-	var backgroundLayer = element.children().eq(2);
-	var hiddenVideo = element.children().eq(3)[0];
-	var canvasMenu = element.children().eq(4);
+	var annotationLayer = element.children().eq(1);
+	var textLayer = element.children().eq(2);
+	var backgroundLayer = element.children().eq(3);
+	var hiddenVideo = element.children().eq(4)[0];
+	var canvasMenu = element.children().eq(5);
 
 
 	var index = scope.$index;
@@ -350,6 +361,8 @@ app.directive('boardPage', function($window) {
 			backgroundLayer[0].height = pageDisplayHeight;
 		  	textLayer.width(pageDisplayWidth);
 			textLayer.height(pageDisplayHeight);
+		  	annotationLayer.width(pageDisplayWidth);
+			annotationLayer.height(pageDisplayHeight);
 		  	drawingLayer[0].width = pageDisplayWidth;
 			drawingLayer[0].height = pageDisplayHeight;
 
@@ -375,6 +388,8 @@ app.directive('boardPage', function($window) {
 
 		  	element.width(pageDisplayWidth);
 			element.height(pageDisplayHeight);
+		  	annotationLayer.width(pageDisplayWidth);
+			annotationLayer.height(pageDisplayHeight);
 		  	drawingLayer[0].width = pageDisplayWidth;
 			drawingLayer[0].height = pageDisplayHeight;
 	  	} else if (tab.metadata.sourceType == "ImageLink" || tab.metadata.sourceType == "ImageFile"){
@@ -394,6 +409,8 @@ app.directive('boardPage', function($window) {
 			backgroundLayer[0].height = pageDisplayHeight;
 		  	textLayer.width(pageDisplayWidth);
 			textLayer.height(pageDisplayHeight);
+		  	annotationLayer.width(pageDisplayWidth);
+			annotationLayer.height(pageDisplayHeight);
 		  	drawingLayer[0].width = pageDisplayWidth;
 			drawingLayer[0].height = pageDisplayHeight;
 			backgroundLayer[0].getContext('2d').drawImage(image, 0, 0, pageDisplayWidth, pageDisplayHeight);
@@ -410,6 +427,8 @@ app.directive('boardPage', function($window) {
 			backgroundLayer[0].height = pageDisplayHeight;
 		  	textLayer.width(pageDisplayWidth);
 			textLayer.height(pageDisplayHeight);
+		  	annotationLayer.width(pageDisplayWidth);
+			annotationLayer.height(pageDisplayHeight);
 		  	drawingLayer[0].width = pageDisplayWidth;
 			drawingLayer[0].height = pageDisplayHeight;
 
@@ -440,6 +459,11 @@ app.directive('boardPage', function($window) {
   		
   		scope.page.canvasController.setCanvasData(tab.canvasData[scope.$index]);
   		scope.page.canvasController.redraw();
+
+  		if (tab.annotationData[scope.$index] == undefined)
+  			tab.annotationData[scope.$index] = {};
+  		scope.page.annotationController.setAnnotationData(tab.annotationData[scope.$index]);
+
 
   		//	Set scroll for parent
   		setTimeout(function(){
@@ -500,26 +524,53 @@ app.directive('boardPage', function($window) {
 	drawingLayer.on('contextmenu', openContextMenu);
 	textLayer.on('contextmenu', openContextMenu);
 	backgroundLayer.on('contextmenu', openContextMenu);
+	annotationLayer.on('contextmenu', openContextMenu);
 
 
     scope.$parent.$on('OpenContextMenu'+scope.$index, function(event, e){
       	openContextMenu(e);
     });
 
-	scope.$parent.pages[scope.$index].getScreenshot = function(){
+	scope.$parent.pages[scope.$index].getScreenshot = function(callback){
 		var canvas = document.createElement("canvas");
 		var canvasContext = canvas.getContext('2d');
 
-		var backgroundCanvas = element.children().eq(2)[0];
+		var backgroundCanvas = element.children().eq(3)[0];
 		var drawingCanvas = element.children().eq(0)[0];
+		var annotationLayer = element.children().eq(1)[0];
 
-		canvas.width = drawingCanvas.width;
-		canvas.height = drawingCanvas.height;
-		canvasContext.fillStyle="#FFFFFF";
-		canvasContext.fillRect(0, 0, canvas.width, canvas.height);
-		canvasContext.drawImage(backgroundCanvas, 0, 0);
-		canvasContext.drawImage(drawingCanvas, 0, 0);
-		return canvas;
+		html2canvas(annotationLayer, {
+		    onrendered: function(c) {
+		    	var annotationCanvas = c;
+
+		    	// Get the CanvasPixelArray from the given coordinates and dimensions.
+		    	console.log(c.width, c.height);
+				var imgd = c.getContext('2d').getImageData(0, 0, c.width, c.height);
+				var pix = imgd.data;
+
+				// Loop over each pixel and invert the color.
+				for (var i = 0, n = pix.length; i < n; i += 4) 
+				    if (pix[i] >= 255 && pix[i+1] >= 255 && pix[i+2] >= 255)
+				    	pix[i+3] = 0;
+
+
+				// Draw the ImageData at the given (x,y) coordinates.
+				c.getContext('2d').putImageData(imgd, 0, 0);
+
+		    	canvas.width = drawingCanvas.width;
+				canvas.height = drawingCanvas.height;
+				canvasContext.fillStyle="#FFFFFF";
+				canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+				canvasContext.drawImage(backgroundCanvas, 0, 0);
+				canvasContext.drawImage(annotationCanvas, 0, 0);
+				canvasContext.drawImage(drawingCanvas, 0, 0);
+				callback(canvas);
+		    },
+		    width: drawingCanvas.width,
+		    height: drawingCanvas.height,
+		    background: '#ffffff',
+		});
+		
 	}
 }});
 

@@ -6,6 +6,7 @@ var BoardServer = function(server){
 
 	var tabNextIndex;
 	var plainRollingIndex;
+	var annotationRollingIndex;
 	var maxTabs = 8;
 	this.getdata = function(){
 		return {tabs: tabs, currentTabIndex: currentTabIndex};
@@ -24,8 +25,10 @@ var BoardServer = function(server){
 		currentTab = "";
 		tabNextIndex = 0;
 		plainRollingIndex = 1;
+		annotationRollingIndex = 0;
 
 		//	First tab by default
+		/*
 		var index = tabNextIndex+"";
 		tabNextIndex++;
 		tabs[index] = new Object();
@@ -34,10 +37,12 @@ var BoardServer = function(server){
 		plainRollingIndex++;
 		tabs[index].coords = {x: 0, y: 0};
 		tabs[index].scale = 1.0;
-		tabs[index].canvasData = []
+		tabs[index].canvasData = [];
+		tabs[index].annotationData = [];
 		tabsPriv[index] = new Object();
 		tabsPriv[index].peerActions = {}
 		currentTabIndex = index;
+		*/
 	}
 
 	function initClient(peerId){
@@ -76,6 +81,11 @@ var BoardServer = function(server){
 				tabs[request.tabIndex].scale = request.scale;
 			}
 
+
+			else if (request.tabSubType == "AnnotationAction"){
+				annotationHandler(request);
+				return;
+			}
 
 			else if (request.tabSubType == "CanvasAction"){
 				var action = request.canvasAction;
@@ -176,17 +186,17 @@ var BoardServer = function(server){
 				plainRollingIndex++;
 			}
 			tabs[message.tabIndex].coords = {x: 0, y: 0};
-			message.coords = tabs[message.tabIndex].coords;
 			tabs[message.tabIndex].scale = 1.0;
-			message.scale = tabs[message.tabIndex].scale;
 			tabs[message.tabIndex].canvasDataPage = [];
 			tabs[message.tabIndex].canvasData = [];
+			tabs[message.tabIndex].annotationData = [];
 			tabs[message.tabIndex].tabIndex = message.tabIndex;
 			
 
 			tabsPriv[message.tabIndex] = new Object();
 			tabsPriv[message.tabIndex].peerActions = {}
 			currentTabIndex = message.tabIndex;
+			message.tab = tabs[message.tabIndex];
 		} 
 
 		
@@ -205,6 +215,67 @@ var BoardServer = function(server){
 		server.broadcast(message);
 	}
 
+
+	function annotationHandler(request){
+		var message = request;
+
+		var action = request.annotationAction;
+		action.peerId = message.peerId;
+
+		//	Get canvas data
+		var annotationData;
+		if (action.pageIndex != undefined){
+			annotationData = tabs[action.tabIndex].annotationData[action.pageIndex];
+			if (annotationData == undefined){
+				annotationData = {};
+				tabs[action.tabIndex].annotationData[action.pageIndex] = annotationData;
+			}
+		}
+
+
+		if (action.type == "AddAnnotation"){
+			action.annotationIndex = annotationRollingIndex;
+			action.annotation.annotationIndex = annotationRollingIndex;
+			annotationData[annotationRollingIndex] = action.annotation;
+			annotationRollingIndex++;
+
+		} else if (action.type == "BeginUpdateAnnotation"){
+			if (annotationData[action.annotationIndex].editing != undefined)
+				return;
+			annotationData[action.annotationIndex].editing = action.peerId;
+		} else if (action.type == "UpdateAnnotation"){
+			if (annotationData[action.annotationIndex] == undefined)
+				return;
+			annotationData[action.annotationIndex].text = action.text;
+			annotationData[action.annotationIndex].editing = undefined;
+
+			if (annotationData[action.annotationIndex].text.length == 0)
+				setTimeout(function(){annotationHandler(
+					createDeleteAnnotation(action.tabIndex, action.pageIndex, action.annotationIndex))},0);
+
+		} else if (action.type == "DeleteAnnotation"){
+			delete annotationData[action.annotationIndex];
+		} else if (action.type == "SetSize"){
+			if (annotationData[action.annotationIndex] == undefined)
+				return;
+			annotationData[action.annotationIndex].size = action.size;
+		} else if (action.type == "SetColor"){
+			if (annotationData[action.annotationIndex] == undefined)
+				return;
+			annotationData[action.annotationIndex].color = action.color;
+		} else if (action.type == "SetCoords"){
+			if (annotationData[action.annotationIndex] == undefined)
+				return;
+			annotationData[action.annotationIndex].coords = action.coords;
+		} else if (action.type == "SetFontsize"){
+			if (annotationData[action.annotationIndex] == undefined)
+				return;
+			annotationData[action.annotationIndex].fontSize = action.fontSize;
+		}
+
+		server.broadcast(message);
+	}
+
 	function createScrollPageRequest(tabIndex, pageIndex, coords){
 		var request = new Object();
 		request.type = "Board";
@@ -215,6 +286,19 @@ var BoardServer = function(server){
 		request.scrollTime = new Date().getTime();
 		request.coords = coords;
 		return request
+	}
+
+	function createDeleteAnnotation(tabIndex, pageIndex, annotationIndex){
+		var request = new Object();
+		request.type = "Board";
+		request.subType = "Tab";
+		request.tabSubType = "AnnotationAction";
+		request.annotationAction = {};
+		request.annotationAction.type = "DeleteAnnotation";
+		request.annotationAction.tabIndex = tabIndex;
+		request.annotationAction.pageIndex = pageIndex;
+		request.annotationAction.annotationIndex = annotationIndex;
+		return request;
 	}
 
 }

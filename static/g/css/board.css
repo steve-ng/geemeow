@@ -28,8 +28,8 @@
     padding:0.55em !important;
 	border-top-left-radius: 10px !important;
 	border-top-right-radius: 10px !important;
-    border: 0 solid white !important;
-	color:rgba(128,128,128,1) !important;
+    border: 0 solid black !important;
+	color:black !important;
 }
 .board-tab-header-list-name:hover{
     background-color: rgba(200,200,200,1) !important;
@@ -47,9 +47,9 @@
 	padding-top:0.3em !important;
 	border-radius: 5px !important;
 	border-top-right-radius: 15px !important;
-    background: rgba(231,185,67,1);
+    background: white;
 	border: 0.2em dotted rgba(138,138,138,1) !important;
-    color: white !important;
+    color: black !important;
     margin-left:0.15em;
 }
 .board-new-tab-button:hover{
@@ -108,6 +108,9 @@
 .board-tab-page-drawing{
     position: absolute;
     cursor: pointer;
+}
+.board-tab-page-annotation{
+    position: absolute;
 }
 .board-tab-page-background{
     background-color: white;
@@ -258,6 +261,17 @@
   z-index:100;
 }
 
+.fontsize-picker{
+    background-color: rgba(230,230,230,1);
+    font-size:1em;
+    min-width: 5em;
+}
+
+.font-check{
+    position: absolute;
+    right:1.0em;
+    line-height:2.4em !important;
+}
 
 .zoom-button {
   font-size:1.3em !important;
@@ -294,4 +308,52 @@
 
 .fixed{
     position:fixed;
+}
+
+
+
+.board-annotation{
+    position: absolute;
+    double: 1 solid #ccc;
+    padding:0.4em;
+    resize: none;
+    overflow:hidden;
+    background: rgba(239,239,239,1);
+}
+.annotationFront{
+    z-index: 9;
+}
+
+.boardAnnotationEditing{
+    border: 1px solid grey;
+    resize: both !important;
+}
+.board-annotation:focus{
+    outline: none;
+}
+
+.board-annotation-close{
+    position:absolute;
+    margin-left:-0.9em;
+    margin-top:-0.9em;
+    font-size:2em;
+    color:black;
+    text-shadow: 0px 0px 13px white;
+    opacity: 0.25;
+    cursor: pointer;
+}
+
+.board-annotation-close:hover{
+    opacity: 1;
+}
+.board-annotation-close:active{
+    opacity: 1;
+}
+.board-annotation-bar{
+    height:1.5em;
+    position: absolute;
+    margin-top: -1.5em;
+    background:#dddddd;
+    border: 1px solid black;
+    cursor:move; 
 }

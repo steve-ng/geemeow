@@ -13,8 +13,10 @@ app.controller('BoardController', function($scope, $rootScope){
 
     //  Board state
     $scope.strokeSize = 2;
-    $scope.strokeColors = ['#2980b9','#8e44ad','#c0392b', '#27ae60', '#ffff00', '#34495e', '#000000', '#ffffff'];
+    $scope.strokeColors = ['#2980b9','#8e44ad','#c0392b', '#27ae60', '#ffff00', '#34495e', '#000000', '#fffffe'];
     $scope.strokeColor = '#000000';
+    $scope.fontSizes = [0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 2.4, 3.6, 7.2, 12];
+    $scope.fontSize = 1.0;
     $scope.canvasMode = 'marker'; //  marker, eraser, select, highlighter
     
 
@@ -64,8 +66,13 @@ app.controller('BoardController', function($scope, $rootScope){
       $scope.strokeColor = color;
     }
 
+
+    $scope.setFontSize = function(size){
+      $scope.fontSize = size;
+    }
+
     $scope.getStrokeColor = function (color) {
-      if ($scope.canvasMode == 'marker' || $scope.canvasMode == 'highlighter')
+      if ($scope.canvasMode == 'marker' || $scope.canvasMode == 'highlighter' || $scope.canvasMode == 'text')
         return { color: color};
       else
         return {color:color, opacity: 0.5};
@@ -119,12 +126,19 @@ app.controller('BoardController', function($scope, $rootScope){
     }
 
     $scope.addScreenshareTab = function(){
-      $scope.boardClient.screenshare();
+      $scope.boardClient.screenshare($rootScope.users[$rootScope.clientId].name+"'s screen");
     }
 
-  	$scope.switchTab = function(tabIndex){
-  		$scope.boardClient.switchTab(tabIndex);
+  	$scope.clickTab = function(event, tabIndex){
+      if (event.which == 2)
+        $scope.closeTab(tabIndex);
+      else
+  		  $scope.switchTab(tabIndex);
   	}
+
+    $scope.switchTab = function(tabIndex){
+        $scope.boardClient.switchTab(tabIndex);
+    }
 
   	$scope.closeTab = function(tabIndex){
   		var pos = $scope.tabsArray.indexOf($scope.tabs[tabIndex]);
@@ -156,12 +170,7 @@ app.controller('BoardController', function($scope, $rootScope){
 
   	//	Events and Messages
   	$scope.onNewTab = function(message){
-  		var tab = new Object();
-  		tab.metadata = message.metadata;
-  		tab.canvasData = new Object();
-      tab.tabIndex = message.tabIndex;
-      tab.coords = message.coords;
-      tab.scale = message.scale;
+      var tab = message.tab;
   		$scope.tabs[message.tabIndex] = tab;
   		$scope.tabsArray.push(tab);
       currentTabIndex = tab.tabIndex;
@@ -222,6 +231,10 @@ app.controller('BoardController', function($scope, $rootScope){
     $scope.onCanvasAction = function(message){
       $rootScope.notify();
       $scope.$broadcast('TabCanvasAction'+message.canvasAction.tabIndex, message);
+    }
+
+    $scope.onAnnotationAction = function(message){
+      $scope.$broadcast('TabAnnotationAction'+message.annotationAction.tabIndex, message);
     }
 
 

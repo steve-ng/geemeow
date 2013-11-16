@@ -45,7 +45,7 @@ var BoardClient = function(client){
 		client.request(request);
 	}
 
-	this.updateCursor = function(cursorData){
+	this.updateCursor = function(cursorData){return;
 		var request = new Object();
 		request.type = "Board";
 		request.subType = "UpdateCursor";
@@ -83,6 +83,15 @@ var BoardClient = function(client){
 		client.request(request);
 	}
 
+	this.annotationAction = function(annotationAction){
+		var request = new Object();
+		request.type = "Board";
+		request.subType = "Tab";
+		request.tabSubType = "AnnotationAction";
+		request.annotationAction = annotationAction;
+		client.request(request);
+	}
+
 	
 	//	Message
 	var messageHandler = function(message){
@@ -95,6 +104,8 @@ var BoardClient = function(client){
 				delegate.onUpdateScroll(message);
 			else if (message.tabSubType == "CanvasAction")
 				delegate.onCanvasAction(message);
+			else if (message.tabSubType == "AnnotationAction")
+				delegate.onAnnotationAction(message);
 			else if (message.tabSubType == "UpdateScrollPage")
 				delegate.onUpdateScrollPage(message);
 			else if (message.tabSubType == "UpdateScale")
@@ -116,7 +127,7 @@ var BoardClient = function(client){
 
 
 
-	this.screenshare = function(){
+	this.screenshare = function(name){
 		if (localScreenStream != undefined)
 			return;
 
@@ -125,7 +136,7 @@ var BoardClient = function(client){
         	localScreenStream = localStream;
         	screenStreams[client.getClientPeerId()] = {stream:localStream, url:URL.createObjectURL(localStream)};
 			
-			var metadata = {sourceType:'Screenshare', peerId:client.getClientPeerId(), name:client.getClientPeerId()};
+			var metadata = {sourceType:'Screenshare', peerId:client.getClientPeerId(), name: name};
 			newTab(metadata);
         }
 

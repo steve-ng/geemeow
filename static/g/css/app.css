@@ -123,7 +123,8 @@ html, body {
 	height:2.5em;
 	font-size:1em;
 	width:100%;
-	background: rgba(231,185,67,1);
+	background: black;
+	color:white;
 	cursor: pointer;
 }
 .chat-widget-title-right{
@@ -591,6 +592,7 @@ box-shadow: 0 0 0px #719ECE;
 	text-align:center;
 	line-height:50;
 	z-index:1;
+	background:white;
 }
 
 /** tooltip overwrite **/
@@ -629,3 +631,13 @@ box-shadow: 0 0 0px #719ECE;
 	height:20px;
 	background: url("../img/highlighter.png");
 }
+
+.empty-tab-arrow {
+	font-size:20em;
+	-webkit-transform: rotate(30deg);
+    -moz-transform: rotate(30deg);
+    -o-transform: rotate(30deg);
+    -ms-transform: rotate(30deg);
+    transform: rotate(30deg);
+}
+
