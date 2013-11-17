@@ -382,6 +382,8 @@ app.directive('boardPage', function($window) {
 
 		  	element.width(pageDisplayWidth);
 			element.height(pageDisplayHeight);
+		  	backgroundLayer[0].width = 0;
+			backgroundLayer[0].height = 0;
 		  	backgroundLayer[0].width = pageDisplayWidth;
 			backgroundLayer[0].height = pageDisplayHeight;
 		  	textLayer.width(pageDisplayWidth);

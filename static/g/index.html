@@ -372,7 +372,7 @@
 							<p ng-style="{color: $root.users[chat.peerId].color}" class="chat-message-name">{{$root.users[chat.peerId].name}}
 								<span class="chat-message-time">{{chat.timestamp | prettyDate}}</span>
 							</p>
-							<textarea readonly class="chat-message-text" chat-message-text>{{chat.text}}</textarea>
+							<p class="chat-message-text" ng-bind-html-unsafe="chat.text | parseUrlFilter:'_blank'"></p>
 						</div>
 					</div>
 					<textarea rows="1" class="chat-message-input" type="text" ng-model="text" placeholder="Type a message.." chat-input></textarea>

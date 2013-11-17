@@ -189,9 +189,10 @@ html, body {
 	margin:0;
 	width: 100%;
 	border-width: 0;
-	resize:none;
 	height: auto;
 	background: none;
+	padding:0.3em;
+	padding-left:0.5em;
 }
 .chat-message-text:focus {
 outline: none !important;
