@@ -39,8 +39,11 @@
     background-color: rgba(200,200,200,1) !important;
     color:white!important;
 }
+.board-new-tab-button-li{
+    margin-top:0.3em;
+    height:100%;
+}
 .board-new-tab-button{
-	top:0.8em;
     height:2em;
     width:2em;
     padding:0.4em !important;
