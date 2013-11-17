@@ -285,7 +285,7 @@ app.directive('annotation', function($window) {
 
 		scope.annotation.coords.x = scope.annotation.coords.x + changeX/element.parent().width();
 		scope.annotation.coords.y = scope.annotation.coords.y + changeY/element.parent().height();
-		
+
 		scope.$apply();
 
 		oldX = e.pageX;
@@ -296,7 +296,6 @@ app.directive('annotation', function($window) {
 	element.on('vmouseup',function(e){
 		dragging = false;
 
-        console.log(element.outerHeight());
 		if (!moved && !scope.editing){
 			scope.$parent.beginUpdateAnnotation(scope.annotationIndex);
 			return;
