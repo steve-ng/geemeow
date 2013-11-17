@@ -218,4 +218,8 @@ app.run(function($rootScope){
 	function showError(message){
 		showErrorAlert(message.errorTitle, message.errorMessage);
 	}
+
+	$rootScope.downloadChat = function(){
+    	$rootScope.$broadcast('DownloadChat');
+	}
 });

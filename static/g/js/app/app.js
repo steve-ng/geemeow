@@ -250,6 +250,10 @@ app.run(function($rootScope){
 		showErrorAlert(message.errorTitle, message.errorMessage);
 	}
 
+
+	$rootScope.downloadChat = function(){
+    	$rootScope.$broadcast('DownloadChat');
+	}
 });
 
 

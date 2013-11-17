@@ -59,15 +59,23 @@ app.controller('ChatController', function($scope, $rootScope){
 
 
 	//	Export Chat history
-	var exportChatHistory = function(){
+	$scope.exportChatHistory = function(){
 		var logs = "";
-		var names = $rootScope.names;
+		var users = $rootScope.users;
 		for (var i in $scope.chatHistory){
 			var message = $scope.chatHistory[i];
-			logs += names[message.peerId] + " (" + (new Date(message.timestamp)).toString() +  "): " + message.text + "\n";
+			logs += (new Date(message.timestamp)).toString() + ", "+users[message.peerId].name + ": "+ message.text + "\n";
 		}
 		return logs;
 	}
+
+    $scope.$on('DownloadChat', function(event){
+        var log = $scope.exportChatHistory();
+        var download = document.createElement('a');
+        download.href = 'data:text/plain;base64,'+btoa(log);
+        download.download = $rootScope.serverPeerId + " at "+ new Date() + '.txt';
+        download.click();
+    });
 
 	//	Safe Apply
   	$scope.safeApply = function(fn) {
