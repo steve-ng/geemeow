@@ -192,7 +192,7 @@
     color: rgba(0,0,0, 1);
 }
 .toolbar-btn-highligher{
-    border-bottom: 0.2em solid rgb(220,220,220);
+    border-top: 0.2em solid rgb(220,220,220);
     border-radius: 0.2em;
     transform:rotate(180deg);
     -ms-transform:rotate(180deg); /* IE 9 */
