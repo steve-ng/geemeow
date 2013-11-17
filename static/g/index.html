@@ -84,7 +84,7 @@
 
 							<li class="toolbar-separator"></li>
 
-							<li type="button" class="toolbar-btn" ng-show="canvasMode == 'marker' || canvasMode == 'highlighter' || canvasMode == 'eraser'" ng-class="{itemSelected: strokeSize==2 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(2)" data--title="Small" analytic-stroke-small>
+							<li type="button" class="toolbar-btn" ng-show="canvasMode == 'marker' || canvasMode == 'highlighter' || canvasMode == 'eraser'" ng-class="{itemSelected: strokeSize==2 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(2)" data-title="Small" analytic-stroke-small>
 								<i class="fa fa-circle toolbar-text" style="font-size:0.3em" ng-style="getStrokeColor(strokeColor)" ng-show="canvasMode == 'marker' || canvasMode == 'select' || canvasMode == 'highlighter'">
 								</i>
 								<i class="fa fa-circle-o toolbar-text" style="font-size:0.3em" ng-show="canvasMode == 'eraser'">
@@ -163,14 +163,14 @@
 								</a>
 							</li>
 
-							<li id="newTabButton" data-toggle="modal" data-target="#newBoardTabModel" data-title="Add New Tab">
-								<a class="board-tab-header-list-name board-new-tab-button" id="room_tab">
+							<li id="room_tab" data-toggle="modal" data-target="#newBoardTabModel" data-title="Add New Tab">
+								<a class="board-tab-header-list-name board-new-tab-button" >
 									<i class="fa fa-plus board-new-tab-text"></i>
 								</a>
 							</li>
 
-							<li class="sync-button pull-right" ng-click="toggleSync()" id="room_sync" ng-class="{syncButtonOn: sync}">
-								<div ng-show="sync">Sync On</div>
+							<li class="sync-button pull-right" ng-click="toggleSync()"  ng-class="{syncButtonOn: sync}">
+								<div ng-show="sync" id="room_sync">Sync On</div>
 								<div ng-show="!sync">Sync Off</div>
 							</li>
 						</ul>
@@ -584,6 +584,10 @@
 	  <li data-id="room_page" data-options="tipLocation:left" data-text="Next" class="tutorial-top-align">
 	  	<p> Access additional page options here. </p>
 	  </li> -->
+
+	  <li data-id="room_sync" data-options="tipLocation:left" data-text="Next" class="tutorial-big-z" >
+	  	<p> You can choose to synchronised tabs here!</p>
+	  </li>
 
 	  <li data-id="room_video" data-options="tipLocation:left" data-text="Next" class="tutorial-big-z" >
 	  	<p> Enable video chat here! </p>
