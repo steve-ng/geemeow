@@ -29,11 +29,7 @@ app.controller('BoardTabPageAnnotationController', function($scope, $rootScope){
   	}
 
   	$scope.getCloseStyle = function(annotation){
-  		return {left: (annotation.coords.x*100)+'%', top: (annotation.coords.y*100)+'%'};
-  	}
-
-  	$scope.getBarStyle = function(annotation){
-  		return {left: (annotation.coords.x*100)+'%', top: (annotation.coords.y*100)+'%', width: (annotation.size.width*100)+'%'};
+  		return {left: (annotation.coords.x*100+annotation.size.width*100)+'%', top: (annotation.coords.y*100)+'%'};
   	}
 
 
@@ -205,8 +201,10 @@ app.controller('BoardTabPageAnnotationController', function($scope, $rootScope){
 
 app.directive('annotation', function($window) {
   return function(scope, element, attrs) {
+  	
   	scope.editing = false;
   	var originalText;
+
     scope.$on('EditAnnotation'+scope.annotationIndex, function(event){
     	scope.$apply();
     	element.focus();
@@ -232,17 +230,8 @@ app.directive('annotation', function($window) {
 		if (e.which != 1 && e.which != 0)
 			return;
 
-
 		scope.$parent.updateAnnotation(scope.annotationIndex, element.val());
 		scope.editing = undefined;
-	});
-
-
-	element.on('click',function(e){
-		if (e.which != 1 && e.which != 0)
-			return;
-
-		e.stopPropagation();
 	});
 
 	scope.$watch('$parent.toolDataSource.strokeColor', function(){
@@ -265,20 +254,6 @@ app.directive('annotation', function($window) {
 	});
 
 
-	element.on('vmouseup',function(e){
-		if (!scope.editing)
-			return;
-        if(this.oldwidth  === null){this.oldwidth  = element.outerWidth();}
-        if(this.oldheight === null){this.oldheight = element.outerHeight();}
-        if(element.outerWidth() != this.oldwidth || element.outerHeight() != this.oldheight){
-			scope.$parent.setAnnotationSize(scope.annotationIndex, element.outerWidth()/element.parent().width(), 
-				element.outerHeight()/element.parent().height());
-            this.oldwidth  = element.outerWidth();
-            this.oldheight = element.outerHeight();
-        }
-    });
-
-
     element.on('scroll', function(){
     	if (element.scrollTop() == 1000000 && element.scrollLeft() == 1000000)
     		return;
@@ -287,49 +262,69 @@ app.directive('annotation', function($window) {
     })
 
     scope.$parent.fontFactor = element.parent();
-  }
-});
 
-app.directive('annotationBar', function($window) {
-  return function(scope, element, attrs) {
-  	var oldX, oldY
-  	var isMoving = false;
+
+
+    var oldX, oldY
+  	var dragging = false, moved = false;
 
 	element.on('vmousedown', function(e){
-  		isMoving = true;
+
+  		dragging = true; 
+  		moved = false
 		oldX = e.pageX;
 		oldY = e.pageY;
-
-		e.stopPropagation();
-		return false;
 	});
 
 	$(window).on('vmousemove', function(e){
-		if (!isMoving)
+		if (!dragging)
 			return false;
-
-		e.preventDefault();
-		e.stopPropagation();
 
 		var changeX = e.pageX - oldX;
 		var changeY = e.pageY - oldY;
 
 		scope.annotation.coords.x = scope.annotation.coords.x + changeX/element.parent().width();
 		scope.annotation.coords.y = scope.annotation.coords.y + changeY/element.parent().height();
+		
 		scope.$apply();
 
 		oldX = e.pageX;
 		oldY = e.pageY;
+		moved = true;
 	});
 
-	$(window).on('vmouseup',function(e){
-		if (!isMoving)
+	element.on('vmouseup',function(e){
+		dragging = false;
+
+        console.log(element.outerHeight());
+		if (!moved && !scope.editing){
+			scope.$parent.beginUpdateAnnotation(scope.annotationIndex);
 			return;
-		e.preventDefault();
-		e.stopPropagation();
+		}
+
+		//	Set size
+        if(this.oldwidth  === null){this.oldwidth  = element.outerWidth();}
+        if(this.oldheight === null){this.oldheight = element.outerHeight();}
+        if(element.outerWidth() != this.oldwidth || element.outerHeight() != this.oldheight){
+			scope.$parent.setAnnotationSize(scope.annotationIndex, element.outerWidth()/element.parent().width(), 
+				element.outerHeight()/element.parent().height());
+            this.oldwidth  = element.outerWidth();
+            this.oldheight = element.outerHeight();
+        }
         
 		scope.$parent.setAnnotationCoords(scope.annotationIndex, scope.annotation.coords); 
-  		isMoving = false;
+		scope.$apply();
+    });
+
+
+    element.on('click', function(e){
+    	e.stopPropagation();
+    });
+
+    element.on('contextmenu', function(e){
+    	e.stopPropagation();
     });
   }
 });
+
+

@@ -319,6 +319,10 @@
     resize: none;
     overflow:hidden;
     background: rgba(239,239,239,1);
+    cursor: pointer;
+}
+.board-annotation:focus{
+    cursor: auto;
 }
 .annotationFront{
     z-index: 9;
@@ -334,7 +338,6 @@
 
 .board-annotation-close{
     position:absolute;
-    margin-left:-0.9em;
     margin-top:-0.9em;
     font-size:2em;
     color:black;
@@ -348,12 +351,4 @@
 }
 .board-annotation-close:active{
     opacity: 1;
-}
-.board-annotation-bar{
-    height:1.5em;
-    position: absolute;
-    margin-top: -1.5em;
-    background:#dddddd;
-    border: 1px solid black;
-    cursor:move; 
 }

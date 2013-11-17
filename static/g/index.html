@@ -197,9 +197,9 @@
 
 				    						<canvas class="board-tab-page-drawing" ng-class="{drawingFront: tab.tabIndex==currentTabIndex, disablePointerEvents: (canvasMode=='select' || canvasMode == 'text')}" tabindex="1"></canvas>
 				    						<div class="board-tab-page-annotation" ng-controller="BoardTabPageAnnotationController" ng-click="addAnnotation($event);" ng-class="{annotationFront: tab.tabIndex==currentTabIndex, disablePointerEvents: (canvasMode != 'text')}">
-				    							<textarea class="board-annotation touchtext" ng-repeat="(annotationIndex, annotation) in annotations" ng-click="beginUpdateAnnotation(annotationIndex)" ng-class="{boardAnnotationEditing: editing}" ng-style="getStyle(annotation)" ng-readonly="annotationIndex != editingIndex" placeholder="Add an annotation.." annotation ng-model="annotation.text"></textarea>
+				    							<textarea class="board-annotation touchtext" ng-repeat="(annotationIndex, annotation) in annotations"ng-class="{boardAnnotationEditing: editing}" ng-style="getStyle(annotation)" ng-readonly="annotationIndex != editingIndex" placeholder="Add an annotation.." annotation ng-model="annotation.text"></textarea>
 				    							<i ng-repeat="(annotationIndex, annotation) in annotations" class="fa fa-times-circle-o board-annotation-close touchtext" ng-show="annotationIndex == editingIndex" ng-style="getCloseStyle(annotation)" ng-click="deleteAnnotation(annotationIndex)"></i>
-				    							<div ng-repeat="(annotationIndex, annotation) in annotations" class="board-annotation-bar touchtext" ng-show="annotationIndex == editingIndex" ng-style="getBarStyle(annotation)"annotation-bar></div>
+				    							
 				    						</div>
 				    						<div class="board-tab-page-text textLayer"></div>
 				    						<canvas class="board-tab-page-background"></canvas>
