@@ -26,7 +26,7 @@ app.controller('ChatController', function($scope, $rootScope){
 	//	Message handlers
 	$scope.onNewChat = function(message){
 		var autoScroll = false;
-		if ($scope.scrollDiv[0].scrollTop + $scope.scrollDiv.height() + 10> $scope.scrollDiv[0].scrollHeight || $scope.scrollDiv.is('animated'))
+		if ($scope.scrollDiv[0].scrollTop + $scope.scrollDiv.height() + 100> $scope.scrollDiv[0].scrollHeight || $scope.scrollDiv.is('animated'))
 			autoScroll = true;
 
 		$scope.chatHistory.push(message);

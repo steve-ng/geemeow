@@ -38,6 +38,7 @@ app.run(function($rootScope){
 
 	$rootScope.errorTitle = "";
 	$rootScope.errorMessage = "";
+	$rootScope.sync = true;
 
 	//	Setup
 	function setup(){
@@ -138,12 +139,17 @@ app.run(function($rootScope){
 	}
 
 	//	UI Methods
-	$rootScope.changeName = function(name){
-		$rootScope.userClient.changeName(name);
+	$rootScope.changeName = function(){
+		var newName = $('#changeNameModalInput').val();
+		if (newName.length == 0 || newName.length > 30)
+			return;
+		$rootScope.userClient.changeName(newName);
+		$('#changeNameModal').modal('hide');
 	}
 
 	$rootScope.openPDFLink = function(link){
     	$rootScope.$broadcast('OpenPDFLink',link);
+		$('#openPDFLinkModal').modal('hide');
 	}
 
 	$rootScope.uploadPDF = function(file){
@@ -156,6 +162,7 @@ app.run(function($rootScope){
 
 	$rootScope.openImageLink = function(link){
     	$rootScope.$broadcast('OpenImageLink',link);
+		$('#openImageLinkModal').modal('hide');
 	}
 
 	$rootScope.uploadImage = function(file){
@@ -178,6 +185,10 @@ app.run(function($rootScope){
 		$rootScope.$apply();
 	}
 
+	function closeHandler(){
+		showErrorAlert("Connection Lost", "You've disconnected from the server :/ Please re-enter.")
+	}
+
 	$rootScope.toggleSound = function(){
 		if ($rootScope.notificationSound == "on")
 			$rootScope.notificationSound = "off";
@@ -186,8 +197,8 @@ app.run(function($rootScope){
 		$.cookie("notificationSound", $rootScope.notificationSound);
 	}
 
-	function closeHandler(){
-		showErrorAlert("Connection Lost", "You've disconnected from the server :/ Please re-enter.")
+	$rootScope.toggleSync = function(){
+		$rootScope.sync = !$rootScope.sync;
 	}
 
 	var audioElement = document.createElement('audio');

@@ -28,7 +28,7 @@ var BoardServer = function(server){
 		annotationRollingIndex = 0;
 
 		//	First tab by default
-		
+		/*
 		var index = tabNextIndex+"";
 		tabNextIndex++;
 		tabs[index] = new Object();
@@ -42,7 +42,7 @@ var BoardServer = function(server){
 		tabsPriv[index] = new Object();
 		tabsPriv[index].peerActions = {}
 		currentTabIndex = index;
-		
+		*/
 	}
 
 	function initClient(peerId){

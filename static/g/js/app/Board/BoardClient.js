@@ -1,5 +1,5 @@
 
-
+var a;
 var BoardClient = function(client){
 	var localScreenStream;
 	var screenStreams = {};
@@ -45,7 +45,7 @@ var BoardClient = function(client){
 		client.request(request);
 	}
 
-	this.updateCursor = function(cursorData){return;
+	this.updateCursor = function(cursorData){
 		var request = new Object();
 		request.type = "Board";
 		request.subType = "UpdateCursor";
@@ -134,6 +134,9 @@ var BoardClient = function(client){
 
 		var gotScreenStream = function(localStream){
         	localScreenStream = localStream;
+        	localScreenStream.onended = function(){
+        		delegate.onScreenshareEnded();
+        	};
         	screenStreams[client.getClientPeerId()] = {stream:localStream, url:URL.createObjectURL(localStream)};
 			
 			var metadata = {sourceType:'Screenshare', peerId:client.getClientPeerId(), name: name};

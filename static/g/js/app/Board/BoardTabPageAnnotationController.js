@@ -206,9 +206,10 @@ app.directive('annotation', function($window) {
   	var originalText;
 
     scope.$on('EditAnnotation'+scope.annotationIndex, function(event){
+    	scope.editing = true;
     	scope.$apply();
     	element.focus();
-    	scope.editing = true;
+    	element.select();
     	originalText = scope.$parent.annotations[scope.annotationIndex].text;
     });
 

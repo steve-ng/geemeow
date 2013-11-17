@@ -163,6 +163,11 @@
 									<i class="fa fa-plus board-new-tab-text"></i>
 								</a>
 							</li>
+
+							<li class="sync-button pull-right" ng-click="toggleSync()" id="room_sync" ng-class="{syncButtonOn: sync}">
+								<div ng-show="sync">Sync On</div>
+								<div ng-show="!sync">Sync Off</div>
+							</li>
 						</ul>
 
 					</div>
@@ -176,7 +181,7 @@
 
 						<div class = "board-wrapper">
 						    <div id = "board-content">
-						    	<div class="board-cursor" ng-style="{background: $root.users[peerId].color}" ng-repeat="(peerId, cursor) in cursors" cursor-position>
+						    	<div class="board-cursor" ng-style="{background: $root.users[peerId].color}" ng-repeat="(peerId, cursor) in cursors" ng-show="$root.sync" cursor-position>
 						    		<span class="board-cursor-text" ng-style="{color: $root.users[peerId].color}">{{$root.users[peerId].name}}</span>
 						    	</div>
 				    			<div class="board-tab-wrapper" ng-repeat="tab in tabsArray" ng-class="{tabfront: currentTabIndex == tab.tabIndex}" ng-controller="BoardTabController" scroll-position>
@@ -212,7 +217,7 @@
 											    	<li><a href="" ng-click="undoCanvas($index)">Undo</a></li>
 											    	<li><a href="" ng-click="redoCanvas($index)">Redo</a></li>
 											    	<li class="divider"></li>
-											    	<li><a href="" ng-click="clearCanvas($index)">Clear Page</a></li>
+											    	<li><a href="" ng-click="clearCanvas($index)">Clear Drawings on Page</a></li>
 											    	<li><a href="" ng-click="screenshotPage($index)">Screenshot Page</a></li>
 											    	<li><a href="" ng-click="screenshotPageAsTab($index)">Screenshot Page As Tab</a></li>
 											    	<li ng-show="tab.metadata.sourceType == 'PDFFile'"><a href="" ng-click="downloadSource()">Download Attached PDF</a></li>
@@ -396,7 +401,7 @@
 				  <h4 class="modal-title">Open PDF Link</h4>
 				</div>
 				<div class="modal-body">
-					<input ng-model="pdflink" class="form-control" type="text" onclick="this.focus();this.select();" placeholder="Enter link here.."></input>
+					<input ng-model="pdflink" class="form-control" type="text" onclick="this.focus();this.select();" placeholder="Enter link here.." ng-enter="openPDFLink(pdflink)"></input>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -415,7 +420,7 @@
 				  <h4 class="modal-title">Open Image Link</h4>
 				</div>
 				<div class="modal-body">
-					<input ng-model="imagelink" class="form-control" type="text" onclick="this.focus();this.select();" placeholder="Enter link here.."></input>
+					<input ng-model="imagelink" class="form-control" type="text" onclick="this.focus();this.select();" placeholder="Enter link here.." ng-enter="openImageLink(imagelink)"></input>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -434,11 +439,11 @@
 				  <h4 class="modal-title">Set Display Name</h4>
 				</div>
 				<div class="modal-body">
-					<input ng-model="changename" class="form-control" type="text" placeholder="Enter display name here.." ng-value="$root.users[$root.clientId].name"></input>
+					<input id="changeNameModalInput" class="form-control" type="text" placeholder="Enter display name here.." ng-value="$root.users[$root.clientId].name" ng-enter="changeName()" onclick="this.focus();this.select();"</input>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="changeName(changename)">Save</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="changeName()">Save</button>
 				</div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->

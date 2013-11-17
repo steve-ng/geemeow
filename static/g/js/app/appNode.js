@@ -37,6 +37,7 @@ app.run(function($rootScope){
 
 	$rootScope.errorTitle = "";
 	$rootScope.errorMessage = "";
+	$rootScope.sync = true;
 
 
 	//	Setup
@@ -109,12 +110,17 @@ app.run(function($rootScope){
 	}
 
 	//	UI Methods
-	$rootScope.changeName = function(name){
-		$rootScope.userClient.changeName(name);
+	$rootScope.changeName = function(){
+		var newName = $('#changeNameModalInput').val();
+		if (newName.length == 0 || newName.length > 30)
+			return;
+		$rootScope.userClient.changeName(newName);
+		$('#changeNameModal').modal('hide');
 	}
 
 	$rootScope.openPDFLink = function(link){
     	$rootScope.$broadcast('OpenPDFLink',link);
+		$('#openPDFLinkModal').modal('hide');
 	}
 
 	$rootScope.uploadPDF = function(file){
@@ -127,6 +133,7 @@ app.run(function($rootScope){
 
 	$rootScope.openImageLink = function(link){
     	$rootScope.$broadcast('OpenImageLink',link);
+		$('#openImageLinkModal').modal('hide');
 	}
 
 	$rootScope.uploadImage = function(file){
@@ -160,6 +167,10 @@ app.run(function($rootScope){
 		$.cookie("notificationSound", $rootScope.notificationSound);
 	}
 
+	$rootScope.toggleSync = function(){
+		$rootScope.sync = !$rootScope.sync;
+	}
+
 	var audioElement = document.createElement('audio');
     audioElement.setAttribute('src', 'assets/sound/alert.mp3');
     var lastPlayed = 0;
@@ -177,7 +188,7 @@ app.run(function($rootScope){
 			audioElement.play();
 			lastPlayed = new Date().getTime();
 		}
-		
+
 		if ($rootScope.notificationInterval != undefined)
 			clearInterval($rootScope.notificationInterval);
 
