@@ -84,7 +84,7 @@
 
 							<li class="toolbar-separator"></li>
 
-							<li type="button" class="toolbar-btn" ng-show="canvasMode == 'marker' || canvasMode == 'highlighter' || canvasMode == 'eraser'" ng-class="{itemSelected: strokeSize==2 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(2)" data--title="Small" analytic-stroke-small>
+							<li type="button" class="toolbar-btn" ng-show="canvasMode == 'marker' || canvasMode == 'highlighter' || canvasMode == 'eraser'" ng-class="{itemSelected: strokeSize==2 && (canvasMode == 'marker' || canvasMode == 'eraser' || canvasMode == 'highlighter')}" ng-click="setStrokeSize(2)" data-title="Small" analytic-stroke-small>
 								<i class="fa fa-circle toolbar-text" style="font-size:0.3em" ng-style="getStrokeColor(strokeColor)" ng-show="canvasMode == 'marker' || canvasMode == 'select' || canvasMode == 'highlighter'">
 								</i>
 								<i class="fa fa-circle-o toolbar-text" style="font-size:0.3em" ng-show="canvasMode == 'eraser'">
@@ -158,19 +158,19 @@
 
 						<ul class="nav nav-tabs board-tab-header-list">
 							<li ng-repeat="tab in tabsArray">
-								<a class="board-tab-header-list-name" ng-class="{highlight: currentTabIndex == tab.tabIndex}"  ng-click="clickTab($event, tab.tabIndex)">{{tab.metadata.name | truncate:15}}&nbsp;
+								<a class="board-tab-header-list-name" ng-class="{highlight: currentTabIndex == tab.tabIndex}"  ng-click="clickTab($event, tab.tabIndex)" tab-tooltip>{{tab.metadata.name | truncate:15}}&nbsp;
 									<i class="fa fa-times board-tab-header-close" ng-click="closeTab(tab.tabIndex); $event.stopPropagation();"></i>
 								</a>
 							</li>
 
-							<li id="newTabButton" data-toggle="modal" data-target="#newBoardTabModel" data-title="Add New Tab">
-								<a class="board-tab-header-list-name board-new-tab-button" id="room_tab">
+							<li id="room_tab" data-toggle="modal" data-target="#newBoardTabModel" data-title="Add New Tab" class="board-new-tab-button-li">
+								<a class="board-tab-header-list-name board-new-tab-button" >
 									<i class="fa fa-plus board-new-tab-text"></i>
 								</a>
 							</li>
 
-							<li class="sync-button pull-right" ng-click="toggleSync()" id="room_sync" ng-class="{syncButtonOn: sync}">
-								<div ng-show="sync">Sync On</div>
+							<li class="sync-button pull-right" ng-click="toggleSync()"  ng-class="{syncButtonOn: sync}">
+								<div ng-show="sync" id="room_sync">Sync On</div>
 								<div ng-show="!sync">Sync Off</div>
 							</li>
 						</ul>
@@ -283,6 +283,8 @@
 		    				<li role="presentation"><a role="menuitem" href="" ng-click="$event.stopPropagation();toggleHD();">HD Video<i class="fa fa-check pull-right" style="padding-top:0.2em" ng-show="currentVideoType == 'CameraHigh'"></i></a></li>
 		    				<li role="presentation"><a role="menuitem" href="" ng-click="$event.stopPropagation();$parent.toggleSound();">Enable Sound<i class="fa fa-check pull-right" style="padding-top:0.2em" ng-show="$parent.notificationSound == 'on'"></i></a></li>
 							<li class="divider"></li>
+							<li role="presentation"><a role="menuitem" href="" ng-click="$event.stopPropagation();downloadChat();">Download Chat History</a></li>
+							<li class="divider"></li>
 		    				<li role="presentation" data-toggle="modal" data-target="#inviteModal"><a role="menuitem" href="">Invite</a></li>
 		    				<li role="presentation" data-toggle="modal" data-target="#aboutModal"><a role="menuitem" href="">About</a></li>
 				    	</ul>
@@ -370,7 +372,7 @@
 							<p ng-style="{color: $root.users[chat.peerId].color}" class="chat-message-name">{{$root.users[chat.peerId].name}}
 								<span class="chat-message-time">{{chat.timestamp | prettyDate}}</span>
 							</p>
-							<textarea readonly class="chat-message-text" chat-message-text>{{chat.text}}</textarea>
+							<p class="chat-message-text" ng-bind-html-unsafe="chat.text | parseUrlFilter:'_blank'"></p>
 						</div>
 					</div>
 					<textarea rows="1" class="chat-message-input" type="text" ng-model="text" placeholder="Type a message.." chat-input></textarea>
@@ -584,6 +586,10 @@
 	  <li data-id="room_page" data-options="tipLocation:left" data-text="Next" class="tutorial-top-align">
 	  	<p> Access additional page options here. </p>
 	  </li> -->
+
+	  <li data-id="room_sync" data-options="tipLocation:left" data-text="Next" class="tutorial-big-z" >
+	  	<p> Toggle to synchronise viewing of tabs, scroll positions and cursors!</p>
+	  </li>
 
 	  <li data-id="room_video" data-options="tipLocation:left" data-text="Next" class="tutorial-big-z" >
 	  	<p> Enable video chat here! </p>
