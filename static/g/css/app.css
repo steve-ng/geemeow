@@ -592,7 +592,8 @@ box-shadow: 0 0 0px #719ECE;
 	text-align:center;
 	line-height:50;
 	z-index:1;
-	background:white;
+	background:rgba(38,38,38,1);
+	color:rgba(238,238,238,1);
 }
 
 /** tooltip overwrite **/

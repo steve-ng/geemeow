@@ -28,9 +28,14 @@ app.run(function($rootScope){
 	
 	$rootScope.notificationInterval;
 	$rootScope.documentTitle;
-	var totalNotificationCount = 0;
+	var totalNotifyCount = 0;
 	$rootScope.notificationText = "\u9FB4\u2180\u25E1\u2180\u9FB4";
-	$rootScope.sound = true;
+	$rootScope.notificationSound = $.cookie("notificationSound");
+	if ($rootScope.notificationSound == null){
+		$.cookie("notificationSound", "on");
+		$rootScope.notificationSound = "on";
+	}
+
 	$rootScope.errorTitle = "";
 	$rootScope.errorMessage = "";
 
@@ -48,6 +53,7 @@ app.run(function($rootScope){
 		$(window).focus(function() {
 			clearInterval($rootScope.notificationInterval);
 			document.title = $rootScope.documentTitle;
+			totalNotifyCount = 0;
 			totalNotificationCount = 0;
 		});
 		$rootScope.documentTitle = document.title;
@@ -173,7 +179,11 @@ app.run(function($rootScope){
 	}
 
 	$rootScope.toggleSound = function(){
-		$rootScope.sound = !$rootScope.sound;
+		if ($rootScope.notificationSound == "on")
+			$rootScope.notificationSound = "off";
+		else
+			$rootScope.notificationSound = "on";
+		$.cookie("notificationSound", $rootScope.notificationSound);
 	}
 
 	function closeHandler(){
@@ -187,25 +197,30 @@ app.run(function($rootScope){
 		if (document.hasFocus())
 			return;
 
-		if ($rootScope.sound && new Date().getTime() > lastPlayed + 2000){
+		totalNotifyCount++;
+		if (totalNotifyCount > 0)
+			document.title = "(" + totalNotifyCount + ") "+ $rootScope.documentTitle;
+		else 
+			document.title = $rootScope.documentTitle;
+
+		if ($rootScope.notificationSound == "on" && new Date().getTime() > lastPlayed + 2000){
 			audioElement.play();
 			lastPlayed = new Date().getTime();
 		}
 
-		if (totalNotificationCount > 10)
-			return;
-		if ($rootScope.notificationInterval != undefined){
+		if ($rootScope.notificationInterval != undefined)
 			clearInterval($rootScope.notificationInterval);
-		}
 
 		var count = 0;
 		$rootScope.notificationInterval = setInterval(function(){
-			if (document.title == $rootScope.documentTitle || count > 2){
+			if (count % 2 == 0){
 				document.title = $rootScope.notificationText;
-				totalNotificationCount++;
+			} else {
+				if (totalNotifyCount > 0)
+					document.title = "(" + totalNotifyCount + ") "+ $rootScope.documentTitle;
+				else 
+					document.title = $rootScope.documentTitle;
 			}
-			else
-				document.title = $rootScope.documentTitle;
 			count++;
 		}, 1000);
 	}

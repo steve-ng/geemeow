@@ -544,7 +544,6 @@ app.directive('boardPage', function($window) {
 		    	var annotationCanvas = c;
 
 		    	// Get the CanvasPixelArray from the given coordinates and dimensions.
-		    	console.log(c.width, c.height);
 				var imgd = c.getContext('2d').getImageData(0, 0, c.width, c.height);
 				var pix = imgd.data;
 

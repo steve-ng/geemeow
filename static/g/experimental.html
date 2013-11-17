@@ -271,7 +271,7 @@
 		    				<li role="presentation" class="dropdown-header">Menu</li>
 		    				<li role="presentation" data-toggle="modal" data-target="#changeNameModal"><a role="menuitem" href="">Set Name</a></li>
 		    				<li role="presentation"><a role="menuitem" href="" ng-click="$event.stopPropagation();toggleHD();">HD Video<i class="fa fa-check pull-right" style="padding-top:0.2em" ng-show="currentVideoType == 'CameraHigh'"></i></a></li>
-		    				<li role="presentation"><a role="menuitem" href="" ng-click="$event.stopPropagation();$parent.toggleSound();">Enable Sound<i class="fa fa-check pull-right" style="padding-top:0.2em" ng-show="$parent.sound"></i></a></li>
+		    				<li role="presentation"><a role="menuitem" href="" ng-click="$event.stopPropagation();$parent.toggleSound();">Enable Sound<i class="fa fa-check pull-right" style="padding-top:0.2em" ng-show="$parent.notificationSound == 'on'"></i></a></li>
 							<li class="divider"></li>
 		    				<li role="presentation" data-toggle="modal" data-target="#inviteModal"><a role="menuitem" href="">Invite</a></li>
 		    				<li role="presentation" data-toggle="modal" data-target="#aboutModal"><a role="menuitem" href="">About</a></li>
@@ -567,13 +567,13 @@
 	<!-- Joyride tutorial -->
 	<ol id="room_tab_tutorial">
 	  <!-- data-id needs to be the same as the parent it will attach to -->
-	  <li data-id="room_tab" data-text="Next" class="tutorial-left-align">
+	  <li data-id="room_tab"   data-text="Next" class="tutorial-left-align">
 	  	<p> Create a new drawing board, share PDFs, images or start a screenshare session here! </p>
 	  </li>
-
+	<!-- 
 	  <li data-id="room_page" data-options="tipLocation:left" data-text="Next" class="tutorial-top-align">
 	  	<p> Access additional page options here. </p>
-	  </li>
+	  </li> -->
 
 	  <li data-id="room_video" data-options="tipLocation:left" data-text="Next" class="tutorial-big-z" >
 	  	<p> Enable video chat here! </p>
@@ -582,17 +582,6 @@
 	  <li data-id="room_setting" data-options="tipLocation:left" data-text="Done" class="tutorial-big-z">
 	  	<p> Set your name, preferences and invite others!  </p>
 	  </li>
-
-	  <!-- using 'data-button' lets you have custom button text -->
-	 <!-- 
-	 <li data-class="parent-element-class" data-options="tipLocation:bottom;tipAnimation:fade" data-button="Second Button"></li>
-	 -->
-
-	  <!-- you can put a class for custom styling -->
-	  <!--  
-	  <li data-id="parentElementID" class="custom-class">Content...</li>
-	  -->
-
 
 	</ol>
 
