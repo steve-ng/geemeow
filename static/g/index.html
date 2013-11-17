@@ -158,7 +158,7 @@
 
 						<ul class="nav nav-tabs board-tab-header-list">
 							<li ng-repeat="tab in tabsArray">
-								<a class="board-tab-header-list-name" ng-class="{highlight: currentTabIndex == tab.tabIndex}"  ng-click="clickTab($event, tab.tabIndex)">{{tab.metadata.name | truncate:15}}&nbsp;
+								<a class="board-tab-header-list-name" ng-class="{highlight: currentTabIndex == tab.tabIndex}"  ng-click="clickTab($event, tab.tabIndex)" tab-tooltip>{{tab.metadata.name | truncate:15}}&nbsp;
 									<i class="fa fa-times board-tab-header-close" ng-click="closeTab(tab.tabIndex); $event.stopPropagation();"></i>
 								</a>
 							</li>
@@ -588,7 +588,7 @@
 	  </li> -->
 
 	  <li data-id="room_sync" data-options="tipLocation:left" data-text="Next" class="tutorial-big-z" >
-	  	<p> You can choose to synchronised tabs here!</p>
+	  	<p> Toggle to synchronise viewing of tabs, scroll positions and cursors!</p>
 	  </li>
 
 	  <li data-id="room_video" data-options="tipLocation:left" data-text="Next" class="tutorial-big-z" >

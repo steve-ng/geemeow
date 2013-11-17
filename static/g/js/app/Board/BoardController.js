@@ -361,6 +361,13 @@ app.directive('boardToolbar', function($window) {
   };
 });
 
+app.directive('tabTooltip', function($window) {
+  return function(scope, element, attrs) {
+    element.attr('data-title', scope.tab.metadata.name);
+    element.tooltip({placement: 'bottom'});
+  };
+});
+
 
 function base64ToUint8Array(base64) {
     var raw = atob(base64); //This is a native function that decodes a base64-encoded string.
