@@ -170,7 +170,7 @@
 							</li>
 
 							<li class="sync-button pull-right" ng-click="toggleSync()"  ng-class="{syncButtonOn: sync}">
-								<div ng-show="sync" id="room_sync">Sync On</div>
+								<div ng-show="sync" id="room_sync">Sync On&nbsp;<i class="fa fa-check"></i></div>
 								<div ng-show="!sync">Sync Off</div>
 							</li>
 						</ul>
@@ -221,8 +221,8 @@
 											    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
 											    	<li><a href="" ng-click="undoCanvas($index)">Undo</a></li>
 											    	<li><a href="" ng-click="redoCanvas($index)">Redo</a></li>
-											    	<li class="divider"></li>
 											    	<li><a href="" ng-click="clearCanvas($index)">Clear Drawings on Page</a></li>
+											    	<li class="divider"></li>
 											    	<li><a href="" ng-click="screenshotPage($index)">Screenshot Page</a></li>
 											    	<li><a href="" ng-click="screenshotPageAsTab($index)">Screenshot Page As Tab</a></li>
 											    	<li ng-show="tab.metadata.sourceType == 'PDFFile'"><a href="" ng-click="downloadSource()">Download Attached PDF</a></li>
