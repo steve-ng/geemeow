@@ -327,8 +327,8 @@
     overflow:hidden;
     background: rgba(239,239,239,1);
     cursor: pointer;
-    min-height:2em;
-    min-width: 2em;
+    min-height:0.5em;
+    min-width: 0.5em;
 }
 .board-annotation:focus{
     cursor: auto;

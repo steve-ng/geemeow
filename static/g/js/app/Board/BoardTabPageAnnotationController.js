@@ -66,7 +66,7 @@ app.controller('BoardTabPageAnnotationController', function($scope, $rootScope){
 		annotationAction.annotation.coords = {x: x, y: y};
 		annotationAction.annotation.color = $scope.toolDataSource.strokeColor;
 		annotationAction.annotation.fontSize = $scope.toolDataSource.fontSize;	//	To change
-		annotationAction.annotation.size = {width: 0.15, height: 0.1};
+		annotationAction.annotation.size = {width: 0.15, height: 0.05};
 		annotationAction.annotation.text = "";
 		annotationAction.annotation.editing = $scope.boardClient.peerId();
 
