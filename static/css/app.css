@@ -129,6 +129,10 @@ font-weight:700;
 	margin: 0 auto;
 }
 
+.margin{
+	margin-top:5%;
+}
+
 .center{
 	text-align:center;
 }
@@ -157,7 +161,7 @@ font-weight:700;
 }
 
 .preventIcon {
-	margin-top: 8%;
+	margin-top: 2%;
 }
 
 .feature_title {
@@ -174,7 +178,7 @@ font-weight:700;
 }
 
 .bigger{
-	font-size: 35px;
+	font-size: 50px;
 }
 
 .thumbnailx {
@@ -212,6 +216,7 @@ font-weight:700;
 
 .feature_description{
 	font-family: 'Raleway',sans-serif;
+	font-size:22px;
 }
 
 .page {
@@ -221,7 +226,7 @@ font-weight:700;
 }
 
 #social ul li:hover a, #social ul li.active a {
-	background-color: #FF8C53;
+	background-color: #0BA385;
 	-webkit-transform: rotateY(180deg);
 	-moz-transform: rotateY(180deg);
 	-ms-transform: rotateY(180deg);
@@ -342,4 +347,28 @@ li {
 	box-shadow: 0 0 8px rgba(0, 0, 0, .8);
 	-webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
 	-moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+}
+
+.room_head{
+	border:solid 2px #fff;
+	height:75px;
+}
+
+.room_head a{
+	border-bottom: 0px;
+	display:inline-block; 
+	vertical-align:middle;
+	line-height: 75px;
+}
+
+.bottom_mid{
+	position: absolute;
+	bottom: 10%;
+	text-align: center;
+	width: 100%;
+
+}
+
+.room_list{
+	margin-bottom:50px;
 }
