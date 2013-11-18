@@ -108,7 +108,8 @@ html, body {
 }
 .chat-widget{
 	height:25em;
-	width:21em;
+	width:19em;
+	min-width:16.5em;
 	right:0em;
 	bottom: 0em;
 	position: absolute;
