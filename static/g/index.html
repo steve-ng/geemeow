@@ -169,8 +169,8 @@
 								</a>
 							</li>
 
-							<li class="sync-button pull-right" ng-click="toggleSync()"  ng-class="{syncButtonOn: sync}">
-								<div ng-show="sync" id="room_sync">Sync On&nbsp;<i class="fa fa-check"></i></div>
+							<li id="room_sync" class="sync-button pull-right" ng-click="toggleSync()" ng-class="{syncButtonOn: sync}" data-title="Toggle to synchronise viewing of tabs, scroll positions and cursors">
+								<div ng-show="sync" >Sync On&nbsp;<i class="fa fa-check"></i></div>
 								<div ng-show="!sync">Sync Off</div>
 							</li>
 						</ul>
@@ -262,18 +262,18 @@
 
 			<div class="sidebar-top">
 				<div class="sidebar-items">
-					<span class="fa-stack sidebar-item" ng-click="toggleOwnVideo()" id="room_video">
+					<span class="fa-stack sidebar-item" ng-click="toggleOwnVideo()" id="room_video" data-title="Toggle Camera">
 						<i class="fa fa-video-camera fa-stack-1x"></i>
 						<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peers[$root.clientId].hasVideo"></i>
 					</span>
-					<span class="fa-stack sidebar-item" ng-click="toggleOwnAudio()">
+					<span class="fa-stack sidebar-item" ng-click="toggleOwnAudio()" id="room_mic" data-title="Toggle Mic">
 						<i class="fa fa-microphone fa-stack-1x"></i>
 						<i class="fa fa-minus fa-stack-1x video-icon-ban" ng-show="!peers[$root.clientId].hasAudio"></i>
 					</span>
 					
 
 					<div class="pull-right" style="margin-right: 0.3em">
-						<span class="fa-stack sidebar-item" data-toggle="dropdown" id="room_setting">
+						<span class="fa-stack sidebar-item" data-toggle="dropdown" id="room_setting" data-title="Menu">
 							<i class="fa fa-bars fa-stack-1x"></i>
 						</span>
 
