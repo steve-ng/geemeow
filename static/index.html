@@ -18,10 +18,12 @@
     <link rel="stylesheet" href="css/main-min.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/fonts.css">
+
+
     <link rel="stylesheet" href="css/app.css">
-    <link rel="stylesheet" href="css/barometer.css">
     <link rel="stylesheet" href="css/animation.css">
 
+    <link rel="stylesheet" href="css/responsiveslides.css">
 </head>
 
 <body>
@@ -86,7 +88,7 @@
                     </section>
 
                     <!-- features --> 
-                    <section class="feature-section " data-index="2" >
+<!--                     <section class="feature-section " data-index="2" >
 
                         <div class="tagline no-top-margin "> Why GeeMeow
                         </div>
@@ -119,15 +121,65 @@
                                     </p>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </section> -->
 
+                <!-- features -->
+                <section class="feature-section" data-index"2">
+                    <div class="tagline no-top-margin "> 
+                        Why GeeMeow
+                    </div>
 
+                    <div class="container preventIcon">
+                        <div class="row">
+                            <div class="col-md-7">
+                              <div class="rslides_container">
+                                  <ul class="rslides" id="slider1">
+                                    <li><img src="img/feature1-easy.png" alt=""></li>
+                                    <li><img src="img/feature2-draw.png" alt=""></li>
+                                    <li><img src="img/feature3-pdf.png" alt=""></li>
+                                    <li><img src="img/feature4-screenshare.png" alt=""></li>
+                                  </ul>
+                                </div>
 
+                            </div>
+
+                            <div class="col-md-5" id="slide_content">
+                                <div id="slide_content0">
+                                    <span class="feature_title bigger">Convenience</span> 
+                                    <p class="feature_description margin">No download and no registration required. Start the meeting simply by sharing the room's link with your invitees!
+                                    </p>
+                                </div>
+                                <div id="slide_content1">
+                                    <span class="feature_title bigger">Drawing on Canvas</span> 
+                                    <p class="feature_description margin">Draw together </br>
+                                        Brainstorm ideas with a drawing </br>
+                                        Simply have fun drawing! </br>
+                                    </p>
+
+                                </div>
+                                <div id="slide_content2">
+                                    <span class="feature_title bigger">PDF annotation</span> 
+                                    <p class="feature_description margin">Review the document together!</br> Add text annotation </br>
+                                        Highlight important note 
+                                    </p>
+
+                                </div>
+                                <div id="slide_content3">
+                                    <span class="feature_title bigger">Screenshare</span> 
+                                    <p class="feature_description margin">Share what's happening on your desktop </br>
+                                        Run through presentation </br>
+                                        Show product demo!
+                                    </p>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-
                 </section>
-
+                
             
         </div>
 
@@ -152,8 +204,14 @@
     <script src="js/jquery.imagesloaded.min.js"></script>
     <script src="js/jquery.simple-text-rotator.min.js"></script>
     <script src="js/jquery.onepage-scroll.min.js"></script>
+
+
+    <!-- features carousel stuffs -->
+    <script src="js/responsiveslides.js"></script>
+
     <script src="js/app.js"></script>
     <script src="js/barometer.js"></script>
+
 
     <!-- Google analytics -->
     <script>
@@ -178,6 +236,7 @@
     <style type="text/css" media="screen, projection">
       @import url(css/zenbox.css);
     </style>
+
     <script type="text/javascript">
       if (typeof(Zenbox) !== "undefined") {
         Zenbox.init({

@@ -129,6 +129,10 @@ font-weight:700;
 	margin: 0 auto;
 }
 
+.margin{
+	margin-top:5%;
+}
+
 .center{
 	text-align:center;
 }
@@ -157,7 +161,7 @@ font-weight:700;
 }
 
 .preventIcon {
-	margin-top: 8%;
+	margin-top: 2%;
 }
 
 .feature_title {
@@ -174,7 +178,7 @@ font-weight:700;
 }
 
 .bigger{
-	font-size: 35px;
+	font-size: 50px;
 }
 
 .thumbnailx {
@@ -212,6 +216,7 @@ font-weight:700;
 
 .feature_description{
 	font-family: 'Raleway',sans-serif;
+	font-size:22px;
 }
 
 .page {

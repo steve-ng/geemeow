@@ -294,4 +294,20 @@ $(document).ready(function () {
 	touchStartToClickHandler();
 
 
+     $('#slide_content').children().hide();
+     $('#slide_content0').fadeIn();
+
+     $("#slider1").responsiveSlides({
+        auto: false,
+        pager: true,
+        nav: true,
+        speed: 500,
+        maxwidth: 800,
+        namespace: "transparent-btns",
+        before: function(erg){
+        	$('#slide_content').children().hide();
+        	$('#slide_content'+erg).fadeIn();
+            console.log(erg);
+        }
+     });
 });
