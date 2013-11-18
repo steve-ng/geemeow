@@ -8,6 +8,7 @@ var BoardServer = function(server){
 	var plainRollingIndex;
 	var annotationRollingIndex;
 	var maxTabs = 8;
+	var annotationsInEditing;
 	this.getdata = function(){
 		return {tabs: tabs, currentTabIndex: currentTabIndex};
 	};
@@ -22,6 +23,7 @@ var BoardServer = function(server){
 	function init(serverId){
 		tabs = new Object();
 		tabsPriv = new Object();
+		annotationsInEditing = {};
 		currentTab = "";
 		tabNextIndex = 0;
 		plainRollingIndex = 1;
@@ -59,6 +61,26 @@ var BoardServer = function(server){
 		message.subType = "CursorRemoved";
 		message.peerId = peerId;
 		server.broadcast(message);
+
+		for (var annotationIndex in annotationsInEditing){
+			if (annotationsInEditing[annotationIndex].editing == peerId){
+				var annotationAction = new Object();
+				annotationAction.type = "UpdateAnnotation";
+				annotationAction.annotationIndex = annotationIndex;
+				annotationAction.text = annotationsInEditing[annotationIndex].text;
+				annotationAction.peerId = annotationsInEditing[annotationIndex].editing;
+				annotationAction.pageIndex = annotationsInEditing[annotationIndex].pageIndex;
+  				annotationAction.tabIndex = annotationsInEditing[annotationIndex].tabIndex;
+  				var request = new Object();
+  				request.annotationAction = annotationAction;
+  				request.type = "Board";
+  				request.subType = "Tab";
+  				request.tabSubType = "AnnotationAction";
+  				request.peerId = peerId;
+  				request.timestamp = new Date().getTime();
+  				annotationHandler(request);
+			}
+		}
 	}
 
 	function boardHandler(request){
@@ -242,12 +264,14 @@ var BoardServer = function(server){
 		} else if (action.type == "BeginUpdateAnnotation"){
 			if (annotationData[action.annotationIndex].editing != undefined)
 				return;
+			annotationsInEditing[action.annotationIndex] = annotationData[action.annotationIndex];
 			annotationData[action.annotationIndex].editing = action.peerId;
 		} else if (action.type == "UpdateAnnotation"){
 			if (annotationData[action.annotationIndex] == undefined)
 				return;
 			annotationData[action.annotationIndex].text = action.text;
-			annotationData[action.annotationIndex].editing = undefined;
+			annotationData[action.annotationIndex].editing = undefined
+			delete annotationsInEditing[action.annotationIndex];
 
 			if (annotationData[action.annotationIndex].text.length == 0)
 				setTimeout(function(){annotationHandler(
