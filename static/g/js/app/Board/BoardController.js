@@ -341,6 +341,7 @@ app.directive('onChangePdfFile', function($window) {
   return function(scope, element, attrs) {
     element.on('change',function(){
       scope.uploadPDF(element[0].files[0]);
+      element.parent()[0].reset();
     });
   };
 });
@@ -350,6 +351,7 @@ app.directive('onChangeImageFile', function($window) {
   return function(scope, element, attrs) {
     element.on('change',function(){
       scope.uploadImage(element[0].files[0]);
+      element.parent()[0].reset();
     });
   };
 });

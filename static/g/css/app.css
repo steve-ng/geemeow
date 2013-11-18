@@ -194,6 +194,7 @@ html, body {
 	background: none;
 	padding:0.3em;
 	padding-left:0.5em;
+	word-break: break-all;
 }
 .chat-message-text:focus {
 outline: none !important;

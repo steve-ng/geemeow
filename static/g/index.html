@@ -503,7 +503,9 @@
 									<i class="fa fa-file-o new-tab-icon-small"></i>
 									<span class="new-tab-text-small">&nbsp;&nbsp;Upload PDF</span>
 								</div>
-								<input id="pdf_file" ng-show="false" type="file" name="pdf_file" accept="application/pdf" on-change-pdf-file></input>
+								<form name="pdf_file_form">
+									<input id="pdf_file" ng-show="false" type="file" name="pdf_file" accept="application/pdf" on-change-pdf-file></input>
+								</form>
 							</div>
 						</div>
 					</div>
@@ -526,7 +528,9 @@
 									<i class="fa fa-picture-o new-tab-icon-small"></i>
 									<span class="new-tab-text-small">&nbsp;&nbsp;Upload Image</span>
 								</div>
-								<input id="image_file" ng-show="false" type="file" name="image_file" accept="image/*" on-change-image-file></input>
+								<form name="image_file_form">
+									<input id="image_file" ng-show="false" type="file" name="image_file" accept="image/*" on-change-image-file></input>
+								</form>
 							</div>
 						</div>
 					</div>
