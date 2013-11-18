@@ -2,7 +2,7 @@
 var apikey = '';
 var apihost = "geemeow.com";
 var apiport = 3216;
-var peerjsDebug = 0;
+var peerjsDebug = 3;
 
 var app = angular.module('Geemeow', ['prettyDateFilter', 'truncateFilter']);
 var rootScope;

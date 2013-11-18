@@ -45,7 +45,7 @@ var BoardClient = function(client){
 		client.request(request);
 	}
 
-	this.updateCursor = function(cursorData){return;
+	this.updateCursor = function(cursorData){
 		var request = new Object();
 		request.type = "Board";
 		request.subType = "UpdateCursor";
