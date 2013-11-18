@@ -294,7 +294,7 @@ app.directive('annotation', function($window) {
 		moved = true;
 	});
 
-	element.on('vmouseup',function(e){
+	element.on('vmouseup vmouseout',function(e){
 		dragging = false;
 
 		if (!moved && !scope.editing){
