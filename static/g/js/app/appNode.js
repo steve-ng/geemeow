@@ -223,7 +223,23 @@ app.run(function($rootScope){
     	$rootScope.$broadcast('DownloadChat');
 	}
 
-	$rootScope.getInviteLink = function(){
+	$rootScope.getFacebookInviteLink = function(){
 		return "https://www.facebook.com/sharer/sharer.php?u=" +window.location.protocol + "//" + window.location.host + window.location.pathname + "%23"+window.location.hash.substring(1);
+	}
+
+	$rootScope.getGooglePlusInviteLink = function(){
+		return "https://plus.google.com/share?url=" +window.location.protocol + "//" + window.location.host + window.location.pathname + "%23"+window.location.hash.substring(1);
+	}
+
+	$rootScope.getTwitterInviteLink = function(){
+		return "https://twitter.com/intent/tweet?text=" +window.location.protocol + "//" + window.location.host + window.location.pathname + "%23"+window.location.hash.substring(1);
+	}
+
+	$rootScope.getRenRenInviteLink = function(){
+		return "http://share.renren.com/share/buttonshare.do?title=GeeMeow&link=" +window.location.protocol + "//" + window.location.host + window.location.pathname + "%23"+window.location.hash.substring(1);
+	}
+
+	$rootScope.getWeiboInviteLink = function(){
+		return "http://service.weibo.com/share/share.php?title=GeeMeow&url=" +window.location.protocol + "//" + window.location.host + window.location.pathname + "%23"+window.location.hash.substring(1);
 	}
 });
