@@ -68,8 +68,8 @@ $(document).ready(function () {
 	function createKittyPopOver(){
 
 		popoverContent =  "<div class=\"popover_thing\"> "+
-    						"I've been a naughty kitten, play a game of <b> Hit the Meow? </b> </br></br> " +
-	    					"<small> Gameplay: Try to hit me while I'm on the run :P </small> </br></br> " +
+    						"I've been a naughty kitten, play a game of <b> Hit the Meow? </b>  " +
+	    					"Gameplay: Try to hit me while I'm on the run :P   " +
 	    					"<div class=\"kitten_conv\">" + 
 	    					"<button id=\"tuna_challenge_yes\" class=\"btn popover_btn\">Yes </button> &nbsp&nbsp"+
 	    					"<button id=\"tuna_challenge_no\" class=\"btn btn-danger\">Close</button>" +
