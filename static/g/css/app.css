@@ -683,8 +683,12 @@ box-shadow: 0 0 0px #719ECE;
 	color:white;
 }
 
-.sharebutton{
-	padding-left:0.3em;
+.sharebutton:hover{
+	color:transparent;
+}
+.sharebutton-fa{
+	padding-left:0.2em;
+	font-size:2em;
 }
 .sharebutton:hover{
 	opacity: 0.8;
