@@ -32,8 +32,8 @@ app.controller('BoardTabController', function($scope,$rootScope) {
  				$scope.$apply();
 		    }
 		    image.onerror = function(){
-		    	$scope.boardClient.closeTab(tab.tabIndex);
-				$rootScope.showErrorAlert("Unable to download image", "The website hosting the image link could have blocked us :/");
+		    	$scope.boardClient.closeTab($scope.tab.tabIndex);
+				$rootScope.showErrorAlert("Unable to download image", "The website hosting the image link could have blocked us :/ Try uploading the image instead.");
 			}
     		image.crossOrigin = "anonymous";
 		    image.src = $scope.tab.metadata.imageLink;
@@ -70,19 +70,42 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 	//	Scroll handler
 	$scope.$on('TabUpdateScroll'+$scope.tab.tabIndex, function(event, message){
 		if (message.scrollTime > $scope.lastScrollTime){
-			$scope.tab.coords = message.coords;
+			if ($rootScope.sync)
+				$scope.tab.coords = message.coords;
+			else
+				$scope.tab.coordsSync = message.coords;
 			$scope.$digest();
 		}
 	});
 
+	var first = true;
+	$rootScope.$watch("sync", function(event){
+		if ($rootScope.sync && !first){
+			$scope.tab.coords = $scope.tab.coordsSync;
+			$scope.tab.pageCoords = $scope.tab.pageCoordsSync;
+			$scope.tab.scale = $scope.tab.scaleSync;
+		} else {
+			$scope.tab.coordsSync = $scope.tab.coords;
+			$scope.tab.pageCoordsSync = $scope.tab.pageCoords;
+			$scope.tab.scaleSync = $scope.tab.scale;
+		}
+		first = false;
+	});
+
 	$scope.$on('TabUpdateScrollPage'+$scope.tab.tabIndex, function(event, message){
-		$scope.tab.pageCoords = {coords: message.coords, pageIndex: message.pageIndex};
+		if ($rootScope.sync)
+			$scope.tab.pageCoords = {coords: message.coords, pageIndex: message.pageIndex};
+		else
+			$scope.tab.pageCoordsSync = {coords: message.coords, pageIndex: message.pageIndex};
 		$scope.$digest();
 	});
 
 	//	Zoom handler
 	$scope.$on('TabUpdateScale'+$scope.tab.tabIndex, function(event, message){
-		$scope.tab.scale = message.scale;
+		if ($rootScope.sync)
+			$scope.tab.scale = message.scale;
+		else
+			$scope.tab.scaleSync = message.scale;
 		$scope.$digest();
 	});
 
@@ -211,7 +234,7 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 
 
 
-app.directive('scrollPosition', function($window) {
+app.directive('scrollPosition', function($rootScope, $window) {
   return function(scope, element, attrs) {
 
   	var scrollTimer;
@@ -237,6 +260,8 @@ app.directive('scrollPosition', function($window) {
 				clearTimeout(scrollTimer);
 			scrollTimer = setTimeout(function(){
 				var coords = {'x': element.scrollLeft()/element[0].scrollWidth, 'y': element.scrollTop()/element[0].scrollHeight};
+				if (!$rootScope.sync)
+					return;
 				scope.boardClient.updateScroll(scope.tab.tabIndex, coords);
 			}, 200);
 		}
@@ -247,7 +272,7 @@ app.directive('scrollPosition', function($window) {
 	element.on('vmousemove', function(e){
 		function update(){
 			scope.cursorData = {left: (e.pageX - element.offset().left -3)/element.width(), top: (e.pageY - element.offset().top-3)/element.height()};
-			if (!scope.sendCursorUpdate)
+			if (!scope.sendCursorUpdate || !$rootScope.sync)
 				return;
 			scope.boardClient.updateCursor(scope.cursorData);
 		}
@@ -357,6 +382,8 @@ app.directive('boardPage', function($window) {
 
 		  	element.width(pageDisplayWidth);
 			element.height(pageDisplayHeight);
+		  	backgroundLayer[0].width = 0;
+			backgroundLayer[0].height = 0;
 		  	backgroundLayer[0].width = pageDisplayWidth;
 			backgroundLayer[0].height = pageDisplayHeight;
 		  	textLayer.width(pageDisplayWidth);
@@ -544,7 +571,6 @@ app.directive('boardPage', function($window) {
 		    	var annotationCanvas = c;
 
 		    	// Get the CanvasPixelArray from the given coordinates and dimensions.
-		    	console.log(c.width, c.height);
 				var imgd = c.getContext('2d').getImageData(0, 0, c.width, c.height);
 				var pix = imgd.data;
 

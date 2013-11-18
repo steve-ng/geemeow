@@ -39,8 +39,11 @@
     background-color: rgba(200,200,200,1) !important;
     color:white!important;
 }
+.board-new-tab-button-li{
+    margin-top:0.3em;
+    height:100%;
+}
 .board-new-tab-button{
-	top:0.8em;
     height:2em;
     width:2em;
     padding:0.4em !important;
@@ -192,7 +195,8 @@
     color: rgba(0,0,0, 1);
 }
 .toolbar-btn-highligher{
-    box-shadow: 0px -5px 3px -2px white;
+    border-top: 0.2em solid rgb(220,220,220);
+    border-radius: 0.2em;
     transform:rotate(180deg);
     -ms-transform:rotate(180deg); /* IE 9 */
     -webkit-transform:rotate(180deg); /* Safari and Chrome */
@@ -286,7 +290,11 @@
 }
 
 .board-tab-page-index{
-    background: rgba(138,138,138,0.8);
+    background: rgba(200,200,200,0.8);
+    color:black;
+    -moz-box-shadow:0px 1px 4px black;
+    -webkit-box-shadow: 0px 1px 4px black;
+    box-shadow: 0px 1px 4px black;
     height: 2em;
     padding: 0.25em;
     padding-left: 0.5em;
@@ -314,11 +322,16 @@
 
 .board-annotation{
     position: absolute;
-    double: 1 solid #ccc;
     padding:0.4em;
     resize: none;
     overflow:hidden;
     background: rgba(239,239,239,1);
+    cursor: pointer;
+    min-height:2em;
+    min-width: 2em;
+}
+.board-annotation:focus{
+    cursor: auto;
 }
 .annotationFront{
     z-index: 9;
@@ -334,7 +347,6 @@
 
 .board-annotation-close{
     position:absolute;
-    margin-left:-0.9em;
     margin-top:-0.9em;
     font-size:2em;
     color:black;
@@ -348,12 +360,4 @@
 }
 .board-annotation-close:active{
     opacity: 1;
-}
-.board-annotation-bar{
-    height:1.5em;
-    position: absolute;
-    margin-top: -1.5em;
-    background:#dddddd;
-    border: 1px solid black;
-    cursor:move; 
 }

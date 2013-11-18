@@ -108,14 +108,15 @@ html, body {
 }
 .chat-widget{
 	height:25em;
-	width:21em;
+	width:19em;
+	min-width:16.5em;
 	right:0em;
 	bottom: 0em;
 	position: absolute;
 	background: white;
-	-moz-box-shadow: rgba(0,0,0,0.3) -1px -1px 4px;
- 	-webkit-box-shadow: rgba(0,0,0,0.3) -1px -1px 4px;
-	box-shadow: rgba(0,0,0,0.3) -1px -1px 4px;
+	-moz-box-shadow: rgba(0,0,0,0.4) -2px -2px 6px;
+ 	-webkit-box-shadow: rgba(0,0,0,0.4) -2px -2px 6px;
+	box-shadow: rgba(0,0,0,0.4) -2px -2px 6px;
    	z-index: 100;
 }
 .chat-widget-title{
@@ -189,9 +190,10 @@ html, body {
 	margin:0;
 	width: 100%;
 	border-width: 0;
-	resize:none;
 	height: auto;
 	background: none;
+	padding:0.3em;
+	padding-left:0.5em;
 }
 .chat-message-text:focus {
 outline: none !important;
@@ -592,7 +594,8 @@ box-shadow: 0 0 0px #719ECE;
 	text-align:center;
 	line-height:50;
 	z-index:1;
-	background:white;
+	background:rgba(88,88,88,1);
+	color:rgba(238,238,238,1);
 }
 
 /** tooltip overwrite **/
@@ -640,3 +643,42 @@ box-shadow: 0 0 0px #719ECE;
     transform: rotate(30deg);
 }
 
+
+.sync-button{
+	cursor: pointer;
+	position: absolute;
+	right:0.3em;
+	top:0.3em;
+	bottom:0.3em;
+	width:6em;
+	padding: 0.2em;
+	text-align: center;
+	line-height: 2em;
+	border-radius: 0.5em;
+	background: lightgrey;
+	color:grey;
+}
+.sync-button:hover{
+	background: grey;
+	color:black;
+}
+
+.sync-button:active{
+	background: grey;
+	color:black;
+}
+
+.syncButtonOn{
+	background: black;
+	color:white;
+}
+
+.syncButtonOn:hover{
+	background: rgb(88,88,88);
+	color:white;
+}
+
+.syncButtonOn:active{
+	background: rgb(88,88,88);
+	color:white;
+}

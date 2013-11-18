@@ -1,5 +1,5 @@
 
-
+var a;
 var BoardClient = function(client){
 	var localScreenStream;
 	var screenStreams = {};
@@ -134,6 +134,9 @@ var BoardClient = function(client){
 
 		var gotScreenStream = function(localStream){
         	localScreenStream = localStream;
+        	localScreenStream.onended = function(){
+        		delegate.onScreenshareEnded();
+        	};
         	screenStreams[client.getClientPeerId()] = {stream:localStream, url:URL.createObjectURL(localStream)};
 			
 			var metadata = {sourceType:'Screenshare', peerId:client.getClientPeerId(), name: name};
@@ -146,7 +149,7 @@ var BoardClient = function(client){
 	        // errorCallback
 	        function(err) {
 	         	console.log(err);
-		        showErrorAlert('Screenshare spoilt', 'Unable to get screenshare working. Note that it is only supported on Chrome. Checkout if this <a href="http://www.youtube.com/watch?v=ZCatVxcyEpI" target="_blank">Youtube</a> video helps.');
+		        showErrorAlert('Unable to start screenshare', 'Note that it is only supported on Chrome and has to be enabled manually. Checkout this <a href="http://www.youtube.com/watch?v=ZCatVxcyEpI" target="_blank">Youtube</a> video for instructions.');
 	        }
 	    );
 	}

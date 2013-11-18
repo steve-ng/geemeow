@@ -27,11 +27,17 @@ app.run(function($rootScope){
 	
 	$rootScope.notificationInterval;
 	$rootScope.documentTitle;
-	var totalNotificationCount = 0;
+	var totalNotifyCount = 0;
 	$rootScope.notificationText = "\u9FB4\u2180\u25E1\u2180\u9FB4";
-	$rootScope.sound = true;
+	$rootScope.notificationSound = $.cookie("notificationSound");
+	if ($rootScope.notificationSound == null){
+		$.cookie("notificationSound", "on");
+		$rootScope.notificationSound = "on";
+	}
+
 	$rootScope.errorTitle = "";
 	$rootScope.errorMessage = "";
+	$rootScope.sync = true;
 
 
 	//	Setup
@@ -44,6 +50,7 @@ app.run(function($rootScope){
 		$(window).focus(function() {
 			clearInterval($rootScope.notificationInterval);
 			document.title = $rootScope.documentTitle;
+			totalNotifyCount = 0;
 			totalNotificationCount = 0;
 		});
 		$rootScope.documentTitle = document.title;
@@ -103,12 +110,17 @@ app.run(function($rootScope){
 	}
 
 	//	UI Methods
-	$rootScope.changeName = function(name){
-		$rootScope.userClient.changeName(name);
+	$rootScope.changeName = function(){
+		var newName = $('#changeNameModalInput').val();
+		if (newName.length == 0 || newName.length > 30)
+			return;
+		$rootScope.userClient.changeName(newName);
+		$('#changeNameModal').modal('hide');
 	}
 
 	$rootScope.openPDFLink = function(link){
     	$rootScope.$broadcast('OpenPDFLink',link);
+		$('#openPDFLinkModal').modal('hide');
 	}
 
 	$rootScope.uploadPDF = function(file){
@@ -121,6 +133,7 @@ app.run(function($rootScope){
 
 	$rootScope.openImageLink = function(link){
     	$rootScope.$broadcast('OpenImageLink',link);
+		$('#openImageLinkModal').modal('hide');
 	}
 
 	$rootScope.uploadImage = function(file){
@@ -147,7 +160,15 @@ app.run(function($rootScope){
 	}
 
 	$rootScope.toggleSound = function(){
-		$rootScope.sound = !$rootScope.sound;
+		if ($rootScope.notificationSound == "on")
+			$rootScope.notificationSound = "off";
+		else
+			$rootScope.notificationSound = "on";
+		$.cookie("notificationSound", $rootScope.notificationSound);
+	}
+
+	$rootScope.toggleSync = function(){
+		$rootScope.sync = !$rootScope.sync;
 	}
 
 	var audioElement = document.createElement('audio');
@@ -157,25 +178,30 @@ app.run(function($rootScope){
 		if (document.hasFocus())
 			return;
 
-		if ($rootScope.sound && new Date().getTime() > lastPlayed + 2000){
+		totalNotifyCount++;
+		if (totalNotifyCount > 0)
+			document.title = "(" + totalNotifyCount + ") "+ $rootScope.documentTitle;
+		else 
+			document.title = $rootScope.documentTitle;
+
+		if ($rootScope.notificationSound == "on" && new Date().getTime() > lastPlayed + 2000){
 			audioElement.play();
 			lastPlayed = new Date().getTime();
 		}
 
-		if (totalNotificationCount > 10)
-			return;
-		if ($rootScope.notificationInterval != undefined){
+		if ($rootScope.notificationInterval != undefined)
 			clearInterval($rootScope.notificationInterval);
-		}
 
 		var count = 0;
 		$rootScope.notificationInterval = setInterval(function(){
-			if (document.title == $rootScope.documentTitle || count > 2){
+			if (count % 2 == 0){
 				document.title = $rootScope.notificationText;
-				totalNotificationCount++;
+			} else {
+				if (totalNotifyCount > 0)
+					document.title = "(" + totalNotifyCount + ") "+ $rootScope.documentTitle;
+				else 
+					document.title = $rootScope.documentTitle;
 			}
-			else
-				document.title = $rootScope.documentTitle;
 			count++;
 		}, 1000);
 	}
@@ -191,5 +217,9 @@ app.run(function($rootScope){
 
 	function showError(message){
 		showErrorAlert(message.errorTitle, message.errorMessage);
+	}
+
+	$rootScope.downloadChat = function(){
+    	$rootScope.$broadcast('DownloadChat');
 	}
 });

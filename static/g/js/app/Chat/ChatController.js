@@ -26,7 +26,7 @@ app.controller('ChatController', function($scope, $rootScope){
 	//	Message handlers
 	$scope.onNewChat = function(message){
 		var autoScroll = false;
-		if ($scope.scrollDiv[0].scrollTop + $scope.scrollDiv.height() + 10> $scope.scrollDiv[0].scrollHeight || $scope.scrollDiv.is('animated'))
+		if ($scope.scrollDiv[0].scrollTop + $scope.scrollDiv.height() + 50> $scope.scrollDiv[0].scrollHeight || $scope.scrollDiv.is('animated'))
 			autoScroll = true;
 
 		$scope.chatHistory.push(message);
@@ -37,7 +37,7 @@ app.controller('ChatController', function($scope, $rootScope){
 				if (autoScroll){
 					$scope.scrollDiv.animate({
 		        		scrollTop: $scope.scrollDiv[0].scrollHeight
-		        	}, 100);
+		        	}, 200);
 				}
 			},0);
 		});
@@ -59,15 +59,20 @@ app.controller('ChatController', function($scope, $rootScope){
 
 
 	//	Export Chat history
-	var exportChatHistory = function(){
+	$scope.exportChatHistory = function(){
 		var logs = "";
-		var names = $rootScope.names;
+		var users = $rootScope.users;
 		for (var i in $scope.chatHistory){
 			var message = $scope.chatHistory[i];
-			logs += names[message.peerId] + " (" + (new Date(message.timestamp)).toString() +  "): " + message.text + "\n";
+			logs += (new Date(message.timestamp)).toString() + ", "+users[message.peerId].name + ": "+ message.text + "\n";
 		}
 		return logs;
 	}
+
+    $scope.$on('DownloadChat', function(event){
+        var log = $scope.exportChatHistory();
+        saveTextAsFile($rootScope.serverPeerId + " at "+ new Date() + '.txt', log);
+    });
 
 	//	Safe Apply
   	$scope.safeApply = function(fn) {
@@ -108,13 +113,6 @@ app.directive('chatScroll', function() {
 });
 
 
-app.directive('chatMessageText', function() {
-    return function(scope, element, attrs) {
-        setTimeout(function(){
-        	element.autosize();
-        },0);
-    };
-});
 
 
 app.directive('chatInput', function() {
@@ -200,3 +198,51 @@ app.filter('reverse', function() {
     return items.slice().reverse();
   };
 });
+
+
+app.filter('parseUrlFilter', function() {
+    //var urlPattern = '^(?!href="[^"\n\r\s]+?").*?(https?:\/\/)?((?:www|ftp)\.[-A-Za-z0-9+&@#\/%?=~_|$!:,.;]+)$';
+    var urlPattern = /(\b(((https?|ftp|file):\/\/)|(www\.))[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%‌​=~_|])/ig;
+    return function(text, target) {        
+        angular.forEach(text.match(urlPattern), function(url) {
+            var httpUrl = url;
+            if (httpUrl.indexOf('http') != 0 && httpUrl.indexOf('ftp') != 0)
+                httpUrl = "http://"+httpUrl;
+            text = text.replace(url, "<a target=\"" + target + "\" href="+ httpUrl + ">" + url +"</a>");
+        });
+        return text ;        
+    };
+});
+
+
+function saveTextAsFile(filename, data)
+{
+    var textFileAsBlob = new Blob([data], {type:'text/plain'});
+    var fileNameToSaveAs = filename;
+
+    var downloadLink = document.createElement("a");
+    downloadLink.download = fileNameToSaveAs;
+    downloadLink.innerHTML = "Download File";
+    if (window.webkitURL != null)
+    {
+        // Chrome allows the link to be clicked
+        // without actually adding it to the DOM.
+        downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+    }
+    else
+    {
+        // Firefox requires the link to be added to the DOM
+        // before it can be clicked.
+        downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+        downloadLink.onclick = destroyClickedElement;
+        downloadLink.style.display = "none";
+        document.body.appendChild(downloadLink);
+    }
+
+    downloadLink.click();
+}
+
+function destroyClickedElement(event)
+{
+    document.body.removeChild(event.target);
+}

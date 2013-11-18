@@ -3,6 +3,7 @@ app.controller('BoardController', function($scope, $rootScope){
   	$scope.tabs = {};
   	$scope.tabsArray = [];
   	$scope.currentTabIndex = "";
+    $scope.currentTabIndexSync = ""
 		$scope.boardClient.setDelegate($scope);
     $scope.cursors = {};
     $scope.colors = ['#1abc9c', '#3498db', '#9b59b6', '#c0392b', '#d35400', '#34495e'];
@@ -137,8 +138,12 @@ app.controller('BoardController', function($scope, $rootScope){
   	}
 
     $scope.switchTab = function(tabIndex){
-        $scope.boardClient.switchTab(tabIndex);
+        if ($rootScope.sync)
+          $scope.boardClient.switchTab(tabIndex);
+        else
+          $scope.currentTabIndex = tabIndex;
     }
+
 
   	$scope.closeTab = function(tabIndex){
   		var pos = $scope.tabsArray.indexOf($scope.tabs[tabIndex]);
@@ -153,11 +158,17 @@ app.controller('BoardController', function($scope, $rootScope){
   	}
 
     $scope.zoomIn = function(){
-      $scope.boardClient.updateScale($scope.currentTabIndex, Math.min($scope.tabs[$scope.currentTabIndex].scale + 0.25,4));
+      if ($rootScope.sync)
+        $scope.boardClient.updateScale($scope.currentTabIndex, Math.min($scope.tabs[$scope.currentTabIndex].scale + 0.25,4));
+      else
+        $scope.tabs[$scope.currentTabIndex].scale = Math.min($scope.tabs[$scope.currentTabIndex].scale + 0.25,4)
     }
 
     $scope.zoomOut = function(){
-      $scope.boardClient.updateScale($scope.currentTabIndex, Math.max($scope.tabs[$scope.currentTabIndex].scale - 0.25,0.5));
+      if ($rootScope.sync)
+        $scope.boardClient.updateScale($scope.currentTabIndex, Math.max($scope.tabs[$scope.currentTabIndex].scale - 0.25,0.5));
+      else
+        $scope.tabs[$scope.currentTabIndex].scale = Math.max($scope.tabs[$scope.currentTabIndex].scale - 0.25, 0.5)
     }
 
     $scope.undoCanvas = function(){
@@ -173,8 +184,12 @@ app.controller('BoardController', function($scope, $rootScope){
       var tab = message.tab;
   		$scope.tabs[message.tabIndex] = tab;
   		$scope.tabsArray.push(tab);
-      currentTabIndex = tab.tabIndex;
-      $scope.currentTabIndex = message.tabIndex;
+
+      if ($rootScope.sync || message.peerId == $scope.boardClient.peerId()){
+        $scope.currentTabIndex = message.tabIndex;
+        $scope.currentTabIndexSync = message.tabIndex;
+      } else
+        $scope.currentTabIndexSync = message.tabIndex;
 
       if ($scope.tabs[message.tabIndex].metadata.sourceType == 'Screenshare' && 
         $scope.tabs[message.tabIndex].metadata.peerId == $scope.boardClient.peerId()){
@@ -186,9 +201,21 @@ app.controller('BoardController', function($scope, $rootScope){
   	}
 
   	$scope.onSwitchTab = function(message){
-  		$scope.currentTabIndex = message.tabIndex;
+      if ($rootScope.sync)
+        $scope.currentTabIndex = message.tabIndex;
+      else
+  		  $scope.currentTabIndexSync = message.tabIndex;
   		$scope.$apply();
   	}
+
+    var first = true;
+    $rootScope.$watch("sync", function(event){
+      if ($rootScope.sync && !first)
+        $scope.currentTabIndex = $scope.currentTabIndexSync;
+      else 
+        $scope.currentTabIndexSync = $scope.currentTabIndex;
+      first = false;
+    });
 
   	$scope.onCloseTab = function(message){
   		$scope.tabsArray.splice($scope.tabsArray.indexOf($scope.tabs[message.tabIndex]), 1);
@@ -251,6 +278,14 @@ app.controller('BoardController', function($scope, $rootScope){
       for (var i = 0; i < tabArrayIndex.length; i++)
         $scope.tabsArray.push($scope.tabs[tabArrayIndex[i]]);
       $scope.$apply();
+    }
+
+    $scope.onScreenshareEnded = function(){
+      for (var i in $scope.tabs){
+        if ($scope.tabs[i].metadata.sourceType == "Screenshare")
+          if ($scope.tabs[i].metadata.peerId == $rootScope.clientId)
+            $scope.closeTab($scope.tabs[i].tabIndex);
+      }
     }
 
     $scope.getScreenshareUrl = function(tab){
@@ -323,6 +358,13 @@ app.directive('onChangeImageFile', function($window) {
 app.directive('boardToolbar', function($window) {
   return function(scope, element, attrs) {
     scope.toolbarElement = element;
+  };
+});
+
+app.directive('tabTooltip', function($window) {
+  return function(scope, element, attrs) {
+    element.attr('data-title', scope.tab.metadata.name);
+    element.tooltip({placement: 'bottom'});
   };
 });
 
