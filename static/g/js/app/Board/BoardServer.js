@@ -68,7 +68,7 @@ var BoardServer = function(server){
 				annotationAction.type = "UpdateAnnotation";
 				annotationAction.annotationIndex = annotationIndex;
 				annotationAction.text = annotationsInEditing[annotationIndex].text;
-				annotationAction.peerId = annotationsInEditing[annotationIndex].editing;
+				annotationAction.peerId = annotationsInEditing[annotationIndex].peerId;
 				annotationAction.pageIndex = annotationsInEditing[annotationIndex].pageIndex;
   				annotationAction.tabIndex = annotationsInEditing[annotationIndex].tabIndex;
   				var request = new Object();
@@ -261,11 +261,18 @@ var BoardServer = function(server){
 			annotationData[annotationRollingIndex] = action.annotation;
 			annotationRollingIndex++;
 
+			annotationsInEditing[action.annotationIndex] = request.annotationAction;
+			annotationsInEditing[action.annotationIndex].editing = action.peerId;
+			annotationsInEditing[action.annotationIndex].text = "";
+
 		} else if (action.type == "BeginUpdateAnnotation"){
 			if (annotationData[action.annotationIndex].editing != undefined)
 				return;
-			annotationsInEditing[action.annotationIndex] = annotationData[action.annotationIndex];
 			annotationData[action.annotationIndex].editing = action.peerId;
+
+			annotationsInEditing[action.annotationIndex] = request.annotationAction;
+			annotationsInEditing[action.annotationIndex].editing = action.peerId;
+			annotationsInEditing[action.annotationIndex].text = annotationData[action.annotationIndex].text;
 		} else if (action.type == "UpdateAnnotation"){
 			if (annotationData[action.annotationIndex] == undefined)
 				return;

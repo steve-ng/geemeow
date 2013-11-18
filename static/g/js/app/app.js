@@ -89,6 +89,10 @@ app.run(function($rootScope){
 			clearTimeout($rootScope.setupTimer);
 	    });
 
+	    $(window).unload(function (){
+	    	$rootScope.client.stop();
+	    });
+
 	    //	Plugins
 	    $rootScope.userClient = new UserClient($rootScope.client);
 	    $rootScope.userClient.setDelegate($rootScope);
