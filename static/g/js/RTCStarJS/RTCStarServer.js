@@ -177,6 +177,7 @@ function RTCStarServer(){
       conn.on('close', function(){connCloseHandler(id);});
       conn.on('error', function(err){connCloseHandler(id, err);});
     });
+    console.log(conn);
   }
 
 
