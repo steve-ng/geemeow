@@ -4,7 +4,7 @@ $(document).ready(function () {
 		title: "",
 		html:"true",
 		content:"GeeMeow has an experimental version that uses entirely webRTC technology, no data transfer through a server! </br></br>"+
-				"<button id=\"geek_redirect\" class=\"btn popover_btn\">Try now! (Chrome Beta Only)  </button> &nbsp &nbsp" 
+				"<button id=\"geek_redirect\" class=\"btn popover_btn\">Try now! (Chrome only)  </button> &nbsp &nbsp" 
 	});
 
 	$('#for_geek').on('shown.bs.popover', function () {
