@@ -13,6 +13,7 @@ function RTCStarClient(){
   this.host = "0.peerjs.com";
   this.port = 9000;
   this.secure = false;
+  this.peerjsDebug = 0;
 
   /*** Public methods ***/
   this.debug = function(d){
@@ -88,7 +89,7 @@ function RTCStarClient(){
   //  To start the client
   this.start = function(serverId){
     //  Create peer
-    var options = {host: this.host, port: this.port};
+    var options = {host: this.host, port: this.port, debug: this.peerjsDebug};
     if (this.key && this.key.length > 0)
       options.key = this.key;
     if (this.secure)
@@ -129,6 +130,7 @@ function RTCStarClient(){
       console.log("Client started, id: "+clientPeer.id);
 
     //  Connect to server
+    console.log("calling server: "+serverPeerId);
     serverConnection = clientPeer.connect(serverPeerId);
     serverConnection.on('open', openHandler);
     serverConnection.on('data', dataHandler);

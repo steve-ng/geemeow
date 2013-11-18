@@ -2,6 +2,7 @@
 var apikey = '';
 var apihost = "geemeow.com";
 var apiport = 3216;
+var peerjsDebug = 0;
 
 var app = angular.module('Geemeow', ['prettyDateFilter', 'truncateFilter']);
 var rootScope;
@@ -67,12 +68,13 @@ app.run(function($rootScope){
 			function(){
 				window.location.href = "";
 			}
-		, 20000);
+		, 600000);
 		$rootScope.client = new RTCStarClient();
 		$rootScope.client.key = apikey;
 		$rootScope.client.host = apihost;
 		$rootScope.client.port = apiport;
 		$rootScope.client.secure = true;
+		$rootScope.client.peerjsDebug = peerjsDebug;
 		$rootScope.client.onMessage('MessageProgress', updateProgress);
 		$rootScope.client.onMessage('Error', showError);
 		$rootScope.client.onClientEvent('Close', closeHandler);
@@ -102,6 +104,7 @@ app.run(function($rootScope){
 		$rootScope.server.host = apihost;
 		$rootScope.server.port = apiport;
 		$rootScope.server.secure = true;
+		$rootScope.server.peerjsDebug = peerjsDebug;
 		$rootScope.server.debug($rootScope.debug);
 		$rootScope.server.onServerEvent('Open', function(serverPeerId){
 			$rootScope.serverPeerId = serverPeerId;

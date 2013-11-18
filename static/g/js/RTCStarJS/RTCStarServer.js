@@ -7,6 +7,7 @@ function RTCStarServer(){
   this.host = "0.peerjs.com";
   this.port = 9000;
   this.secure = false;
+  this.peerjsDebug = 0;
   var self = this;
 
   /** Data **/
@@ -57,7 +58,7 @@ function RTCStarServer(){
   //  Starts the server
   this.start = function(){
     //  Create peer
-    var options = {host: this.host, port: this.port};
+    var options = {host: this.host, port: this.port, debug: this.peerjsDebug};
     if (this.key && this.key.length > 0)
       options.key = this.key;
     if (this.secure)
@@ -157,9 +158,11 @@ function RTCStarServer(){
 
   //  PeerJS Connection
   function peerjsConnectionHandler(conn){
+    if (debug)
+        console.log("New peer connect: "+conn.peer);
     conn.on('open', function(){
       if (debug)
-        console.log("New peer: "+conn.peer);
+        console.log("New peer open: "+conn.peer);
 
       var id = conn.peer;
 
@@ -172,7 +175,7 @@ function RTCStarServer(){
       /*** Connection Handlers ***/
       conn.on('data', function(data){connDataHandler(id, data);});
       conn.on('close', function(){connCloseHandler(id);});
-      conn.on('error', function(err){connCloseHandler(id);});
+      conn.on('error', function(err){connCloseHandler(id, err);});
     });
   }
 
@@ -246,7 +249,10 @@ function RTCStarServer(){
   }
 
   //  Connection Close
-  var connCloseHandler = function(id){
+  var connCloseHandler = function(id, err){
+      if (debug)
+        console.log(id, err);
+
       if (peerConnections[id] == undefined)
         return;
 
