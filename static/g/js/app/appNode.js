@@ -240,6 +240,6 @@ app.run(function($rootScope){
 	}
 
 	$rootScope.getWeiboInviteLink = function(){
-		return "http://service.weibo.com/share/share.php?title=GeeMeow&url=" +window.location.protocol + "//" + window.location.host + window.location.pathname + "%23"+window.location.hash.substring(1);
+		return "http://service.weibo.com/share/share.php?url=" +window.location.protocol + "//" + window.location.host + window.location.pathname + "%23"+window.location.hash.substring(1);
 	}
 });
