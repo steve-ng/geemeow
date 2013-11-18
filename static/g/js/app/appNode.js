@@ -222,4 +222,8 @@ app.run(function($rootScope){
 	$rootScope.downloadChat = function(){
     	$rootScope.$broadcast('DownloadChat');
 	}
+
+	$rootScope.getInviteLink = function(){
+		return "https://www.facebook.com/sharer/sharer.php?u=" +window.location.protocol + "//" + window.location.host + window.location.pathname + "%23"+window.location.hash.substring(1);
+	}
 });

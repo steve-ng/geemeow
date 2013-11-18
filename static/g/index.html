@@ -6,6 +6,9 @@
 	<link rel="shortcut icon" sizes="196x196" href="img/favicon.png">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="mobile-web-app-capable" content="yes">
+	<meta property="og:title" content="GeeMeow" />
+	<meta property="og:description" content="Geemeow is a real time web discussion platform that includes video conferencing, whiteboard, doc-sketch capabilities." />
+	<meta property="og:image" content="https://geemeow.com/img/banner2.png" />
 
 	 <title>GeeMeow</title>
  
@@ -391,8 +394,12 @@
 				<div class="modal-body">
 					<p>Share link with anyone:</p>
 					<input class="form-control pointer" type="text" onclick="this.focus();this.select();" readonly="readonly" ng-value="getGeemeowURL()">
-					   
 					</input>
+					<p style="padding-top:1.0em">Via Facebook:&nbsp;
+						<a ng-href="{{getInviteLink()}}" target="_blank" >
+						  <i class="fa fa-facebook-square fa-2x touchtext" ></i>
+						</a>
+					</p>
 				</div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->
@@ -548,7 +555,7 @@
 			  <h4 class="modal-title"><i class="fa fa-info-circle"></i>&nbsp;&nbsp;About GeeMeow</h4>
 			</div>
 			<div class="modal-body touchtext">
-				<p>A web collaboration platofrm built for speed, simplicity and usability</p>
+				<p>A web collaboration platform built for speed, simplicity and usability</p>
 				<p><i>Geemeow is currently in beta!</i></p>
 				<p>Contact us at <a href="mailto:contact@geemeow.com">contact@geemeow.com</a></p>
 			</div>
