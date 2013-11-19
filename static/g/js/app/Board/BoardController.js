@@ -93,7 +93,9 @@ app.controller('BoardController', function($scope, $rootScope){
     $scope.addPDFTab = function(link){
       var metadata = new Object();
       metadata.sourceType = "PDFLink";
-      metadata.pdfLink = link;
+      metadata.originalLink = link;
+      //  temp code
+      metadata.pdfLink = window.location.protocol + "//" + window.location.host +":3218/urlproxy?url="+metadata.originalLink;
       metadata.name = link.slice(link.lastIndexOf('/')+1, link.length);
       $scope.boardClient.newTab(metadata);
     }
@@ -111,7 +113,9 @@ app.controller('BoardController', function($scope, $rootScope){
     $scope.addImageTab = function(link){
       var metadata = new Object();
       metadata.sourceType = "ImageLink";
-      metadata.imageLink = link;
+      metadata.originalLink = link;
+      //  temp code
+      metadata.imageLink = window.location.protocol + "//" + window.location.host +":3218/urlproxy?url="+metadata.originalLink;
       metadata.name = link.slice(link.lastIndexOf('/')+1, link.length);
       $scope.boardClient.newTab(metadata);
     }
