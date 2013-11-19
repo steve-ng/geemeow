@@ -95,7 +95,7 @@ app.controller('BoardController', function($scope, $rootScope){
       metadata.sourceType = "PDFLink";
       metadata.originalLink = link;
       //  temp code
-      metadata.pdfLink = window.location.protocol + "//" + window.location.host +":3218/urlproxy?url="+metadata.originalLink;
+      metadata.pdfLink = "http://" + window.location.host +":3218/urlproxy?url="+metadata.originalLink;
       metadata.name = link.slice(link.lastIndexOf('/')+1, link.length);
       $scope.boardClient.newTab(metadata);
     }
@@ -115,7 +115,7 @@ app.controller('BoardController', function($scope, $rootScope){
       metadata.sourceType = "ImageLink";
       metadata.originalLink = link;
       //  temp code
-      metadata.imageLink = window.location.protocol + "//" + window.location.host +":3218/urlproxy?url="+metadata.originalLink;
+      metadata.imageLink = "http://" + window.location.host +":3218/urlproxy?url="+metadata.originalLink;
       metadata.name = link.slice(link.lastIndexOf('/')+1, link.length);
       $scope.boardClient.newTab(metadata);
     }
