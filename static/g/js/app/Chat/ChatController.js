@@ -204,8 +204,6 @@ app.filter('parseUrlFilter', function() {
     //var urlPattern = '^(?!href="[^"\n\r\s]+?").*?(https?:\/\/)?((?:www|ftp)\.[-A-Za-z0-9+&@#\/%?=~_|$!:,.;]+)$';
     var urlPattern = /(\b(((https?|ftp|file):\/\/)|(www\.))[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%‌​=~_|])/ig;
     return function(text, target) {        
-        if (text.length > 0 && text.substring(text.length-1) == '/')
-            text = text.substring(0, text.length-1);
         angular.forEach(text.match(urlPattern), function(url) {
             var httpUrl = url;
             if (httpUrl.indexOf('http') != 0 && httpUrl.indexOf('ftp') != 0)
