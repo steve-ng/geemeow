@@ -43,27 +43,28 @@ app.controller('VideoController', function($scope, $rootScope){
 		if ($scope.peers[peerId] == undefined)
 			$scope.addPeer(peerId);
 
+		if (peerId == $rootScope.clientId)
+			$scope.gettingUserMedia = false;
+
 		$scope.peers[peerId].stream = undefined;
 		$scope.peers[peerId].url = "";
 		$scope.peers[peerId].hasVideo = false;
 		$scope.peers[peerId].hasAudio = false;
 
-		if (stream == undefined)
-			return;
+		if (stream != undefined){
+			var url = URL.createObjectURL(stream);
+			z = stream;
+			$scope.peers[peerId].stream = stream;
+			$scope.peers[peerId].url = url;
+			for (var i in stream.getVideoTracks())
+				if (stream.getVideoTracks()[i].enabled)
+					$scope.peers[peerId].hasVideo = true;
+			
 
-		var url = URL.createObjectURL(stream);
-		z = stream;
-		$scope.peers[peerId].stream = stream;
-		$scope.peers[peerId].url = url;
-		for (var i in stream.getVideoTracks())
-			if (stream.getVideoTracks()[i].enabled)
-				$scope.peers[peerId].hasVideo = true;
-		
-
-		for (var i in stream.getAudioTracks())
-			if (stream.getAudioTracks()[i].enabled)
-				$scope.peers[peerId].hasAudio = true;
-		
+			for (var i in stream.getAudioTracks())
+				if (stream.getAudioTracks()[i].enabled)
+					$scope.peers[peerId].hasAudio = true;
+		}
 		
         $rootScope.notify();
 		$scope.safeApply();
@@ -80,20 +81,32 @@ app.controller('VideoController', function($scope, $rootScope){
 
 
 	$scope.toggleOwnVideo = function(type){
+		if ($scope.gettingUserMedia)
+			return;
+
 		$scope.videoEnabled = !$scope.videoEnabled;
 
 		rebuildConstraints();
-
-		if ($scope.constraintsListener != undefined)
-			$scope.constraintsListener.constraintsChanged($scope.constraints);
+		$scope.notifyConstraints();
 	}
 
 	$scope.toggleOwnAudio = function(){
-		$scope.constraints.audio = !$scope.constraints.audio;
+		if ($scope.gettingUserMedia)
+			return;
 
-		if ($scope.constraintsListener != undefined)
-			$scope.constraintsListener.constraintsChanged($scope.constraints);
+		$scope.constraints.audio = !$scope.constraints.audio;
+		$scope.notifyConstraints();
 	}
+
+	$scope.notifyConstraints = function(){
+		if ($scope.constraintsListener != undefined){
+			$scope.gettingUserMedia = true;
+			setTimeout(function(){
+				$scope.constraintsListener.constraintsChanged($scope.constraints)
+			},200);
+		}
+	}
+
 
 
 	$scope.toggleVideo = function(peerId){

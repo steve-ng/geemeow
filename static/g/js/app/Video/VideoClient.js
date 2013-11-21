@@ -98,7 +98,7 @@ var VideoClient = function(client){
 		    }
         }
 
-        if (constraints == undefined || constraints.video == false && constraints.audio == false){
+        if (constraints == undefined || (constraints.video == false && constraints.audio == false)){
         	gotStream(undefined);
         } else {
 			navigator.getMedia (constraints, gotStream,

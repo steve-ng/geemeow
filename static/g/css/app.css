@@ -358,7 +358,7 @@ box-shadow: 0 0 0px #719ECE;
 	padding-left: 0.8em;
 }
 
-.video-off{
+.video-state{
 	text-shadow: none;
 	position: absolute;
 	left: 8em;
@@ -367,6 +367,29 @@ box-shadow: 0 0 0px #719ECE;
 	margin-top: -2em;
 	margin-left: -2em
 }
+
+.video-hover{
+	-webkit-animation: rotating 2s linear infinite;
+	animation: rotating 2s linear infinite;
+	color:white;
+}
+@-webkit-keyframes rotating {
+    from{
+        -webkit-transform: rotate(0deg);
+    }
+    to{
+        -webkit-transform: rotate(360deg);
+    }
+}
+@keyframes rotating {
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+
 
 .own-video-name:hover{
 	opacity:0.5;
