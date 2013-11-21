@@ -342,6 +342,7 @@ box-shadow: 0 0 0px #719ECE;
 	height: 9em;
 	position: absolute;
 }
+
 .video-side{
 	position: absolute;
 	left:0em;
@@ -355,6 +356,16 @@ box-shadow: 0 0 0px #719ECE;
 	bottom: 0em;
 	padding: 0;
 	padding-left: 0.8em;
+}
+
+.video-off{
+	text-shadow: none;
+	position: absolute;
+	left: 8em;
+	top: 4.5em;
+	opacity: 0.5;
+	margin-top: -2em;
+	margin-left: -2em
 }
 
 .own-video-name:hover{
@@ -695,3 +706,4 @@ box-shadow: 0 0 0px #719ECE;
 	opacity: 0.8;
 
 }
+

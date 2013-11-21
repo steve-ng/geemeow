@@ -302,6 +302,7 @@
 
 				<div class="video-div own-video">
 					<div class="video-overlay">
+						<span class="video-off" ng-show="!peers[$root.clientId].videoEnabled || !peers[$root.clientId].hasVideo"><i class="fa fa-times fa-4x"></i></span>
 						<span class="video-name own-video-name" data-toggle="modal" data-target="#changeNameModal">
 							<i class="fa fa-user"></i>&nbsp;{{$root.users[$root.clientId].name}}
 						</span>
@@ -325,11 +326,11 @@
 			<div class="sidebar-bottom">
 				<div class="video-div others-video" ng-repeat="(peerId, peer) in peers" ng-hide="peerId == $root.clientId">
 					<div class="video-overlay">
+						<span class="video-off" ng-show="!peer.videoEnabled || !peer.hasVideo"><i class="fa fa-times fa-4x"></i></span>
+
 						<span class="touchnone video-name">
 							{{$root.users[peerId].name}}
-							
 						</span>
-						
 				
 						<div class="video-side" ng-style="{background: $root.users[peerId].color}">
 						</div>
