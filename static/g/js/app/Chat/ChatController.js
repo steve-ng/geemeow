@@ -208,7 +208,7 @@ app.filter('parseUrlFilter', function() {
             var httpUrl = url;
             if (httpUrl.indexOf('http') != 0 && httpUrl.indexOf('ftp') != 0)
                 httpUrl = "http://"+httpUrl;
-            text = text.replace(url, "<a target=\"" + target + "\" href="+ httpUrl + ">" + url +"</a>");
+            text = text.replace(url, "<a target=\"" + target + "\" href=\""+ httpUrl + "\">" + url +"</a>");
         });
         return text ;        
     };
