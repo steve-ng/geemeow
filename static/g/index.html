@@ -159,7 +159,7 @@
 					<!-- Board Tab Bar -->
 					<div class="board-tabbar">
 
-						<ul class="nav nav-tabs board-tab-header-list">
+						<ul class="nav nav-tabs board-tab-header-list" id="room_tab2">
 							<li ng-repeat="tab in tabsArray">
 								<a class="board-tab-header-list-name" ng-class="{highlight: currentTabIndex == tab.tabIndex}"  ng-click="clickTab($event, tab.tabIndex)" tab-tooltip>{{tab.metadata.name | truncate:15}}&nbsp;
 									<i class="fa fa-times board-tab-header-close" ng-click="closeTab(tab.tabIndex); $event.stopPropagation();"></i>
@@ -602,13 +602,9 @@
 	<!-- Joyride tutorial -->
 	<ol id="room_tab_tutorial">
 	  <!-- data-id needs to be the same as the parent it will attach to -->
-	  <li data-id="room_tab"   data-text="Next" class="tutorial-left-align">
+	  <li data-id="room_tab" class="tutorial-left-align">
 	  	<p> Create a new drawing board, share PDFs, images or start a screenshare session here! </p>
 	  </li>
-	<!-- 
-	  <li data-id="room_page" data-options="tipLocation:left" data-text="Next" class="tutorial-top-align">
-	  	<p> Access additional page options here. </p>
-	  </li> -->
 
 	  <li data-id="room_sync" data-options="tipLocation:left" data-text="Next" class="tutorial-big-z" >
 	  	<p> Toggle to synchronise viewing of tabs, scroll positions and cursors!</p>

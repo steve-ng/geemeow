@@ -6,9 +6,9 @@ app.run(function($rootScope){
 		var firstTime = $.cookie("firstTimerCookie");
 
 		//set non-first timer
-		console.log('setting cookie!');
 		$.cookie("firstTimerCookie","present");
 
+		
 		$rootScope.showTutorial = function(){
 			$('#room_tab_tutorial').joyride({
 				'autoStart' : true,
@@ -21,7 +21,11 @@ app.run(function($rootScope){
 		}
 
 		if(firstTime == null ){
-			$rootScope.showTutorial();
+
+			setTimeout(function(){
+
+				$rootScope.showTutorial();	
+			},500);
 		}
 
 	});
