@@ -42,12 +42,15 @@ function socketConnectionInstance(socket) {
 
         var serverId = message.serverId;
         var nodeStarServer;
-		if (serverId == undefined || serverId.length == 0 || serverId.length > 128){
+		if (serverId == undefined || serverId.length == 0 || 
+			serverId.length > 128 || removeTags(serverId).length == 0){
+			
 			serverId = crypto.createHash('md5').update(new Date().getTime()+randstr).digest("hex");
 			nodeStarServer = new NodeStarServer(serverId);
 			nodeStarServers[serverId] = nodeStarServer;
 			checkServer(nodeStarServer);
 		} else {
+			serverId = removeTags(serverId);
 			if (nodeStarServers[serverId] == undefined){
 				nodeStarServers[serverId] = new NodeStarServer(serverId);
 				checkServer(nodeStarServers[serverId]);
@@ -69,3 +72,25 @@ function socketConnectionInstance(socket) {
 	socket.emit('ready');
 }
 
+var tagBody = '(?:[^"\'>]|"[^"]*"|\'[^\']*\')*';
+
+var tagOrComment = new RegExp(
+    '<(?:'
+    // Comment body.
+    + '!--(?:(?:-*[^->])*--+|-?)'
+    // Special "raw text" elements whose content should be elided.
+    + '|script\\b' + tagBody + '>[\\s\\S]*?</script\\s*'
+    + '|style\\b' + tagBody + '>[\\s\\S]*?</style\\s*'
+    // Regular name
+    + '|/?[a-z]'
+    + tagBody
+    + ')>',
+    'gi');
+function removeTags(html) {
+  var oldHtml;
+  do {
+    oldHtml = html;
+    html = html.replace(tagOrComment, '');
+  } while (html !== oldHtml);
+  return html.replace(/</g, '&lt;');
+}
