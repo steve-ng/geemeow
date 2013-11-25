@@ -375,7 +375,8 @@
 .CodeMirror {
     height: auto!important;
     width: auto!important;
-    overflow: visible;
+    min-width:100%;
+    min-height:100%;
 }
 div.CodeMirror-scroll { 
     height: 100% !important; 

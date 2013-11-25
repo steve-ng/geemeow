@@ -391,7 +391,6 @@ app.directive('onChangeImageFile', function($window) {
 app.directive('onChangeTextFile', function($window) {
   return function(scope, element, attrs) {
     element.on('change',function(){
-      console.log("asd");
       scope.uploadTextFile(element[0].files[0]);
       element.parent()[0].reset();
     });

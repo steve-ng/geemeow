@@ -348,6 +348,8 @@ app.directive('boardPage', function($window) {
     	var windowHeightCur = $(window).height();
     	if (windowWidthCur == windowWidth && windowHeightCur == windowHeight)
     		return;
+    	windowWidth = windowWidthCur;
+    	windowHeight = windowHeightCur;
     	clearTimeout(resizeTimer);
     	resizeTimer = setTimeout(function(){
     		element.resize();
@@ -625,41 +627,65 @@ app.directive('boardPage', function($window) {
 		var canvas = document.createElement("canvas");
 		var canvasContext = canvas.getContext('2d');
 
-		var backgroundCanvas = element.children().eq(3)[0];
+		var backgroundCanvas = element.children().eq(4)[0];
 		var drawingCanvas = element.children().eq(0)[0];
 		var annotationLayer = element.children().eq(1)[0];
-
-		html2canvas(annotationLayer, {
-		    onrendered: function(c) {
-		    	var annotationCanvas = c;
-
-		    	// Get the CanvasPixelArray from the given coordinates and dimensions.
-				var imgd = c.getContext('2d').getImageData(0, 0, c.width, c.height);
-				var pix = imgd.data;
-
-				// Loop over each pixel and invert the color.
-				for (var i = 0, n = pix.length; i < n; i += 4) 
-				    if (pix[i] >= 255 && pix[i+1] >= 255 && pix[i+2] >= 255)
-				    	pix[i+3] = 0;
-
-
-				// Draw the ImageData at the given (x,y) coordinates.
-				c.getContext('2d').putImageData(imgd, 0, 0);
-
-		    	canvas.width = drawingCanvas.width;
-				canvas.height = drawingCanvas.height;
-				canvasContext.fillStyle="#FFFFFF";
-				canvasContext.fillRect(0, 0, canvas.width, canvas.height);
-				canvasContext.drawImage(backgroundCanvas, 0, 0);
-				canvasContext.drawImage(annotationCanvas, 0, 0);
-				canvasContext.drawImage(drawingCanvas, 0, 0);
-				callback(canvas);
-		    },
-		    width: drawingCanvas.width,
-		    height: drawingCanvas.height,
-		    background: '#ffffff',
-		});
+		var editorDiv = element.children().eq(2)[0];
 		
+
+		var ssTextFile = function(editorCanvas){
+			html2canvas(annotationLayer, {
+			    onrendered: function(c) {
+			    	var annotationCanvas = c;
+
+			    	// Get the CanvasPixelArray from the given coordinates and dimensions.
+					var imgd = c.getContext('2d').getImageData(0, 0, c.width, c.height);
+					var pix = imgd.data;
+
+					// Loop over each pixel and invert the color.
+					for (var i = 0, n = pix.length; i < n; i += 4) 
+					    if (pix[i] >= 255 && pix[i+1] >= 255 && pix[i+2] >= 255)
+					    	pix[i+3] = 0;
+
+
+					// Draw the ImageData at the given (x,y) coordinates.
+					c.getContext('2d').putImageData(imgd, 0, 0);
+
+			    	canvas.width = drawingCanvas.width;
+					canvas.height = drawingCanvas.height;
+					canvasContext.fillStyle="#FFFFFF";
+					canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+					canvasContext.drawImage(backgroundCanvas, 0, 0);
+					if (editorCanvas != undefined)
+						canvasContext.drawImage(editorCanvas, 0, 0);
+					canvasContext.drawImage(annotationCanvas, 0, 0);
+					canvasContext.drawImage(drawingCanvas, 0, 0);
+					callback(canvas);
+			    },
+			    width: drawingCanvas.width,
+			    height: drawingCanvas.height,
+			    background: '#ffffff',
+			});
+		}
+		
+		if (tab.metadata.sourceType == "TextFile"){
+			element.parent().parent()[0].scrollTop = 0;
+			element.parent().parent()[0].scrollLeft = 0;
+		
+
+			html2canvas(editorDiv, {
+			    onrendered: function(editorc) {
+			    	var editorCanvas = editorc;
+			
+					ssTextFile(editorCanvas);
+				},
+				width: drawingCanvas.width,
+				height: drawingCanvas.height+1000,
+				background: '#ffffff',
+			});
+		} else {
+			ssTextFile(undefined);
+		}
 	}
 }});
 
