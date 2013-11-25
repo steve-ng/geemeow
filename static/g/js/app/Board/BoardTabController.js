@@ -45,6 +45,12 @@ app.controller('BoardTabController', function($scope,$rootScope) {
  				$scope.$apply();
 		    }
 		    image.src = $scope.tab.metadata.imageFile;
+		} else if ($scope.tab.metadata.sourceType == "TextFile"){
+			var data = atob($scope.tab.metadata.textFile.substring($scope.tab.metadata.textFile.indexOf(';base64,')+8));
+  			var mimetype = $scope.tab.metadata.textFile.substring(5, $scope.tab.metadata.textFile.indexOf(';base64'));
+			if (mimetype == "text/x-python-script")
+				mimetype = "text/x-python";
+			$scope.pages[0] = {textFile: {data: data, mimetype: mimetype}};
 		} else if ($scope.tab.metadata.sourceType == "Screenshare"){
  			$scope.pages[0] = {streamSrc: $scope.boardClient.screenStreams, peerId: $scope.tab.metadata.peerId};
 		}
@@ -193,6 +199,8 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 			$scope.downloadOriginalImage();
 		else if ($scope.tab.metadata.sourceType == "ImageLink")
 			$scope.downloadImageFromLink();
+		else if ($scope.tab.metadata.sourceType == "TextFile")
+			$scope.downloadOriginalText();
 	}
 
 	$scope.downloadOriginalPDF = function(){
@@ -218,6 +226,14 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 		var win = window.open($scope.tab.metadata.imageLink, '_blank');
   		win.focus();
 	}
+
+	$scope.downloadOriginalText = function(){
+		var download = document.createElement('a');
+		download.href = $scope.tab.metadata.textFile;
+		download.download = $scope.tab.metadata.name;
+		download.click();
+	}
+
 
 	//	Canvas Context Menu handler
 	$scope.openContextMenu = function(e){
@@ -343,10 +359,13 @@ app.directive('boardPage', function($window) {
 	var parent = element.parent();
 	var drawingLayer = element.children().eq(0);
 	var annotationLayer = element.children().eq(1);
-	var textLayer = element.children().eq(2);
-	var backgroundLayer = element.children().eq(3);
-	var hiddenVideo = element.children().eq(4)[0];
-	var canvasMenu = element.children().eq(5);
+	var editorDiv = element.children().eq(2);
+	var editorLayer = element.children().eq(2).children().eq(0);
+	var editorCodeMirror;
+	var textLayer = element.children().eq(3);
+	var backgroundLayer = element.children().eq(4);
+	var hiddenVideo = element.children().eq(5)[0];
+	var canvasMenu = element.children().eq(6);
 
 
 	var index = scope.$index;
@@ -441,6 +460,48 @@ app.directive('boardPage', function($window) {
 		  	drawingLayer[0].width = pageDisplayWidth;
 			drawingLayer[0].height = pageDisplayHeight;
 			backgroundLayer[0].getContext('2d').drawImage(image, 0, 0, pageDisplayWidth, pageDisplayHeight);
+	  	} else if (tab.metadata.sourceType == "TextFile"){
+			var parentWidth = parent.parent().innerWidth()-1-getScrollBarWidth();
+			var textFile = scope.$parent.pages[scope.$index].textFile;			
+
+			if (editorDiv.children().eq(1) != undefined)
+				editorDiv.children().eq(1).remove();
+
+			tabScale = 0.85;	//	hard code first
+			var pageDisplayWidth = parentWidth*tabScale;
+			var pageDisplayHeight = parentHeight*tabScale;
+
+			element.width(pageDisplayWidth);
+			element.height(pageDisplayHeight);
+
+			editorLayer[0].value = textFile.data;
+			editorDiv.css('font-size', (tabScale*100)+"%");
+			console.log(textFile.mimetype);
+			var codeMirror = CodeMirror.fromTextArea(editorLayer[0], {
+				mode: textFile.mimetype,
+				readOnly: true,
+				lineNumbers: true,
+				lineWrapping: true,
+			});
+			scope.$parent.pages[scope.$index].codeMirror = codeMirror;
+
+			pageDisplayHeight = Math.max(codeMirror.getScrollInfo().clientHeight, pageDisplayHeight);
+			pageDisplayWidth = Math.max(codeMirror.getScrollInfo().clientWidth, pageDisplayWidth);
+
+
+			element.width(pageDisplayWidth);
+			element.height(pageDisplayHeight);
+		  	backgroundLayer[0].width = pageDisplayWidth;
+			backgroundLayer[0].height = pageDisplayHeight;
+		  	textLayer.width(pageDisplayWidth);
+			textLayer.height(pageDisplayHeight);
+		  	annotationLayer.width(pageDisplayWidth);
+			annotationLayer.height(pageDisplayHeight);
+		  	drawingLayer[0].width = pageDisplayWidth;
+			drawingLayer[0].height = pageDisplayHeight;
+
+			editorCodeMirror = editorDiv.children().eq(1);
+
 	  	} else if (tab.metadata.sourceType == "Screenshare"){
 			var parentWidth = parent.parent().innerWidth()-1;
 
@@ -552,7 +613,9 @@ app.directive('boardPage', function($window) {
 	textLayer.on('contextmenu', openContextMenu);
 	backgroundLayer.on('contextmenu', openContextMenu);
 	annotationLayer.on('contextmenu', openContextMenu);
-
+	editorDiv.on('contextmenu', openContextMenu);
+	if (editorCodeMirror != undefined)
+		editorCodeMirror.on('contextmenu', openContextMenu);
 
     scope.$parent.$on('OpenContextMenu'+scope.$index, function(event, e){
       	openContextMenu(e);

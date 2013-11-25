@@ -361,3 +361,24 @@
 .board-annotation-close:active{
     opacity: 1;
 }
+
+.board-tab-page-editor{
+    width: auto;
+    height: auto;
+    position: absolute;
+}
+
+.board-tab-page-editor-textarea{
+    min-height: 0;
+    min-width: 0;
+}
+.CodeMirror {
+    height: auto!important;
+    width: auto!important;
+    overflow: visible;
+}
+div.CodeMirror-scroll { 
+    height: 100% !important; 
+    width: 100% !important;
+    overflow: hidden;
+}

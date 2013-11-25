@@ -19,6 +19,7 @@
 	<link rel="stylesheet" href="css/tinyloader.css">
 	<link rel="stylesheet" href="css/textlayerbuilder.css">
 	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/codemirror.css">
 
 	<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 </head>
@@ -214,6 +215,9 @@
 				    							<i ng-repeat="(annotationIndex, annotation) in annotations" class="fa fa-times-circle-o board-annotation-close touchtext" ng-show="annotationIndex == editingIndex" ng-style="getCloseStyle(annotation)" ng-click="deleteAnnotation(annotationIndex)"></i>
 				    							
 				    						</div>
+				    						<div class="board-tab-page-editor" ng-show="tab.metadata.sourceType =='TextFile' || tab.metadata.sourceType == 'TextFileLink'">
+				    							<textarea class="board-tab-page-editor-textarea"></textarea>
+				    						</div>
 				    						<div class="board-tab-page-text textLayer"></div>
 				    						<canvas class="board-tab-page-background"></canvas>
 				    						<video width="0px"></video>
@@ -232,6 +236,7 @@
 											    	<li ng-show="tab.metadata.sourceType == 'PDFLink'"><a href="" ng-click="downloadSource()">Download Attached PDF</a></li>
 											    	<li ng-show="tab.metadata.sourceType == 'ImageFile'"><a href="" ng-click="downloadSource()">Download Attached Image</a></li>
 											    	<li ng-show="tab.metadata.sourceType == 'ImageLink'"><a href="" ng-click="downloadSource()">Download Attached Image</a></li>
+											    	<li ng-show="tab.metadata.sourceType == 'TextFile'"><a href="" ng-click="downloadSource()">Download Attached Text File</a></li>
 											    </ul>
 											</div>
 
@@ -302,6 +307,12 @@
 
 				<div class="video-div own-video">
 					<div class="video-overlay">
+
+						<span class="video-state">
+							<i class="fa fa-times fa-4x" ng-show="(!peers[$root.clientId].videoEnabled || !peers[$root.clientId].hasVideo) && !gettingUserMedia"></i>
+							<i class="fa fa-spinner fa-4x video-hover" ng-show="gettingUserMedia"></i>
+						</span>
+
 						<span class="video-name own-video-name" data-toggle="modal" data-target="#changeNameModal">
 							<i class="fa fa-user"></i>&nbsp;{{$root.users[$root.clientId].name}}
 						</span>
@@ -325,11 +336,13 @@
 			<div class="sidebar-bottom">
 				<div class="video-div others-video" ng-repeat="(peerId, peer) in peers" ng-hide="peerId == $root.clientId">
 					<div class="video-overlay">
+						<span class="video-state">
+							<i class="fa fa-times fa-4x" ng-show="!peer.videoEnabled || !peer.hasVideo"></i>
+						</span>
+
 						<span class="touchnone video-name">
 							{{$root.users[peerId].name}}
-							
 						</span>
-						
 				
 						<div class="video-side" ng-style="{background: $root.users[peerId].color}">
 						</div>
@@ -503,9 +516,23 @@
 									<i class="fa fa-file-o new-tab-icon-small"></i>
 									<span class="new-tab-text-small">&nbsp;&nbsp;Upload PDF</span>
 								</div>
-								<input id="pdf_file" ng-show="false" type="file" name="pdf_file" accept="application/pdf" on-change-pdf-file></input>
+								<form name="pdf_file_form">
+									<input id="pdf_file" ng-show="false" type="file" name="pdf_file" accept="application/pdf" on-change-pdf-file></input>
+								</form>
 							</div>
 						</div>
+
+						<div class="new-tab-item " onclick="$('#textfile_file').click();" data-dismiss="modal">
+							<div class="new-tab-item-div new-tab-item-div-select pointer">
+								<i class="fa fa-file-text-o new-tab-center new-tab-icon"></i>
+								<p class="new-tab-text new-tab-center">Upload Text File</p>
+							</div>
+							
+						</div>
+						<form name="text_file_form">
+							<input id="textfile_file" ng-show="false" type="file" name="textfile_file" on-change-text-file></input>
+						</form>
+
 					</div>
 					<div class="new-tab-col pull-right">
 						<div class="new-tab-item" ng-click="screenshare()" data-dismiss="modal">
@@ -526,7 +553,9 @@
 									<i class="fa fa-picture-o new-tab-icon-small"></i>
 									<span class="new-tab-text-small">&nbsp;&nbsp;Upload Image</span>
 								</div>
-								<input id="image_file" ng-show="false" type="file" name="image_file" accept="image/*" on-change-image-file></input>
+								<form name="image_file_form">
+									<input id="image_file" ng-show="false" type="file" name="image_file" accept="image/*" on-change-image-file></input>
+								</form>
 							</div>
 						</div>
 					</div>
@@ -558,7 +587,7 @@
 	</div><!-- /.modal -->
 
 
-	<!-- Modal for invite -->
+	<!-- Modal for about -->
 	<div id="aboutModal" class="modal fade" style="z-index:10000000" tabindex="-1">
 	  <div class="modal-dialog modal-dialog-center">
 	    <div class="modal-content">
@@ -598,13 +627,9 @@
 	<!-- Joyride tutorial -->
 	<ol id="room_tab_tutorial">
 	  <!-- data-id needs to be the same as the parent it will attach to -->
-	  <li data-id="room_tab"   data-text="Next" class="tutorial-left-align">
+	  <li data-id="room_tab" class="tutorial-left-align">
 	  	<p> Create a new drawing board, share PDFs, images or start a screenshare session here! </p>
 	  </li>
-	<!-- 
-	  <li data-id="room_page" data-options="tipLocation:left" data-text="Next" class="tutorial-top-align">
-	  	<p> Access additional page options here. </p>
-	  </li> -->
 
 	  <li data-id="room_sync" data-options="tipLocation:left" data-text="Next" class="tutorial-big-z" >
 	  	<p> Toggle to synchronise viewing of tabs, scroll positions and cursors!</p>
@@ -633,6 +658,7 @@
 	<script src="js/jquery.cookie.js"></script>
 	<script src="js/jquery.joyride-2.1.js"></script>
 	<script src="js/html2canvas.js"></script>
+	<script src="js/codemirror-compressed.js"></script>
 
 	<!-- RTCStarJS -->
 	<script src="js/RTCStarJS/adapter.js"></script>

@@ -176,10 +176,13 @@ app.run(function($rootScope){
     	$rootScope.$broadcast('UploadImage', file);
 	}
 
+	$rootScope.uploadTextFile = function(file){
+    	$rootScope.$broadcast('UploadTextFile', file);
+	}
+
 	$rootScope.screenshare = function(){
     	$rootScope.$broadcast('Screenshare');
 	}
-
 
 	$rootScope.getGeemeowURL = function(){
 		return window.location.href;
@@ -256,7 +259,6 @@ app.run(function($rootScope){
 	function showError(message){
 		showErrorAlert(message.errorTitle, message.errorMessage);
 	}
-
 
 	$rootScope.downloadChat = function(){
     	$rootScope.$broadcast('DownloadChat');

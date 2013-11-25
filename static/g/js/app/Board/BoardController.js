@@ -38,6 +38,14 @@ app.controller('BoardController', function($scope, $rootScope){
       $scope.uploadImageTab(message);
     });
 
+    $scope.$on('OpenTextFileLink', function(event, message){
+      $scope.addTextFileTab(message);
+    });
+
+    $scope.$on('UploadTextFile', function(event, message){
+      $scope.uploadTextFileTab(message);
+    });
+
     $scope.$on('NewPlainBoard', function(event, message){
       $scope.addPlainTab();
     });
@@ -122,6 +130,16 @@ app.controller('BoardController', function($scope, $rootScope){
       metadata.name = file.name.slice(file.name.lastIndexOf('/')+1, file.name.length);
       readFile(file, function(data){
           metadata.imageFile = data;
+          $scope.boardClient.newTab(metadata);
+      });
+    }
+
+    $scope.uploadTextFileTab = function(file){
+      var metadata = new Object();
+      metadata.sourceType = "TextFile";
+      metadata.name = file.name.slice(file.name.lastIndexOf('/')+1, file.name.length);
+      readFile(file, function(data){
+          metadata.textFile = data;
           $scope.boardClient.newTab(metadata);
       });
     }
@@ -303,6 +321,19 @@ app.controller('BoardController', function($scope, $rootScope){
           console.log("reading "+file.name);
       }
     }
+
+    var readText = function(file, callback){
+      var reader;
+      if (window.FileReader) {  
+          reader = new FileReader();
+          reader.onloadend = function(e){
+              callback(e.target.result);  
+          }; 
+          reader.readAsText(file);
+          console.log("reading "+file.name);
+      }
+    }
+
   });
 
 
@@ -356,6 +387,16 @@ app.directive('onChangeImageFile', function($window) {
   };
 });
 
+
+app.directive('onChangeTextFile', function($window) {
+  return function(scope, element, attrs) {
+    element.on('change',function(){
+      console.log("asd");
+      scope.uploadTextFile(element[0].files[0]);
+      element.parent()[0].reset();
+    });
+  };
+});
 
 app.directive('boardToolbar', function($window) {
   return function(scope, element, attrs) {

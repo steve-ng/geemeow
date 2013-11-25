@@ -21,7 +21,7 @@ app.run(function($rootScope){
 	$rootScope.userClient;
 	$rootScope.userServer;
 
-	$rootScope.debug = true;
+	$rootScope.debug = false;
 	$rootScope.serverPeerId = "";
 	$rootScope.progress = 0;
 	
@@ -140,6 +140,10 @@ app.run(function($rootScope){
     	$rootScope.$broadcast('UploadImage', file);
 	}
 	
+	$rootScope.uploadTextFile = function(file){
+    	$rootScope.$broadcast('UploadTextFile', file);
+	}
+
 	$rootScope.screenshare = function(){
     	$rootScope.$broadcast('Screenshare');
 	}
