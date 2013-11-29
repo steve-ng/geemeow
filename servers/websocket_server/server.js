@@ -48,13 +48,13 @@ function socketConnectionInstance(socket) {
 			serverId = crypto.createHash('md5').update(new Date().getTime()+randstr).digest("hex");
 			nodeStarServer = new NodeStarServer(serverId);
 			nodeStarServers[serverId] = nodeStarServer;
-			if (persistentRooms[serverId] == undefined)
-				checkServer(nodeStarServer);
+			checkServer(nodeStarServer);
 		} else {
 			serverId = removeTags(serverId);
 			if (nodeStarServers[serverId] == undefined){
 				nodeStarServers[serverId] = new NodeStarServer(serverId);
-				checkServer(nodeStarServers[serverId]);
+				if (persistentRooms[serverId] == undefined)
+					checkServer(nodeStarServers[serverId]);
 			}
 		 	nodeStarServer = nodeStarServers[serverId];
 		}
