@@ -19,7 +19,7 @@ io.sockets.on('connection', socketConnectionInstance);
 
 var nodeStarServers = {};
 var randstr = "";	//	To edit
-
+var persistentRooms = {'cs5321': true};
 
 function checkServer(server){
 	var almostDied = false;
@@ -48,7 +48,8 @@ function socketConnectionInstance(socket) {
 			serverId = crypto.createHash('md5').update(new Date().getTime()+randstr).digest("hex");
 			nodeStarServer = new NodeStarServer(serverId);
 			nodeStarServers[serverId] = nodeStarServer;
-			checkServer(nodeStarServer);
+			if (persistentRooms[serverId] == undefined)
+				checkServer(nodeStarServer);
 		} else {
 			serverId = removeTags(serverId);
 			if (nodeStarServers[serverId] == undefined){
