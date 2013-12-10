@@ -246,8 +246,6 @@ app.controller('BoardController', function($scope, $rootScope){
   	}
 
     $scope.onUpdateScroll = function(message){
-      if (message.peerId == $rootScope.clientId)
-        return;
       $scope.$broadcast('TabUpdateScroll'+message.tabIndex, message);
     }
 
