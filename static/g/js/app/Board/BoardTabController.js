@@ -7,6 +7,7 @@ app.controller('BoardTabController', function($scope,$rootScope) {
     $scope.sendCursorUpdate;
     $scope.currentPage = 0;
     $scope.scrollHistory = {};
+    $scope.previousScrollPeerId = $rootScope.clientId;
 
   	//	Init page
   	var initTab = function(){
@@ -75,6 +76,9 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 
 	//	Scroll handler
 	$scope.$on('TabUpdateScroll'+$scope.tab.tabIndex, function(event, message){
+      	if (message.peerId == $rootScope.clientId && $scope.previousScrollPeerId == $rootScope.clientId)
+        	return;
+        $scope.previousScrollPeerId = message.peerId;
 		if ($rootScope.sync)
 			$scope.tab.coords = message.coords;
 		else
@@ -271,7 +275,6 @@ app.directive('scrollPosition', function($rootScope, $window) {
 		if (!$rootScope.sync)
 			return;
 
-		console.log("scroll", scope.scrollHistory[JSON.stringify(coords)], coords);
 		if (scope.scrollHistory[JSON.stringify(coords)] == undefined){
 			//setTimeout(function(){
 			scope.boardClient.updateScroll(scope.tab.tabIndex, coords);
