@@ -177,8 +177,10 @@ html, body {
 	-moz-user-select: text;
 	-ms-user-select: text;
 	user-select: text;
+	font-size:0.9em;
 }
 .chat-message-input:focus{
+	font-size: 0.9em;
 	outline: none;
 }
 .chat-message-name{

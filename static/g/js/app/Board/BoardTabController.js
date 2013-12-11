@@ -284,12 +284,13 @@ app.directive('scrollPosition', function($rootScope, $window) {
   		}
 
   		scope.currentPage = pageNumber;
-  		scope.safeApply();
 
   		//	Scroll
 		var coords = {'x': element.scrollLeft()/element[0].scrollWidth, 'y': element.scrollTop()/element[0].scrollHeight};
-		if (!$rootScope.sync)
+		if (!$rootScope.sync){
+  			scope.safeApply();
 			return;
+		}
 
 		if (scope.scrollHistory[JSON.stringify(coords)] == undefined){
 			//setTimeout(function(){
@@ -302,6 +303,7 @@ app.directive('scrollPosition', function($rootScope, $window) {
 			if (scope.scrollHistory[JSON.stringify(scope.tab.coords)] == 0)
 				delete scope.scrollHistory[JSON.stringify(scope.tab.coords)];
 		}
+  		scope.safeApply();
 	});
 
     //	Watch tab dirty
@@ -337,10 +339,14 @@ app.directive('scrollPosition', function($rootScope, $window) {
 				scope.pages[pageNum].renderState = 'rendering';
 			}
 		}
-		renderQueue = [];
+
+		while (renderQueue.length > 0)
+			delete scope.pages[renderQueue.shift()].renderState;
 		renderPage(scope.currentPage);
 		renderPage(scope.currentPage+1);
+		renderPage(scope.currentPage+2);
 		renderPage(scope.currentPage-1);
+		renderPage(scope.currentPage-2);
 		startRender();
 	};
 
@@ -405,7 +411,7 @@ app.directive('scrollPosition', function($rootScope, $window) {
 	scope.$watch("tab.pageCoords", function() {
 		if (scope.tab.pageCoords != undefined){
 			var coords = scope.tab.pageCoords.coords;
-			var pageElement = element.children().eq(1).children().eq(scope.tab.pageCoords.pageIndex)[0];
+			var pageElement = element.children().eq(2).children().eq(scope.tab.pageCoords.pageIndex)[0];
 
 			var currentTop = scope.tab.coords.y * element[0].scrollHeight;
 			var currentLeft = scope.tab.coords.x * element[0].scrollWidth;
