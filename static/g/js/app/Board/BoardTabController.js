@@ -284,6 +284,7 @@ app.directive('scrollPosition', function($rootScope, $window) {
   		}
 
   		scope.currentPage = pageNumber;
+  		scope.safeApply();
 
   		//	Scroll
 		var coords = {'x': element.scrollLeft()/element[0].scrollWidth, 'y': element.scrollTop()/element[0].scrollHeight};
@@ -655,6 +656,7 @@ app.directive('boardPage', function($window) {
 			    	} catch (e) {
 			    	}
 					requestAnimationFrame(draw);
+					hiddenVideo.play();
 			  	}
 
 				requestAnimationFrame(draw);
