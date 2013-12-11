@@ -76,7 +76,9 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 
 	//	Scroll handler
 	$scope.$on('TabUpdateScroll'+$scope.tab.tabIndex, function(event, message){
-      	if (message.peerId == $rootScope.clientId && $scope.previousScrollPeerId == $rootScope.clientId)
+      	//if (message.peerId == $rootScope.clientId && $scope.previousScrollPeerId == $rootScope.clientId)
+        //	return;
+        if (message.peerId == $rootScope.clientId)
         	return;
         $scope.previousScrollPeerId = message.peerId;
 		if ($rootScope.sync)
