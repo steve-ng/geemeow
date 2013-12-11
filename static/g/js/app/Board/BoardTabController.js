@@ -506,7 +506,7 @@ app.directive('boardPage', function($window) {
 		                textLayer: textLayerPDF  	
 		            };
 	        		scope.page.renderState = 'rendered';
-	        		scope.$apply();
+	        		scope.$digest();
 					page.render(renderContext);
 	        	});
 			});
