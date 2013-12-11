@@ -316,7 +316,7 @@ var BoardServer = function(server){
 		request.pageIndex = pageIndex;
 		request.scrollTime = new Date().getTime();
 		request.coords = coords;
-		return request
+		return request;
 	}
 
 	function createDeleteAnnotation(tabIndex, pageIndex, annotationIndex){

@@ -291,6 +291,7 @@ app.directive('scrollPosition', function($rootScope, $window) {
 
 		if (scope.scrollHistory[JSON.stringify(coords)] == undefined){
 			//setTimeout(function(){
+			scope.tab.coords = coords;
 			scope.boardClient.updateScroll(scope.tab.tabIndex, coords);
 			//},500);
 		}
@@ -352,18 +353,23 @@ app.directive('scrollPosition', function($rootScope, $window) {
 
     var counter = 0;
     var updateTimer;
+    var previousCursorData = {left: -1, top: -1};
 	element.on('vmousemove', function(e){
 		function update(){
 			scope.cursorData = {left: (e.pageX - element.offset().left -3)/element.width(), top: (e.pageY - element.offset().top-3)/element.height()};
 			if (!scope.sendCursorUpdate || !$rootScope.sync)
 				return;
+			if (scope.cursorData.left == previousCursorData.left && scope.cursorData.top == previousCursorData.top){
+				return;
+			}
 			scope.boardClient.updateCursor(scope.cursorData);
+			previousCursorData = {left: scope.cursorData.left, top: scope.cursorData.top};
 		}
 
 		clearTimeout(updateTimer);
 		updateTimer = setTimeout(update, 200);
 		counter++;
-		if (counter % 2 != 0)
+		if (counter % 2 == 0)
 			return;
 		else
 			update();
@@ -424,6 +430,7 @@ app.directive('boardPage', function($window) {
   	scope.$watch("$parent.tab.scale", function() {
       element.resize();
     });
+
     var resizeTimer;
     var windowWidth = $(window).width();
     var windowHeight = $(window).height();
@@ -437,7 +444,8 @@ app.directive('boardPage', function($window) {
     	clearTimeout(resizeTimer);
     	resizeTimer = setTimeout(function(){
     		if (scope.$parent.pages[scope.$index].renderState != undefined);
-    			delete scope.$parent.pages[scope.$index].renderState;
+    			scope.$parent.pages[scope.$index].renderState = 'rendering';
+    			scope.safeApply();
     		element.resize();
     	},500);
     });
@@ -537,6 +545,8 @@ app.directive('boardPage', function($window) {
 			annotationLayer.height(pageDisplayHeight);
 		  	drawingLayer[0].width = pageDisplayWidth;
 			drawingLayer[0].height = pageDisplayHeight;
+	        scope.page.renderState = 'rendered';
+	        scope.safeApply();
 	  	} else if (tab.metadata.sourceType == "ImageLink" || tab.metadata.sourceType == "ImageFile"){
 			var parentWidth = parent.parent().innerWidth()-1-getScrollBarWidth();
 			var image = scope.$parent.pages[scope.$index].image;
@@ -559,6 +569,8 @@ app.directive('boardPage', function($window) {
 		  	drawingLayer[0].width = pageDisplayWidth;
 			drawingLayer[0].height = pageDisplayHeight;
 			backgroundLayer[0].getContext('2d').drawImage(image, 0, 0, pageDisplayWidth, pageDisplayHeight);
+	        scope.page.renderState = 'rendered';
+	        scope.safeApply();
 	  	} else if (tab.metadata.sourceType == "TextFile"){
 			var parentWidth = parent.parent().innerWidth()-1-getScrollBarWidth();
 			var textFile = scope.$parent.pages[scope.$index].textFile;			
@@ -600,6 +612,8 @@ app.directive('boardPage', function($window) {
 			drawingLayer[0].height = pageDisplayHeight;
 
 			editorCodeMirror = editorDiv.children().eq(1);
+	        scope.page.renderState = 'rendered';
+	        scope.safeApply();
 
 	  	} else if (tab.metadata.sourceType == "Screenshare"){
 			var parentWidth = parent.parent().innerWidth()-1;
@@ -638,6 +652,8 @@ app.directive('boardPage', function($window) {
 				requestAnimationFrame(draw);
 		  	}
 			requestAnimationFrame(draw);
+	        scope.page.renderState = 'rendered';
+	        scope.safeApply();
 	  	}
 
 	  	//	Setup canvas init data
@@ -660,8 +676,6 @@ app.directive('boardPage', function($window) {
 	  			scope.$parent.$digest();
 	  		}
 	  	},0);
-
-
   		
 	});
 
