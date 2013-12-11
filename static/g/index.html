@@ -209,6 +209,12 @@
 
 				    					<div class="board-tab-page" ng-repeat="page in pages" board-page>
 
+				    						<div class="board-tab-render" ng-show="page.renderState == 'rendering'">
+				    							<div class="rendering-div">
+				    								<i class="fa fa-spinner rotating"></i>
+				    							</div>
+				    						</div>
+
 				    						<canvas class="board-tab-page-drawing" ng-class="{drawingFront: tab.tabIndex==currentTabIndex, disablePointerEvents: (canvasMode=='select' || canvasMode == 'text')}" tabindex="1"></canvas>
 				    						<div class="board-tab-page-annotation" ng-controller="BoardTabPageAnnotationController" ng-click="addAnnotation($event);" ng-class="{annotationFront: tab.tabIndex==currentTabIndex, disablePointerEvents: (canvasMode != 'text')}">
 				    							<textarea class="board-annotation touchtext" ng-repeat="(annotationIndex, annotation) in annotations"ng-class="{boardAnnotationEditing: editing}" ng-style="getStyle(annotation)" ng-readonly="annotationIndex != editingIndex" placeholder="Add an annotation.." annotation ng-model="annotation.text"></textarea>
@@ -222,7 +228,7 @@
 				    						<canvas class="board-tab-page-background"></canvas>
 				    						<video width="0px"></video>
 
-
+				    						
 
 											<div class="canvasMenu" class="dropdown clearfix">
 											    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
@@ -509,7 +515,7 @@
 							<div class="new-tab-item-div">
 								<div class="new-tab-item-sub pointer" data-toggle="modal" data-target="#openPDFLinkModal" data-dismiss="modal">
 									<i class="fa fa-link new-tab-icon-small"></i>
-									<span class="new-tab-text-small">&nbsp;&nbsp;Share PDF Link</span>
+									<span class="new-tab-text-small">&nbsp;&nbsp;Open PDF Link</span>
 								</div>
 								<p class="new-tab-center new-tab-text touchnone">- PDF -</p>
 								<div class="new-tab-item-sub pointer" data-dismiss="modal" onclick="$('#pdf_file').click();">
@@ -546,7 +552,7 @@
 							<div class="new-tab-item-div">
 								<div class="new-tab-item-sub pointer" data-toggle="modal" data-target="#openImageLinkModal" data-dismiss="modal">
 									<i class="fa fa-link new-tab-icon-small"></i>
-									<span class="new-tab-text-small">&nbsp;&nbsp;Share Image Link</span>
+									<span class="new-tab-text-small">&nbsp;&nbsp;Open Image Link</span>
 								</div>
 								<p class="new-tab-center new-tab-text touchnone">- Image -</p>
 								<div class="new-tab-item-sub pointer" data-dismiss="modal" onclick="$('#image_file').click();">
@@ -628,7 +634,7 @@
 	<ol id="room_tab_tutorial">
 	  <!-- data-id needs to be the same as the parent it will attach to -->
 	  <li data-id="room_tab" class="tutorial-left-align">
-	  	<p> Create a new drawing board, share PDFs, images or start a screenshare session here! </p>
+	  	<p> Create a new drawing board, open PDFs, images or start a screenshare session here! </p>
 	  </li>
 
 	  <li data-id="room_sync" data-options="tipLocation:left" data-text="Next" class="tutorial-big-z" >

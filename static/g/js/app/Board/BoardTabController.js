@@ -287,6 +287,56 @@ app.directive('scrollPosition', function($rootScope, $window) {
 		}
 	});
 
+    //	Watch tab dirty
+    var renderQueue = [];
+    scope.$watch('currentPage', function(oldPage, newPage){
+    	if (oldPage == newPage)
+    		return;
+  		renderTab();
+    });
+    scope.$watch("tab.coords", function(oldCoords, newCoords){
+    	if (oldCoords == newCoords)
+    		return;
+    	renderTab();
+    });
+    scope.$watch('tab.scale', function(oldScale, newScale){
+    	if (oldScale == newScale)
+    		return;
+    	resetRender();
+    	renderTab();
+    });
+
+    //	Reset render state
+	function resetRender(){
+		for (var i = 0; i < scope.pages.length; i++)
+			if (scope.pages[i].renderState != undefined)
+				delete scope.pages[i].renderState;
+	}
+
+	//	Render tab at position
+	function renderTab(){
+		function renderPage(pageNum){
+			if (pageNum >= 0 && pageNum < scope.pages.length && scope.pages[pageNum].renderState == undefined){
+				renderQueue.push(pageNum);
+				scope.pages[pageNum].renderState = 'rendering';
+			}
+		}
+		renderQueue = [];
+		renderPage(scope.currentPage);
+		renderPage(scope.currentPage+1);
+		renderPage(scope.currentPage-1);
+		startRender();
+	};
+
+	//	Async render
+	function startRender(){
+		setTimeout(function(){
+			while (renderQueue.length > 0){
+				scope.$broadcast('render'+renderQueue.shift());
+			}
+		},0);
+	}
+
     var counter = 0;
     var updateTimer;
 	element.on('vmousemove', function(e){
@@ -306,19 +356,17 @@ app.directive('scrollPosition', function($rootScope, $window) {
 			update();
 	});
 
-	var oldTabCoords;
-	scope.$watch("tab.coords", function() {
-	if (!scope.done)
-		return;
+	scope.$watch("tab.coords", function(oldTabCoords, newTabCoords) {
+		if (!scope.done)
+			return;
 
 		//	Calibrate coords to nearest pixel
-		var x = Math.floor(scope.tab.coords.x*element[0].scrollWidth);
-		var y = Math.floor(scope.tab.coords.y*element[0].scrollHeight);
-		if (oldTabCoords != undefined && oldTabCoords.x == scope.tab.coords.x && oldTabCoords.y == scope.tab.coords.y
+		var x = Math.floor(newTabCoords.x*element[0].scrollWidth);
+		var y = Math.floor(newTabCoords.y*element[0].scrollHeight);
+		if (oldTabCoords != undefined && oldTabCoords.x == scope.tab.coords.x && oldTabCoords.y == newTabCoords.y
 			&& (Math.abs(x - element[0].scrollLeft) <1.5 && Math.abs(y - element[0].scrollTop) < 1.5))
 			return;
 		scope.tab.coords = {x: x/element[0].scrollWidth, y: y/element[0].scrollHeight};
-		oldTabCoords = {x: scope.tab.coords.x, y: scope.tab.coords.y};
 
 		if (scope.scrollHistory[JSON.stringify(scope.tab.coords)] == undefined)
 			scope.scrollHistory[JSON.stringify(scope.tab.coords)] = 1;
@@ -380,15 +428,16 @@ app.directive('boardPage', function($window) {
 
 	var tab = scope.$parent.tab;
 	var parent = element.parent();
-	var drawingLayer = element.children().eq(0);
-	var annotationLayer = element.children().eq(1);
-	var editorDiv = element.children().eq(2);
-	var editorLayer = element.children().eq(2).children().eq(0);
+	var renderingLayer = element.children().eq(0);
+	var drawingLayer = element.children().eq(1);
+	var annotationLayer = element.children().eq(2);
+	var editorDiv = element.children().eq(3);
+	var editorLayer = element.children().eq(3).children().eq(0);
 	var editorCodeMirror;
-	var textLayer = element.children().eq(3);
-	var backgroundLayer = element.children().eq(4);
-	var hiddenVideo = element.children().eq(5)[0];
-	var canvasMenu = element.children().eq(6);
+	var textLayer = element.children().eq(4);
+	var backgroundLayer = element.children().eq(5);
+	var hiddenVideo = element.children().eq(6)[0];
+	var canvasMenu = element.children().eq(7);
 
 
 	var index = scope.$index;
@@ -424,6 +473,8 @@ app.directive('boardPage', function($window) {
 
 		  	element.width(pageDisplayWidth);
 			element.height(pageDisplayHeight);
+			renderingLayer.width(pageDisplayWidth);
+			renderingLayer.height(pageDisplayHeight);
 		  	backgroundLayer[0].width = 0;
 			backgroundLayer[0].height = 0;
 		  	backgroundLayer[0].width = pageDisplayWidth;
@@ -435,20 +486,28 @@ app.directive('boardPage', function($window) {
 		  	drawingLayer[0].width = pageDisplayWidth;
 			drawingLayer[0].height = pageDisplayHeight;
 
-			page.getTextContent().then(function (textContent) {
-	            var textLayerPDF = new TextLayerBuilder({
-	                textLayerDiv: textLayer.get(0),
-	                pageIndex: scope.$index
-	            }); 
-	            textLayerPDF.setTextContent(textContent);
-
-	            var renderContext = {
-	                canvasContext: backgroundLayer[0].getContext('2d'),
-	                viewport: viewport,
-	                textLayer: textLayerPDF  	
-	            };
-				page.render(renderContext);
-        	});
+			if (page.deregisterRender != undefined)
+				page.deregisterRender();
+			page.deregisterRender = scope.$parent.$on('render'+scope.$index, function(){
+				if (scope.pages[scope.$index].renderState != 'rendering')
+					return;
+				page.getTextContent().then(function (textContent) {
+		            var textLayerPDF = new TextLayerBuilder({
+		                textLayerDiv: textLayer.get(0),
+		                pageIndex: scope.$index
+		            }); 
+		            textLayerPDF.setTextContent(textContent);
+					
+		            var renderContext = {
+		                canvasContext: backgroundLayer[0].getContext('2d'),
+		                viewport: viewport,
+		                textLayer: textLayerPDF  	
+		            };
+	        		scope.page.renderState = 'rendered';
+	        		scope.$apply();
+					page.render(renderContext);
+	        	});
+			});
 	  	} else if (tab.metadata.sourceType == "Plain"){
 			var parentWidth = parent.parent().innerWidth()-1;
 
