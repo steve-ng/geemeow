@@ -139,7 +139,7 @@ var BoardClient = function(client){
         	};
         	screenStreams[client.getClientPeerId()] = {stream:localStream, url:URL.createObjectURL(localStream)};
 			
-			var metadata = {sourceType:'Screenshare', peerId:client.getClientPeerId(), name: name};
+			var metadata = {sourceType:'Screenshare', peerId:client.getClientPeerId(), name: name, size:{width: screen.width, height:screen.height}};
 			newTab(metadata);
         }
 

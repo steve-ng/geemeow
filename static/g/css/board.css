@@ -94,7 +94,7 @@
 .tabfront{
     z-index: 5;
 }
-.loading-screen{
+.cover-screen{
     left:0;
     right:0;
     top:0;
@@ -103,7 +103,15 @@
     background: grey;
     position:absolute;
 }
-
+.cover-center-text{
+    position: absolute;
+    top: 50%;
+    width:100%;
+    margin-top: -1em;
+    text-align: center;
+    font-size:2em;
+    color: white;
+}
 
 .board-tab{
     background-color: rgba(240,240,240,1);
@@ -384,7 +392,7 @@ div.CodeMirror-scroll {
     overflow: hidden;
 }
 
-.rendering-div{
+.board-page-fulldiv{
     width: 100%;
     height: 100%;
     position: relative;
@@ -393,9 +401,10 @@ div.CodeMirror-scroll {
 .rotating{
     top: 50%;
     left: 50%;
-    margin-top: 0.5em;
-    margin-left: 0.5em;
-    width: 1em;
+    margin-top: -1em;
+    margin-left: -1em;
+    width: 2em;
+    font-size:2em;
     position: absolute;
     text-align: center;
     vertical-align: center;

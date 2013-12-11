@@ -271,6 +271,9 @@ app.controller('BoardController', function($scope, $rootScope){
 
     $scope.onUpdateCursor = function(message){
       if (message.peerId in $scope.cursors) {
+        if ($scope.cursors[message.peerId].position.left == message.cursorData.left &&
+            $scope.cursors[message.peerId].position.top == message.cursorData.top)
+          return;    
         $scope.cursors[message.peerId].position = message.cursorData;
       } else {
         $scope.cursors[message.peerId] = {position: message.cursorData, color: $scope.colors[$scope.colorIndex]};

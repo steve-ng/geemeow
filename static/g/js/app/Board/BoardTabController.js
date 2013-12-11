@@ -7,6 +7,7 @@ app.controller('BoardTabController', function($scope,$rootScope) {
     $scope.sendCursorUpdate;
     $scope.currentPage = 0;
     $scope.scrollHistory = {};
+    $scope.clientId = $rootScope.clientId;
     $scope.previousScrollPeerId = $rootScope.clientId;
 
     //  Safe Apply
@@ -616,44 +617,50 @@ app.directive('boardPage', function($window) {
 	        scope.safeApply();
 
 	  	} else if (tab.metadata.sourceType == "Screenshare"){
-			var parentWidth = parent.parent().innerWidth()-1;
+			var page = scope.$parent.pages[scope.$index];
+		  	if (scope.$parent.clientId != page.peerId){
+				var parentWidth = parent.parent().innerWidth()-1;
 
-			var pageDisplayWidth = parentWidth*tabScale;
-			var pageDisplayHeight = parentHeight*tabScale;
+				var ratioHeight = parentHeight/tab.metadata.size.height;
+				var ratioWidth = parentWidth/tab.metadata.size.width;
+				var scale = Math.max(ratioWidth, ratioHeight)*tabScale;
 
-		  	
-			element.width(pageDisplayWidth);
-			element.height(pageDisplayHeight);
-		  	backgroundLayer[0].width = pageDisplayWidth;
-			backgroundLayer[0].height = pageDisplayHeight;
-		  	textLayer.width(pageDisplayWidth);
-			textLayer.height(pageDisplayHeight);
-		  	annotationLayer.width(pageDisplayWidth);
-			annotationLayer.height(pageDisplayHeight);
-		  	drawingLayer[0].width = pageDisplayWidth;
-			drawingLayer[0].height = pageDisplayHeight;
+				var pageDisplayWidth = tab.metadata.size.width*scale;
+				var pageDisplayHeight = tab.metadata.size.height*scale;
+			  	
+				element.width(pageDisplayWidth);
+				element.height(pageDisplayHeight);
+			  	backgroundLayer[0].width = pageDisplayWidth;
+				backgroundLayer[0].height = pageDisplayHeight;
+			  	textLayer.width(pageDisplayWidth);
+				textLayer.height(pageDisplayHeight);
+			  	annotationLayer.width(pageDisplayWidth);
+				annotationLayer.height(pageDisplayHeight);
+			  	drawingLayer[0].width = pageDisplayWidth;
+				drawingLayer[0].height = pageDisplayHeight;
 
-			var context = backgroundLayer[0].getContext('2d');
-		  	var page = scope.$parent.pages[scope.$index];
-			if (page.streamSrc[page.peerId] != undefined)
-				hiddenVideo.src = page.streamSrc[page.peerId].url;
+				var context = backgroundLayer[0].getContext('2d');
+				if (page.streamSrc[page.peerId] != undefined)
+					hiddenVideo.src = page.streamSrc[page.peerId].url;
 
-		  	hiddenVideo.play();
-			function draw() {
-		    	try {
-		    		if (hiddenVideo.src == undefined || hiddenVideo.src.length == 0){
-		    			hiddenVideo.src = page.streamSrc[page.peerId].url;
-		    			hiddenVideo.play();
-		    		}
-		    		else
-		      			context.drawImage(hiddenVideo, 0, 0, pageDisplayWidth, pageDisplayHeight);
-		    	} catch (e) {
-		    	}
+			  	hiddenVideo.play();
+				function draw() {
+			    	try {
+			    		if (hiddenVideo.src == undefined || hiddenVideo.src.length == 0){
+			    			hiddenVideo.src = page.streamSrc[page.peerId].url;
+			    			hiddenVideo.play();
+			    		}
+			    		else
+			      			context.drawImage(hiddenVideo, 0, 0, pageDisplayWidth, pageDisplayHeight);
+			    	} catch (e) {
+			    	}
+					requestAnimationFrame(draw);
+			  	}
+
 				requestAnimationFrame(draw);
-		  	}
-			requestAnimationFrame(draw);
-	        scope.page.renderState = 'rendered';
-	        scope.safeApply();
+		        scope.page.renderState = 'rendered';
+		        scope.safeApply();
+	    	}
 	  	}
 
 	  	//	Setup canvas init data

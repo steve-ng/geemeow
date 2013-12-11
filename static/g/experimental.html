@@ -195,7 +195,7 @@
 						    	</div>
 				    			<div class="board-tab-wrapper" ng-repeat="tab in tabsArray" ng-class="{tabfront: currentTabIndex == tab.tabIndex}" ng-controller="BoardTabController" scroll-position>
 
-									<div class="loading-screen" ng-show="!done">
+									<div class="cover-screen" ng-show="!done">
 			    						<div class="center-screen">
 				    						<div class="loader">
 											  <div class="left stick"><span></span></div>
@@ -205,12 +205,18 @@
 										</div>
 									</div>
 
+									<div class="cover-screen" ng-show="tab.metadata.sourceType == 'Screenshare' && tab.metadata.peerId == $root.clientId">
+			    						<div class="cover-center-text">
+											<span>{{$root.users[tab.metadata.peerId].name}} is screen sharing.</span>
+										</div>
+									</div>
+
 				    				<div class="board-tab">
 
 				    					<div class="board-tab-page" ng-repeat="page in pages" board-page>
 
 				    						<div class="board-tab-render" ng-show="page.renderState == 'rendering'">
-				    							<div class="rendering-div">
+				    							<div class="board-page-fulldiv">
 				    								<i class="fa fa-spinner rotating"></i>
 				    							</div>
 				    						</div>
