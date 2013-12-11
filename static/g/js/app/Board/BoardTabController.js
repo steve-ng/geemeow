@@ -97,7 +97,7 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 			$scope.tab.coords = message.coords;
 		else
 			$scope.tab.coordsSync = message.coords;
-		$scope.$digest();
+		$scope.safeApply();
 	});
 
 	var first = true;
@@ -119,7 +119,7 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 			$scope.tab.pageCoords = {coords: message.coords, pageIndex: message.pageIndex};
 		else
 			$scope.tab.pageCoordsSync = {coords: message.coords, pageIndex: message.pageIndex};
-		$scope.$digest();
+		$scope.safeApply();
 	});
 
 	//	Zoom handler
@@ -128,7 +128,7 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 			$scope.tab.scale = message.scale;
 		else
 			$scope.tab.scaleSync = message.scale;
-		$scope.$digest();
+		$scope.safeApply();
 	});
 
 	//	Canvas Action handler
