@@ -21,6 +21,18 @@ app.controller('BoardController', function($scope, $rootScope){
     $scope.canvasMode = 'marker'; //  marker, eraser, select, highlighter
     
 
+    //  Safe Apply
+    $scope.safeApply = function(fn) {
+      var phase = this.$root.$$phase;
+      if(phase == '$apply' || phase == '$digest') {
+        if(fn && (typeof(fn) === 'function')) {
+          fn();
+        }
+      } else {
+        this.$apply(fn);
+      }
+    };
+
     //  Public methods for menu
     $scope.$on('OpenPDFLink', function(event, message){
       $scope.addPDFTab(message);
@@ -264,7 +276,7 @@ app.controller('BoardController', function($scope, $rootScope){
         $scope.cursors[message.peerId] = {position: message.cursorData, color: $scope.colors[$scope.colorIndex]};
         $scope.colorIndex++;
       }
-      $scope.$apply();
+      $scope.safeApply();
     }
 
     $scope.onCursorRemoved = function(message){

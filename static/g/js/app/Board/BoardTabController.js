@@ -9,6 +9,18 @@ app.controller('BoardTabController', function($scope,$rootScope) {
     $scope.scrollHistory = {};
     $scope.previousScrollPeerId = $rootScope.clientId;
 
+    //  Safe Apply
+    $scope.safeApply = function(fn) {
+      var phase = this.$root.$$phase;
+      if(phase == '$apply' || phase == '$digest') {
+        if(fn && (typeof(fn) === 'function')) {
+          fn();
+        }
+      } else {
+        this.$apply(fn);
+      }
+    };
+
   	//	Init page
   	var initTab = function(){
   		if ($scope.tab.metadata.sourceType == "PDFLink"){
@@ -506,7 +518,7 @@ app.directive('boardPage', function($window) {
 		                textLayer: textLayerPDF  	
 		            };
 	        		scope.page.renderState = 'rendered';
-	        		scope.$digest();
+	        		scope.safeApply();
 					page.render(renderContext);
 	        	});
 			});
