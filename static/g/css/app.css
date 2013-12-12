@@ -614,14 +614,14 @@ box-shadow: 0 0 0px #719ECE;
 
 .global-progress{
 	position: fixed;
-	height:0.4em;
+	height:0.35em;
 	top:0;
 	left:0;
 	background: rgba(255,255,255,1);
 	z-index:2000;
-	-moz-box-shadow:1px 2px 4px black;
-	-webkit-box-shadow: 1px 2px 4px black;
-	box-shadow: 1px 2px 4px black;
+	-moz-box-shadow:1px 1px 10px black;
+	-webkit-box-shadow: 1px 1px 10px black;
+	box-shadow: 1px 1px 10px black;
 }
 
 .empty-board-span{
