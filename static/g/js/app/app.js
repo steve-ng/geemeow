@@ -80,7 +80,7 @@ app.run(function($rootScope){
 		$rootScope.client.onClientEvent('Close', closeHandler);
 	    $rootScope.client.debug($rootScope.debug);
 	    $rootScope.client.onClientEvent('Open',function(clientPeerId){
-			$("#loading-screen").hide();
+			$("#loading-screen").fadeOut();
 			$("#app").show();
 			if ($rootScope.serverPeerId == undefined || $rootScope.serverPeerId.length == 0)
 				$("#inviteModal").modal("show");
