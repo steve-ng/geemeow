@@ -129,6 +129,9 @@
 .drawingFront{
     z-index: 10;
 }
+.loadingFront{
+    z-index: 11;
+}
 .disablePointerEvents{
     pointer-events:none;
 }
@@ -408,7 +411,6 @@ div.CodeMirror-scroll {
     position: absolute;
     text-align: center;
     vertical-align: center;
-    z-index:1000;
     -webkit-animation: rotating 1s linear infinite;
     animation: rotating 1s linear infinite;
 }

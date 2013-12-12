@@ -215,7 +215,7 @@
 
 				    					<div class="board-tab-page" ng-repeat="page in pages" board-page>
 
-				    						<div class="board-tab-render" ng-show="page.renderState == 'rendering'">
+				    						<div class="board-tab-render" ng-show="page.renderState == 'rendering'" ng-class="{loadingFront: tab.tabIndex==currentTabIndex}">
 				    							<div class="board-page-fulldiv">
 				    								<i class="fa fa-spinner rotating"></i>
 				    							</div>
