@@ -323,6 +323,10 @@ app.directive('scrollPosition', function($rootScope, $window) {
     	resetRender();
     	renderTab();
     });
+    $(window).on('resize',function(){
+    	resetRender();
+    	renderTab();
+    });
 
     //	Reset render state
 	function resetRender(){
