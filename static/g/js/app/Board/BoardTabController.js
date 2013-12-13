@@ -102,7 +102,7 @@ app.controller('BoardTabController', function($scope,$rootScope) {
 	});
 
 	var first = true;
-	$rootScope.$watch("sync", function(event){
+	$rootScope.$watch("sync", function(){
 		if ($rootScope.sync && !first){
 			$scope.tab.coords = $scope.tab.coordsSync;
 			$scope.tab.pageCoords = $scope.tab.pageCoordsSync;
@@ -309,16 +309,16 @@ app.directive('scrollPosition', function($rootScope, $window) {
 
     //	Watch tab dirty
     var renderQueue = [];
-    scope.$watch('currentPage', function(oldPage, newPage){
+    scope.$watch('currentPage', function(newPage, oldPage){
     	if (oldPage == newPage)
     		return;
   		renderTab();
     });
-    scope.$watch('done', function(oldPage, newPage){
+    scope.$watch('done', function(newPage, oldPage){
     	if (scope.done)
   			renderTab();
     });
-    scope.$watch('tab.scale', function(oldScale, newScale){
+    scope.$watch('tab.scale', function(newScale, oldScale){
     	if (oldScale == newScale)
     		return;
     	resetRender();
@@ -388,19 +388,17 @@ app.directive('scrollPosition', function($rootScope, $window) {
 			update();
 	});
 
-	var oldTabCoords;
-	scope.$watch("tab.coords", function() {
+	scope.$watch("tab.coords", function(newTabCoords, oldTabCoords) {
 		if (!scope.done)
 			return;
 
 		//	Calibrate coords to nearest pixel
-		var x = Math.floor(scope.tab.coords.x*element[0].scrollWidth);
-		var y = Math.floor(scope.tab.coords.y*element[0].scrollHeight);
-		if (oldTabCoords != undefined && oldTabCoords.x == scope.tab.coords.x && oldTabCoords.y == scope.tab.coords.y
+		var x = Math.floor(newTabCoords.x*element[0].scrollWidth);
+		var y = Math.floor(newTabCoords.y*element[0].scrollHeight);
+		if (oldTabCoords != undefined && oldTabCoords.x == newTabCoords.x && oldTabCoords.y == newTabCoords.y
 			&& (Math.abs(x - element[0].scrollLeft) <1.5 && Math.abs(y - element[0].scrollTop) < 1.5))
 			return;
 		scope.tab.coords = {x: x/element[0].scrollWidth, y: y/element[0].scrollHeight};
-		oldTabCoords = {x: scope.tab.coords.x, y:scope.tab.coords.y};
 
 		if (scope.scrollHistory[JSON.stringify(scope.tab.coords)] == undefined)
 			scope.scrollHistory[JSON.stringify(scope.tab.coords)] = 1;
@@ -456,9 +454,6 @@ app.directive('boardPage', function($window) {
     	windowHeight = windowHeightCur;
     	clearTimeout(resizeTimer);
     	resizeTimer = setTimeout(function(){
-    		if (scope.$parent.pages[scope.$index].renderState != undefined);
-    			scope.$parent.pages[scope.$index].renderState = 'rendering';
-    			scope.safeApply();
     		element.resize();
     	},500);
     });

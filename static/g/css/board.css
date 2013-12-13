@@ -11,8 +11,6 @@
     content: '';
 }
 #board-content {
-    height:100%;
-    width:100%;
     position:absolute;
     background-color: rgb(200, 200, 200); 
     overflow: hidden;
@@ -301,7 +299,7 @@
 }
 
 .board-tab-page-index{
-    background: rgba(200,200,200,0.8);
+    background: rgba(200,200,200,1);
     color:black;
     -moz-box-shadow:0px 1px 4px black;
     -webkit-box-shadow: 0px 1px 4px black;
@@ -313,7 +311,7 @@
 	border-bottom-left-radius: 5px !important;
     border-bottom-right-radius: 5px !important;
 	width:6em;
-    right:18em;
+    left:38em;
     top:3em;
     z-index:1000;
     cursor:pointer;

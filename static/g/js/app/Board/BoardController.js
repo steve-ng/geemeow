@@ -33,6 +33,7 @@ app.controller('BoardController', function($scope, $rootScope){
       }
     };
 
+
     //  Public methods for menu
     $scope.$on('OpenPDFLink', function(event, message){
       $scope.addPDFTab(message);
@@ -364,6 +365,37 @@ app.directive('boardMain', function($window) {
         scope.$broadcast('TabCanvasRedo'+scope.currentTabIndex);
       } 
     });
+  }
+});
+
+app.directive('boardContent', function($window) {
+  return function(scope, element, attrs) {
+    function resizeBoardContent(){
+      var parentWidth = element.parent().width();
+      var parentHeight = element.parent().height();
+
+      var parentRatio = parentWidth/parentHeight;
+      var targetRatio = 16/9;
+
+      var elementRatioX = Math.min(targetRatio/parentRatio, 1);
+      var elementRatioY = Math.min(parentRatio/targetRatio, 1);
+      element.width(elementRatioX * parentWidth);
+      element.height(elementRatioY * parentHeight);
+
+      //  Offset Left
+      var x = (parentWidth - element.width())/2;
+      var offset = element.offset();
+      element.offset({top: offset.top, left: x});
+    }
+
+    $(window).on('resize', resizeBoardContent);
+    var checkSize = setInterval(function(){
+      var parentWidth = element.parent().width();
+      if (parentWidth > 0){
+        resizeBoardContent();
+        clearInterval(checkSize);
+      }
+    },300);
   }
 });
 
