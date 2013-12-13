@@ -439,8 +439,13 @@ app.directive('scrollPosition', function($rootScope, $window) {
 app.directive('boardPage', function($window) {
   return function(scope, element, attrs) {
   	scope.$watch("$parent.tab.scale", function() {
-      element.resize();
-    });
+      	var sizeInterval = setInterval(function(){
+      		if (element.parent().width() > 0){
+      			element.resize();
+      			clearInterval(sizeInterval);
+      		}
+    	}, 50);
+  	});
 
     var resizeTimer;
     var windowWidth = $(window).width();
@@ -457,7 +462,6 @@ app.directive('boardPage', function($window) {
     		element.resize();
     	},500);
     });
-
 
 	var tab = scope.$parent.tab;
 	var parent = element.parent();
