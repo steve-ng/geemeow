@@ -509,67 +509,45 @@
 				  <h4 class="modal-title">Open A New Tab</h4>
 				</div>
 				<div class="modal-body">
-					<div class="new-tab-col">
-						<div class="new-tab-item " ng-click="newPlainBoard()" data-dismiss="modal">
-							<div class="new-tab-item-div new-tab-item-div-select pointer">
-								<i class="fa fa-square-o new-tab-center new-tab-icon"></i>
-								<p class="new-tab-text new-tab-center">Plain Board</p>
-							</div>
-						</div>
+					<div class="new-tab-div">
 						
-						<div class="new-tab-item">
-							<div class="new-tab-item-div">
-								<div class="new-tab-item-sub pointer" data-toggle="modal" data-target="#openPDFLinkModal" data-dismiss="modal">
-									<i class="fa fa-link new-tab-icon-small"></i>
-									<span class="new-tab-text-small">&nbsp;&nbsp;Open PDF Link</span>
-								</div>
-								<p class="new-tab-center new-tab-text touchnone">- PDF -</p>
-								<div class="new-tab-item-sub pointer" data-dismiss="modal" onclick="$('#pdf_file').click();">
-									<i class="fa fa-file-o new-tab-icon-small"></i>
-									<span class="new-tab-text-small">&nbsp;&nbsp;Upload PDF</span>
-								</div>
-								<form name="pdf_file_form">
-									<input id="pdf_file" ng-show="false" type="file" name="pdf_file" accept="application/pdf" on-change-pdf-file></input>
-								</form>
+						<div class="new-tab-item bg-blue" ng-click="newPlainBoard()" data-dismiss="modal">
+							<div class="new-tab-item-div-select pointer">
+								<i class="fa fa-square-o new-tab-center new-tab-icon"></i>
+								<p class="new-tab-center">Plain Board</p>
+								<p class="new-tab-center"></p>
 							</div>
 						</div>
 
-						<div class="new-tab-item " onclick="$('#textfile_file').click();" data-dismiss="modal">
-							<div class="new-tab-item-div new-tab-item-div-select pointer">
-								<i class="fa fa-file-text-o new-tab-center new-tab-icon"></i>
-								<p class="new-tab-text new-tab-center">Upload Source File</p>
+						<div class="new-tab-item bg-yellow" data-dismiss="modal" onclick="$('#pdf_file').click();">
+							<div class="new-tab-item-div-select pointer">
+								<i class="fa fa-file-o new-tab-center new-tab-icon"></i>
+								<p class="new-tab-center">Upload PDF</p>
+								<p class="new-tab-center"></p>
 							</div>
-							
 						</div>
-						<form name="text_file_form">
-							<input id="textfile_file" ng-show="false" type="file" name="textfile_file" on-change-text-file></input>
+						<form name="pdf_file_form" ng-show="false">
+							<input id="pdf_file" ng-show="false" type="file" name="pdf_file" accept="application/pdf" on-change-pdf-file></input>
 						</form>
 
-					</div>
-					<div class="new-tab-col pull-right">
-						<div class="new-tab-item" ng-click="screenshare()" data-dismiss="modal">
-							<div class="new-tab-item-div new-tab-item-div-select pointer">
+						<div class="new-tab-item bg-orange" data-dismiss="modal" onclick="$('#image_file').click();">
+							<div class="new-tab-item-div-select pointer">
+								<i class="fa fa-picture-o new-tab-center new-tab-icon"></i>
+								<p class="new-tab-center">Upload Image</p>
+								<p class="new-tab-center"></p>
+							</div>
+						</div>
+						<form name="image_file_form"  ng-show="false">
+							<input id="image_file" ng-show="false" type="file" name="image_file" accept="image/*" on-change-image-file></input>
+						</form>
+
+						<div class="new-tab-item bg-green" ng-click="screenshare()" data-dismiss="modal">
+							<div class="new-tab-item-div-select pointer">
 								<i class="fa fa-desktop new-tab-icon new-tab-center"></i>
-								<p class="new-tab-text new-tab-center">Screen Share</p>
-								<p class="new-tab-center">(For Chrome)</p>
+								<p class="new-tab-text new-tab-center">Screen Share (For Chrome)</p>
 							</div>
 						</div>
-						<div class="new-tab-item">
-							<div class="new-tab-item-div">
-								<div class="new-tab-item-sub pointer" data-toggle="modal" data-target="#openImageLinkModal" data-dismiss="modal">
-									<i class="fa fa-link new-tab-icon-small"></i>
-									<span class="new-tab-text-small">&nbsp;&nbsp;Open Image Link</span>
-								</div>
-								<p class="new-tab-center new-tab-text touchnone">- Image -</p>
-								<div class="new-tab-item-sub pointer" data-dismiss="modal" onclick="$('#image_file').click();">
-									<i class="fa fa-picture-o new-tab-icon-small"></i>
-									<span class="new-tab-text-small">&nbsp;&nbsp;Upload Image</span>
-								</div>
-								<form name="image_file_form">
-									<input id="image_file" ng-show="false" type="file" name="image_file" accept="image/*" on-change-image-file></input>
-								</form>
-							</div>
-						</div>
+
 					</div>
 				</div>
 		    </div><!-- /.modal-content -->

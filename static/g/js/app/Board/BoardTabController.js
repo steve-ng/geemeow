@@ -294,7 +294,8 @@ app.directive('scrollPosition', function($rootScope, $window) {
 
 		if (scope.scrollHistory[JSON.stringify(coords)] == undefined){
 			//setTimeout(function(){
-			scope.tab.coords = coords;
+			//if (scope.tab.coords.x != coords.x || scope.tab.coords.y != coords.y)
+				scope.tab.coords = coords;
 			scope.boardClient.updateScroll(scope.tab.tabIndex, coords);
 			//},500);
 		}
