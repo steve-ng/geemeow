@@ -188,84 +188,82 @@
 							Hit the + button right there <i class="fa fa-arrow-left empty-tab-arrow"></i> to begin!
 						</span>
 
-						<div class = "board-wrapper">
-						    <div id = "board-content">
-						    	<div class="board-cursor" ng-style="{background: $root.users[peerId].color}" ng-repeat="(peerId, cursor) in cursors" ng-show="$root.sync" cursor-position>
-						    		<span class="board-cursor-text" ng-style="{color: $root.users[peerId].color}">{{$root.users[peerId].name}}</span>
-						    	</div>
-				    			<div class="board-tab-wrapper" ng-repeat="tab in tabsArray" ng-class="{tabfront: currentTabIndex == tab.tabIndex}" ng-controller="BoardTabController" scroll-position>
+					    <div id = "board-content" board-content>
+					    	<div class="board-cursor" ng-style="{background: $root.users[peerId].color}" ng-repeat="(peerId, cursor) in cursors" ng-show="$root.sync" cursor-position>
+					    		<span class="board-cursor-text" ng-style="{color: $root.users[peerId].color}">{{$root.users[peerId].name}}</span>
+					    	</div>
+			    			<div class="board-tab-wrapper" ng-repeat="tab in tabsArray" ng-class="{tabfront: currentTabIndex == tab.tabIndex}" ng-controller="BoardTabController" scroll-position>
 
-									<div class="cover-screen" ng-show="!done">
-			    						<div class="center-screen">
-				    						<div class="loader">
-											  <div class="left stick"><span></span></div>
-											  <div class="right stick"><span></span></div>
-											</div>
-											<span>Loading ...</span>
+								<div class="cover-screen" ng-show="!done">
+		    						<div class="center-screen">
+			    						<div class="loader">
+										  <div class="left stick"><span></span></div>
+										  <div class="right stick"><span></span></div>
 										</div>
+										<span>Loading ...</span>
 									</div>
+								</div>
 
-									<div class="cover-screen" ng-show="tab.metadata.sourceType == 'Screenshare' && tab.metadata.peerId == $root.clientId">
-			    						<div class="cover-center-text">
-											<span>{{$root.users[tab.metadata.peerId].name}} is screen sharing.</span>
-										</div>
+								<div class="cover-screen" ng-show="tab.metadata.sourceType == 'Screenshare' && tab.metadata.peerId == $root.clientId">
+		    						<div class="cover-center-text">
+										<span>{{$root.users[tab.metadata.peerId].name}} is screen sharing.</span>
 									</div>
+								</div>
 
-				    				<div class="board-tab">
+			    				<div class="board-tab">
 
-				    					<div class="board-tab-page" ng-repeat="page in pages" board-page>
+			    					<div class="board-tab-page" ng-repeat="page in pages" board-page>
 
-				    						<div class="board-tab-render" ng-show="page.renderState == 'rendering'" ng-class="{loadingFront: tab.tabIndex==currentTabIndex}">
-				    							<div class="board-page-fulldiv">
-				    								<i class="fa fa-spinner rotating"></i>
-				    							</div>
-				    						</div>
-
-				    						<canvas class="board-tab-page-drawing" ng-class="{drawingFront: tab.tabIndex==currentTabIndex, disablePointerEvents: (canvasMode=='select' || canvasMode == 'text')}" tabindex="1"></canvas>
-				    						<div class="board-tab-page-annotation" ng-controller="BoardTabPageAnnotationController" ng-click="addAnnotation($event);" ng-class="{annotationFront: tab.tabIndex==currentTabIndex, disablePointerEvents: (canvasMode != 'text')}">
-				    							<textarea class="board-annotation touchtext" ng-repeat="(annotationIndex, annotation) in annotations"ng-class="{boardAnnotationEditing: editing}" ng-style="getStyle(annotation)" ng-readonly="annotationIndex != editingIndex" placeholder="Add an annotation.." annotation ng-model="annotation.text"></textarea>
-				    							<i ng-repeat="(annotationIndex, annotation) in annotations" class="fa fa-times-circle-o board-annotation-close touchtext" ng-show="annotationIndex == editingIndex" ng-style="getCloseStyle(annotation)" ng-click="deleteAnnotation(annotationIndex)"></i>
-				    							
-				    						</div>
-				    						<div class="board-tab-page-editor" ng-show="tab.metadata.sourceType =='TextFile' || tab.metadata.sourceType == 'TextFileLink'">
-				    							<textarea class="board-tab-page-editor-textarea"></textarea>
-				    						</div>
-				    						<div class="board-tab-page-text textLayer"></div>
-				    						<canvas class="board-tab-page-background"></canvas>
-				    						<video width="0px"></video>
-
-				    						
-
-											<div class="canvasMenu" class="dropdown clearfix">
-											    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
-											    	<li><a href="" ng-click="undoCanvas($index)">Undo</a></li>
-											    	<li><a href="" ng-click="redoCanvas($index)">Redo</a></li>
-											    	<li><a href="" ng-click="clearCanvas($index)">Clear Drawings on Page</a></li>
-											    	<li class="divider"></li>
-											    	<li><a href="" ng-click="screenshotPage($index)">Screenshot Page</a></li>
-											    	<li><a href="" ng-click="screenshotPageAsTab($index)">Screenshot Page As Tab</a></li>
-											    	<li ng-show="tab.metadata.sourceType == 'PDFFile'"><a href="" ng-click="downloadSource()">Download Attached PDF</a></li>
-											    	<li ng-show="tab.metadata.sourceType == 'PDFLink'"><a href="" ng-click="downloadSource()">Download Attached PDF</a></li>
-											    	<li ng-show="tab.metadata.sourceType == 'ImageFile'"><a href="" ng-click="downloadSource()">Download Attached Image</a></li>
-											    	<li ng-show="tab.metadata.sourceType == 'ImageLink'"><a href="" ng-click="downloadSource()">Download Attached Image</a></li>
-											    	<li ng-show="tab.metadata.sourceType == 'TextFile'"><a href="" ng-click="downloadSource()">Download Attached Source File</a></li>
-											    </ul>
-											</div>
-
-				    					</div>
-
-					    					<!-- Page index -->
-			    						<div class="fixed board-tab-page-index" id="room_page" ng-show="tab.tabIndex==currentTabIndex" ng-click="openContextMenu($event)">
-			    							<span class="touchnone" ng-show="pages.length > 1">Page {{currentPage+1}}</span>
-			    							<span class="touchnone" ng-show="pages.length == 1">&nbsp;&nbsp;Menu</span>
-											<i class="fa fa-chevron-down pull-right touchnone" style="padding-top:0.1em;"></i>
+			    						<div class="board-tab-render" ng-show="page.renderState == 'rendering'" ng-class="{loadingFront: tab.tabIndex==currentTabIndex}">
+			    							<div class="board-page-fulldiv">
+			    								<i class="fa fa-spinner rotating"></i>
+			    							</div>
 			    						</div>
 
-					    			</div>
-					    		
-						    	</div>
-						    </div>
-						</div>
+			    						<canvas class="board-tab-page-drawing" ng-class="{drawingFront: tab.tabIndex==currentTabIndex, disablePointerEvents: (canvasMode=='select' || canvasMode == 'text')}" tabindex="1"></canvas>
+			    						<div class="board-tab-page-annotation" ng-controller="BoardTabPageAnnotationController" ng-click="addAnnotation($event);" ng-class="{annotationFront: tab.tabIndex==currentTabIndex, disablePointerEvents: (canvasMode != 'text')}">
+			    							<textarea class="board-annotation touchtext" ng-repeat="(annotationIndex, annotation) in annotations"ng-class="{boardAnnotationEditing: editing}" ng-style="getStyle(annotation)" ng-readonly="annotationIndex != editingIndex" placeholder="Add an annotation.." annotation ng-model="annotation.text"></textarea>
+			    							<i ng-repeat="(annotationIndex, annotation) in annotations" class="fa fa-times-circle-o board-annotation-close touchtext" ng-show="annotationIndex == editingIndex" ng-style="getCloseStyle(annotation)" ng-click="deleteAnnotation(annotationIndex)"></i>
+			    							
+			    						</div>
+			    						<div class="board-tab-page-editor" ng-show="tab.metadata.sourceType =='TextFile' || tab.metadata.sourceType == 'TextFileLink'">
+			    							<textarea class="board-tab-page-editor-textarea"></textarea>
+			    						</div>
+			    						<div class="board-tab-page-text textLayer"></div>
+			    						<canvas class="board-tab-page-background"></canvas>
+			    						<video width="0px"></video>
+
+			    						
+
+										<div class="canvasMenu" class="dropdown clearfix">
+										    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+										    	<li><a href="" ng-click="undoCanvas($index)">Undo</a></li>
+										    	<li><a href="" ng-click="redoCanvas($index)">Redo</a></li>
+										    	<li><a href="" ng-click="clearCanvas($index)">Clear Drawings on Page</a></li>
+										    	<li class="divider"></li>
+										    	<li><a href="" ng-click="screenshotPage($index)">Screenshot Page</a></li>
+										    	<li><a href="" ng-click="screenshotPageAsTab($index)">Screenshot Page As Tab</a></li>
+										    	<li ng-show="tab.metadata.sourceType == 'PDFFile'"><a href="" ng-click="downloadSource()">Download Attached PDF</a></li>
+										    	<li ng-show="tab.metadata.sourceType == 'PDFLink'"><a href="" ng-click="downloadSource()">Download Attached PDF</a></li>
+										    	<li ng-show="tab.metadata.sourceType == 'ImageFile'"><a href="" ng-click="downloadSource()">Download Attached Image</a></li>
+										    	<li ng-show="tab.metadata.sourceType == 'ImageLink'"><a href="" ng-click="downloadSource()">Download Attached Image</a></li>
+										    	<li ng-show="tab.metadata.sourceType == 'TextFile'"><a href="" ng-click="downloadSource()">Download Attached Source File</a></li>
+										    </ul>
+										</div>
+
+			    					</div>
+
+				    					<!-- Page index -->
+		    						<div class="fixed board-tab-page-index" id="room_page" ng-show="tab.tabIndex==currentTabIndex" ng-click="openContextMenu($event)">
+		    							<span class="touchnone" ng-show="pages.length > 1">Page {{currentPage+1}}</span>
+		    							<span class="touchnone" ng-show="pages.length == 1">&nbsp;&nbsp;Menu</span>
+										<i class="fa fa-chevron-down pull-right touchnone" style="padding-top:0.1em;"></i>
+		    						</div>
+
+				    			</div>
+				    		
+					    	</div>
+					    </div>
 
 
 					</div>
@@ -509,67 +507,45 @@
 				  <h4 class="modal-title">Open A New Tab</h4>
 				</div>
 				<div class="modal-body">
-					<div class="new-tab-col">
-						<div class="new-tab-item " ng-click="newPlainBoard()" data-dismiss="modal">
-							<div class="new-tab-item-div new-tab-item-div-select pointer">
-								<i class="fa fa-square-o new-tab-center new-tab-icon"></i>
-								<p class="new-tab-text new-tab-center">Plain Board</p>
-							</div>
-						</div>
+					<div class="new-tab-div">
 						
-						<div class="new-tab-item">
-							<div class="new-tab-item-div">
-								<div class="new-tab-item-sub pointer" data-toggle="modal" data-target="#openPDFLinkModal" data-dismiss="modal">
-									<i class="fa fa-link new-tab-icon-small"></i>
-									<span class="new-tab-text-small">&nbsp;&nbsp;Open PDF Link</span>
-								</div>
-								<p class="new-tab-center new-tab-text touchnone">- PDF -</p>
-								<div class="new-tab-item-sub pointer" data-dismiss="modal" onclick="$('#pdf_file').click();">
-									<i class="fa fa-file-o new-tab-icon-small"></i>
-									<span class="new-tab-text-small">&nbsp;&nbsp;Upload PDF</span>
-								</div>
-								<form name="pdf_file_form">
-									<input id="pdf_file" ng-show="false" type="file" name="pdf_file" accept="application/pdf" on-change-pdf-file></input>
-								</form>
+						<div class="new-tab-item bg-blue" ng-click="newPlainBoard()" data-dismiss="modal">
+							<div class="new-tab-item-div-select pointer">
+								<i class="fa fa-square-o new-tab-center new-tab-icon"></i>
+								<p class="new-tab-center">Plain Board</p>
+								<p class="new-tab-center"></p>
 							</div>
 						</div>
 
-						<div class="new-tab-item " onclick="$('#textfile_file').click();" data-dismiss="modal">
-							<div class="new-tab-item-div new-tab-item-div-select pointer">
-								<i class="fa fa-file-text-o new-tab-center new-tab-icon"></i>
-								<p class="new-tab-text new-tab-center">Upload Source File</p>
+						<div class="new-tab-item bg-yellow" data-dismiss="modal" onclick="$('#pdf_file').click();">
+							<div class="new-tab-item-div-select pointer">
+								<i class="fa fa-file-o new-tab-center new-tab-icon"></i>
+								<p class="new-tab-center">Upload PDF</p>
+								<p class="new-tab-center"></p>
 							</div>
-							
 						</div>
-						<form name="text_file_form">
-							<input id="textfile_file" ng-show="false" type="file" name="textfile_file" on-change-text-file></input>
+						<form name="pdf_file_form" ng-show="false">
+							<input id="pdf_file" ng-show="false" type="file" name="pdf_file" accept="application/pdf" on-change-pdf-file></input>
 						</form>
 
-					</div>
-					<div class="new-tab-col pull-right">
-						<div class="new-tab-item" ng-click="screenshare()" data-dismiss="modal">
-							<div class="new-tab-item-div new-tab-item-div-select pointer">
+						<div class="new-tab-item bg-orange" data-dismiss="modal" onclick="$('#image_file').click();">
+							<div class="new-tab-item-div-select pointer">
+								<i class="fa fa-picture-o new-tab-center new-tab-icon"></i>
+								<p class="new-tab-center">Upload Image</p>
+								<p class="new-tab-center"></p>
+							</div>
+						</div>
+						<form name="image_file_form"  ng-show="false">
+							<input id="image_file" ng-show="false" type="file" name="image_file" accept="image/*" on-change-image-file></input>
+						</form>
+
+						<div class="new-tab-item bg-green" ng-click="screenshare()" data-dismiss="modal">
+							<div class="new-tab-item-div-select pointer">
 								<i class="fa fa-desktop new-tab-icon new-tab-center"></i>
-								<p class="new-tab-text new-tab-center">Screen Share</p>
-								<p class="new-tab-center">(For Chrome)</p>
+								<p class="new-tab-text new-tab-center">Screen Share (For Chrome)</p>
 							</div>
 						</div>
-						<div class="new-tab-item">
-							<div class="new-tab-item-div">
-								<div class="new-tab-item-sub pointer" data-toggle="modal" data-target="#openImageLinkModal" data-dismiss="modal">
-									<i class="fa fa-link new-tab-icon-small"></i>
-									<span class="new-tab-text-small">&nbsp;&nbsp;Open Image Link</span>
-								</div>
-								<p class="new-tab-center new-tab-text touchnone">- Image -</p>
-								<div class="new-tab-item-sub pointer" data-dismiss="modal" onclick="$('#image_file').click();">
-									<i class="fa fa-picture-o new-tab-icon-small"></i>
-									<span class="new-tab-text-small">&nbsp;&nbsp;Upload Image</span>
-								</div>
-								<form name="image_file_form">
-									<input id="image_file" ng-show="false" type="file" name="image_file" accept="image/*" on-change-image-file></input>
-								</form>
-							</div>
-						</div>
+
 					</div>
 				</div>
 		    </div><!-- /.modal-content -->
