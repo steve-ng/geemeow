@@ -757,10 +757,10 @@ app.directive('boardPage', function($window) {
 		var canvas = document.createElement("canvas");
 		var canvasContext = canvas.getContext('2d');
 
-		var backgroundCanvas = element.children().eq(4)[0];
-		var drawingCanvas = element.children().eq(0)[0];
-		var annotationLayer = element.children().eq(1)[0];
-		var editorDiv = element.children().eq(2)[0];
+		var backgroundCanvas = element.children().eq(5)[0];
+		var drawingCanvas = element.children().eq(1)[0];
+		var annotationLayer = element.children().eq(2)[0];
+		var editorDiv = element.children().eq(3)[0];
 		
 
 		var ssTextFile = function(editorCanvas){
