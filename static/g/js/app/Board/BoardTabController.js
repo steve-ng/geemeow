@@ -500,6 +500,7 @@ app.directive('boardPage', function($window) {
 			backgroundLayer[0].height = 0;
 		  	backgroundLayer[0].width = pageDisplayWidth;
 			backgroundLayer[0].height = pageDisplayHeight;
+			backgroundLayer[0].getContext('2d').clearRect(0, 0, pageDisplayWidth, pageDisplayHeight);
 		  	textLayer.width(pageDisplayWidth);
 			textLayer.height(pageDisplayHeight);
 		  	annotationLayer.width(pageDisplayWidth);
