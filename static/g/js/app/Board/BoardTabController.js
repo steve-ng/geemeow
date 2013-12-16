@@ -6,7 +6,7 @@ app.controller('BoardTabController', function($scope,$rootScope) {
     $scope.cursorData;
     $scope.sendCursorUpdate;
     $scope.currentPage = 0;
-    $scope.scrollHistory = {};
+    $scope.lastScrollTime = 0;
     $scope.clientId = $rootScope.clientId;
     $scope.previousScrollPeerId = $rootScope.clientId;
 
@@ -94,11 +94,13 @@ app.controller('BoardTabController', function($scope,$rootScope) {
         //if (message.peerId == $rootScope.clientId)
         //	return;
         $scope.previousScrollPeerId = message.peerId;
-		if ($rootScope.sync)
-			$scope.tab.coords = message.coords;
-		else
-			$scope.tab.coordsSync = message.coords;
-		$scope.safeApply();
+        if (message.scrollTime > $scope.lastScrollTime){
+			if ($rootScope.sync)
+				$scope.tab.coords = message.coords;
+			else
+				$scope.tab.coordsSync = message.coords;
+			$scope.safeApply();
+		}
 	});
 
 	var first = true;
@@ -286,25 +288,18 @@ app.directive('scrollPosition', function($rootScope, $window) {
   		scope.currentPage = pageNumber;
 
   		//	Scroll
-		var coords = {'x': element.scrollLeft()/element[0].scrollWidth, 'y': element.scrollTop()/element[0].scrollHeight};
-		if (!$rootScope.sync){
-  			scope.safeApply();
-			return;
+		var time = new Date().getTime();
+ 		if (time > scope.lastScrollTime){
+ 			scope.lastScrollTime = time;
+			if (scrollTimer != undefined)
+				clearTimeout(scrollTimer);
+			scrollTimer = setTimeout(function(){
+				var coords = {'x': element.scrollLeft()/element[0].scrollWidth, 'y': element.scrollTop()/element[0].scrollHeight};
+				if (!$rootScope.sync)
+					return;
+				scope.boardClient.updateScroll(scope.tab.tabIndex, coords);
+			}, 200);
 		}
-
-		if (scope.scrollHistory[JSON.stringify(coords)] == undefined){
-			//setTimeout(function(){
-			//if (scope.tab.coords.x != coords.x || scope.tab.coords.y != coords.y)
-				scope.tab.coords = coords;
-			scope.boardClient.updateScroll(scope.tab.tabIndex, coords);
-			//},500);
-		}
-		else {
-			scope.scrollHistory[JSON.stringify(scope.tab.coords)]--;
-			if (scope.scrollHistory[JSON.stringify(scope.tab.coords)] == 0)
-				delete scope.scrollHistory[JSON.stringify(scope.tab.coords)];
-		}
-  		scope.safeApply();
 	});
 
     //	Watch tab dirty
@@ -392,23 +387,12 @@ app.directive('scrollPosition', function($rootScope, $window) {
 		if (!scope.done)
 			return;
 
-		//	Calibrate coords to nearest pixel
-		var x = Math.floor(newTabCoords.x*element[0].scrollWidth);
-		var y = Math.floor(newTabCoords.y*element[0].scrollHeight);
-		if (oldTabCoords != undefined && oldTabCoords.x == newTabCoords.x && oldTabCoords.y == newTabCoords.y
-			&& (Math.abs(x - element[0].scrollLeft) <1.5 && Math.abs(y - element[0].scrollTop) < 1.5))
-			return;
-		scope.tab.coords = {x: x/element[0].scrollWidth, y: y/element[0].scrollHeight};
-
-		if (scope.scrollHistory[JSON.stringify(scope.tab.coords)] == undefined)
-			scope.scrollHistory[JSON.stringify(scope.tab.coords)] = 1;
-		else
-			scope.scrollHistory[JSON.stringify(scope.tab.coords)]++;
-
-		if (Math.abs(scope.tab.coords.x*element[0].scrollWidth - element[0].scrollLeft) > 1.5)
-			element.scrollLeft(x);
-		if (Math.abs(scope.tab.coords.y*element[0].scrollHeight - element[0].scrollTop) > 1.5)
-			element.scrollTop(y);
+		if (scope.tab.coords != undefined && 
+			Math.abs(element.scrollLeft() - scope.tab.coords.x*element[0].scrollWidth) + 
+			Math.abs(element.scrollTop() - scope.tab.coords.y*element[0].scrollHeight) > 2){
+			element.scrollLeft(scope.tab.coords.x*element[0].scrollWidth);
+			element.scrollTop(scope.tab.coords.y*element[0].scrollHeight);
+		} 
 	});
 
 	scope.$watch("tab.pageCoords", function() {
