@@ -35,7 +35,7 @@ function checkServer(server){
 			almostDied = false;
 
 		//	Duration limit to 30 mins
-		if (new Date().getTime() - server.startedTime > 60*1000*30 
+		if (new Date().getTime() - server.startedTime > 60*1000*0.2 
 			&& server.getServerNodeId().toLowerCase().indexOf("geecat") != 0){
 			nodeStarServers[server.getServerNodeId()].stop();
 			delete nodeStarServers[server.getServerNodeId()];
