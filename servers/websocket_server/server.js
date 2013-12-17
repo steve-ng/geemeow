@@ -3,6 +3,7 @@ var https = require('https');
 var socketio = require('socket.io');
 var crypto = require('crypto');
 var NodeStarServer = require('NodeStarServer/NodeStarServer');
+var RestServer = require('../express_server/app')
 
 var httpsOptions = {
     key: fs.readFileSync('/etc/ssl/private/privatekey.pem'),
