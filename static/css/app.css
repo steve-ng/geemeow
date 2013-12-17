@@ -370,6 +370,10 @@ li {
 
 }
 
+.notice{
+	color: #FF4D4D;
+}
+
 .room_list{
 	margin-bottom:50px;
 }
