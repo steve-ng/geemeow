@@ -42,7 +42,7 @@ function checkServer(server){
 			delete nodeStarServers[server.getServerNodeId()];
 			clearInterval(interval);
 		}
-	}, 30000);
+	}, 10000);
 }
 
 function socketConnectionInstance(socket) {
@@ -70,7 +70,7 @@ function socketConnectionInstance(socket) {
 		}
 		console.log(serverId + " @ " + new Date());
 		if (nodeStarServer.isFull()){
-			socket.emit('disconnected', 'RoomFull');
+			socket.emit('disconnected', 'Room is Full');
 			socket.disconnect();
 		} else {
 			socket.emit('open', serverId);
