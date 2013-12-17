@@ -160,7 +160,6 @@ app.run(function($rootScope){
 	}
 
 	function closeHandler(message){
-		console.log(message);
 		showErrorAlert("Connection Lost: "+message, "You've disconnected from the server :/ Please re-enter.")
 	}
 
