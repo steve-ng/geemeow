@@ -68,7 +68,10 @@ app.run(function($rootScope){
 		$rootScope.client.onMessage('Error', showError);
 		$rootScope.client.onClientEvent('Close', closeHandler);
 	    $rootScope.client.debug($rootScope.debug);
-	    $rootScope.client.onClientEvent('Open',function(clientPeerId, serverPeerId){
+	    $rootScope.client.onClientEvent('Open',function(clientPeerId, message){
+	    	var serverPeerId = message.serverPeerId;
+	    	var remainingTime = message.remainingTime;
+	    	setupTimeout(remainingTime);
 			$("#loading-screen").fadeOut();
 			$("#app").show();
 			if ($rootScope.serverPeerId == undefined || $rootScope.serverPeerId.length == 0){
@@ -90,6 +93,19 @@ app.run(function($rootScope){
 	    $rootScope.videoClient = new VideoClient($rootScope.client);
 	    $rootScope.userClient = new UserClient($rootScope.client);
 	    $rootScope.userClient.setDelegate($rootScope);
+	}
+
+	//	Timeout dialog
+	function setupTimeout(remainingTime){
+		var alertTimes = [15*60*1000, 5*60*1000, 2*60*1000];
+		for (var i = 0; i < alertTimes.length; i++){
+			var alertTime = alertTimes[i];
+			if (remainingTime - alertTime > 0){
+				setTimeout(function(){
+					showErrorAlert("Duration Remaining", (alertTime/1000/60)+" minutes");
+				}, remainingTime - alertTime);
+			}
+		}
 	}
 
 	//	User data

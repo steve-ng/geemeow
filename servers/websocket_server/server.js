@@ -20,6 +20,7 @@ io.sockets.on('connection', socketConnectionInstance);
 var nodeStarServers = {};
 var randstr = "";	//	To edit
 var persistentRooms = {'persist': true};
+var timeLimit = 60*1000*30;	// to 30 mins
 
 function checkServer(server){
 	var almostDied = false;
@@ -34,8 +35,8 @@ function checkServer(server){
 		} else
 			almostDied = false;
 
-		//	Duration limit to 30 mins
-		if (new Date().getTime() - server.startedTime > 60*1000*30 
+		//	Duration limit
+		if (new Date().getTime() - server.startedTime > timeLimit 
 			&& server.getServerNodeId().toLowerCase().indexOf("geecat") != 0){
 			server.stop();
 			delete nodeStarServers[server.getServerNodeId()];
@@ -72,7 +73,7 @@ function socketConnectionInstance(socket) {
 			socket.emit('disconnected', 'Room is Full');
 			socket.disconnect();
 		} else {
-			socket.emit('open', serverId);
+			socket.emit('open', {serverPeerId: serverId, remainingTime: timeLimit - (new Date().getTime() - server.startedTime)});
 			nodeStarServer.socketOpenHandler(socket);
 		}
     });

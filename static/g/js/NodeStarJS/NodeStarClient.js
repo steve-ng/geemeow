@@ -153,13 +153,14 @@ function NodeStarClient(){
   }
 
   //  Client Open
-  function openHandler(serverPeerId){
+  function openHandler(message){
+    message = JSON.parse(message);
     if (debug)
-      console.log("Client connected, id: "+clientPeer.id + " " + serverPeerId);
+      console.log("Client connected, id: "+clientPeer.id + " " + message.serverPeerId);
     
     if (eventHandlers['Open'] != undefined)
       for (var i in eventHandlers['Open'])
-        eventHandlers['Open'][i](clientPeer.id, serverPeerId);
+        eventHandlers['Open'][i](clientPeer.id, message);
   }
 
 
