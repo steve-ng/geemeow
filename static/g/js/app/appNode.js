@@ -97,13 +97,13 @@ app.run(function($rootScope){
 
 	//	Timeout dialog
 	function setupTimeout(remainingTime){
-		var alertTimes = [29*60*1000, 29.8*60*1000, 15*60*1000, 5*60*1000, 2*60*1000];
+		var alertTimes = [15*60*1000, 5*60*1000, 2*60*1000];
 		for (var i = 0; i < alertTimes.length; i++){
 			var alertTime = alertTimes[i];
 			if (remainingTime - alertTime > 0)
 				doSetTimeout(alertTime);
 		}
-		
+
 		function doSetTimeout(alertTime){
   			setTimeout(function(){
 				showErrorAlert("Duration Remaining", (alertTime/1000/60)+" minutes");
