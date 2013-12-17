@@ -102,7 +102,8 @@ app.run(function($rootScope){
 			var alertTime = alertTimes[i];
 			if (remainingTime - alertTime > 0){
 				setTimeout(function(){
-					showErrorAlert("Duration Remaining", (alertTime/1000/60)+" minutes");
+					var a = alertTime;
+					showErrorAlert("Duration Remaining", (a/1000/60)+" minutes");
 				}, remainingTime - alertTime);
 			}
 		}
