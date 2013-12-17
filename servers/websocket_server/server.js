@@ -35,7 +35,7 @@ function checkServer(server){
 			almostDied = false;
 
 		//	Duration limit to 30 mins
-		if (new Date().getTime() - nodeStarServer.startedTime > 60*1000*0.2 
+		if (new Date().getTime() - server.startedTime > 60*1000*0.2 
 			&& server.getServerNodeId().toLowerCase.indexOf("geecat") != 0){
 			nodeStarServers[server.getServerNodeId()].stop();
 			delete nodeStarServers[server.getServerNodeId()];
@@ -67,7 +67,7 @@ function socketConnectionInstance(socket) {
 			}
 		 	nodeStarServer = nodeStarServers[serverId];
 		}
-		console.log(serverId, new Date());
+		console.log(serverId + " @ " + new Date());
 		if (nodeStarServer.isFull()){
 			socket.emit('disconnected', 'RoomFull');
 			socket.disconnect();
