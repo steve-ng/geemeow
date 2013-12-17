@@ -73,7 +73,8 @@ function socketConnectionInstance(socket) {
 			socket.emit('disconnected', 'Room is Full');
 			socket.disconnect();
 		} else {
-			socket.emit('open', {serverPeerId: serverId, remainingTime: timeLimit - (new Date().getTime() - nodeStarServer.startedTime)});
+			var m = {serverPeerId: serverId, remainingTime: timeLimit - (new Date().getTime() - nodeStarServer.startedTime)};
+			socket.emit('open', JSON.stringify(m));
 			nodeStarServer.socketOpenHandler(socket);
 		}
     });
