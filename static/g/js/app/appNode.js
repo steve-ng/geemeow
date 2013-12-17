@@ -84,7 +84,7 @@ app.run(function($rootScope){
 				$("#inviteModal").modal("show");
 	    });
 
-	    //	Plugins
+	    //	PluginscloseHandler
 	    $rootScope.chatClient = new ChatClient($rootScope.client);
 	    $rootScope.boardClient = new BoardClient($rootScope.client);
 	    $rootScope.videoClient = new VideoClient($rootScope.client);
@@ -159,8 +159,9 @@ app.run(function($rootScope){
 		$rootScope.$apply();
 	}
 
-	function closeHandler(){
-		showErrorAlert("Connection Lost", "You've disconnected from the server :/ Please re-enter.")
+	function closeHandler(message){
+		console.log(message);
+		showErrorAlert("Connection Lost: "+message, "You've disconnected from the server :/ Please re-enter.")
 	}
 
 	$rootScope.toggleSound = function(){
