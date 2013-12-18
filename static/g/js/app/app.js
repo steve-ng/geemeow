@@ -1,7 +1,7 @@
 
 var apikey = '';
-//var apihost = "geemeow.com";
-var apihost = "127.0.0.1";
+var apihost = "geemeow.com";
+//var apihost = "127.0.0.1";
 var apiport = 3216;
 var peerjsDebug = 3;
 
