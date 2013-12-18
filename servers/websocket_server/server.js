@@ -26,7 +26,7 @@ function checkServer(server){
 	var almostDied = false;
 	server.startedTime = new Date().getTime();
 	if (server.getServerNodeId().toLowerCase().indexOf("geecat") == 0)
-		server.startedTime += 1000000*60*1000;
+		server.startedTime += 100000*60*1000;
 	var interval = setInterval(function(){
 		if (server.isEmpty()){
 			if (almostDied){
