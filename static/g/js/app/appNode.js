@@ -71,6 +71,7 @@ app.run(function($rootScope){
 	    $rootScope.client.onClientEvent('Open',function(clientPeerId, message){
 	    	var serverPeerId = message.serverPeerId;
 	    	var remainingTime = message.remainingTime;
+	    	$rootScope.remainingTime = message.remainingTime;
 	    	setupTimeout(remainingTime);
 			$("#loading-screen").fadeOut();
 			$("#app").show();
