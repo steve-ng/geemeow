@@ -25,6 +25,8 @@ var timeLimit = 60*1000*30;	// to 30 mins
 function checkServer(server){
 	var almostDied = false;
 	server.startedTime = new Date().getTime();
+	if (server.getServerNodeId().toLowerCase().indexOf("geecat") == 0)
+		server.startedTime += 1000000*60*1000;
 	var interval = setInterval(function(){
 		if (server.isEmpty()){
 			if (almostDied){
@@ -36,8 +38,7 @@ function checkServer(server){
 			almostDied = false;
 
 		//	Duration limit
-		if (new Date().getTime() - server.startedTime > timeLimit 
-			&& server.getServerNodeId().toLowerCase().indexOf("geecat") != 0){
+		if (new Date().getTime() - server.startedTime > timeLimit){
 			server.stop();
 			delete nodeStarServers[server.getServerNodeId()];
 			clearInterval(interval);
